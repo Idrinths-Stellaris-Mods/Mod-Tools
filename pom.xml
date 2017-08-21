@@ -34,6 +34,12 @@
             <artifactId>jsoup</artifactId>
             <version>1.10.3</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.sarxos/windows-registry-util -->
+        <dependency>
+            <groupId>com.github.sarxos</groupId>
+            <artifactId>windows-registry-util</artifactId>
+            <version>0.3</version>
+        </dependency>
     </dependencies>
 
     <organization>
