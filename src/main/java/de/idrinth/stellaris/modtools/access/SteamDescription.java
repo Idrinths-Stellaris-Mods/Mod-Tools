@@ -15,6 +15,7 @@ public class SteamDescription implements Runnable{
     }
     @Override
     public void run() {
+        System.out.println("Mod loading: "+mod.getId());
         try {
             Document doc = Jsoup.connect("http://steamcommunity.com/sharedfiles/filedetails/?id="+mod.getId()).get();
             mod.setDescription(doc.getElementById("highlightContent").html());

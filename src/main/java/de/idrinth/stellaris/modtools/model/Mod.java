@@ -60,12 +60,14 @@ public class Mod {
         new Thread(new SteamDescription(this)).start();
     }
     protected void fillFilesFromZip(String[] exts) throws IOException {
-        Enumeration entries = new ZipFile(path).getEntries();
-        while(entries.hasMoreElements()) {
-            ZipArchiveEntry entry = (ZipArchiveEntry) entries.nextElement();
-            for(String ext:exts) {
-                if(entry.getName().endsWith(ext)) {
-                    files.add(entry.getName());
+        try (ZipFile zip = new ZipFile(path)) {
+            Enumeration entries = zip.getEntries();
+            while(entries.hasMoreElements()) {
+                ZipArchiveEntry entry = (ZipArchiveEntry) entries.nextElement();
+                for(String ext:exts) {
+                    if(entry.getName().endsWith(ext)) {
+                        files.add(entry.getName());
+                    }
                 }
             }
         }
