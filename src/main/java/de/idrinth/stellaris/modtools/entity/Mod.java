@@ -11,29 +11,27 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 
 public class Mod {
-    protected ModList list;
-    protected boolean locked=false;
+    protected ModCollection list;
     //basics
     protected String name;
-    protected String[] tags;
     protected String version;
+    protected String path;
     //Remote only
     protected int id=0;
     protected String description;
     //generated
     protected ArrayList<String> files = new ArrayList<>();
-    protected ArrayList<Mod> overwrites = new ArrayList<>();
+    protected ArrayList<String> overwrites = new ArrayList<>();
     public boolean broken = false;
 
-    public Mod(ModList list) {
+    public Mod(ModCollection list) {
         this.list = list;
     }
     public void lock() {
-        locked=true;
         this.list.add(this);
     }
 
-    public ModList getList() {
+    public ModCollection getList() {
         return list;
     }
 
@@ -42,18 +40,7 @@ public class Mod {
     }
 
     public void setName(String name) {
-        if(locked) {
-            throw new UnsupportedOperationException("The class is locked.");
-        }
         this.name = name;
-    }
-
-    public String[] getTags() {
-        return tags;
-    }
-
-    public void setTags(String[] tags) {
-        this.tags = tags;
     }
 
     public String getVersion() {
@@ -64,10 +51,16 @@ public class Mod {
         this.version = version;
     }
 
-    public void setArchive(String archive) throws IOException {
-        files.clear();
-        Enumeration entries = new ZipFile(archive).getEntries();
-        String[] exts = ".txt,.yml,.dds,.gfx,.gui".split("/,/");
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+        new Thread(new SteamDescription(this)).start();
+    }
+    protected void fillFilesFromZip(String[] exts) throws IOException {
+        Enumeration entries = new ZipFile(path).getEntries();
         while(entries.hasMoreElements()) {
             ZipArchiveEntry entry = (ZipArchiveEntry) entries.nextElement();
             for(String ext:exts) {
@@ -77,25 +70,25 @@ public class Mod {
             }
         }
     }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        if(locked) {
-            throw new UnsupportedOperationException("The class is locked.");
-        }
-        this.id = id;
-        new Thread(new SteamDescription(this)).start();
-    }
-
-    public void setPath(String path) {
-        String[] ext = "txt,yml,dds,gfx,gui".split("/,/");
-        files.clear();
-        FileUtils.listFiles(new File(path), ext, true).forEach((file) -> {
+    protected void fillFilesFromFolder(String[] exts) throws IOException {
+        FileUtils.listFiles(new File(path), exts, true).forEach((file) -> {
             files.add(file.getAbsolutePath().substring(path.length()));//relative path
         });
+    }
+    public void setPath(String path) {
+        this.path = path;
+        String[] ext = ".txt,.yml,.dds,.gfx,.gui".split("/,/");
+        files.clear();
+        try {
+            if(path.endsWith(".zip")) {
+                fillFilesFromZip(ext);
+            } else {
+                fillFilesFromFolder(ext);
+            }
+        } catch (IOException exception) {
+            broken = true;
+            description = exception.getLocalizedMessage();
+        }
     }
     
     protected ArrayList<String> getFiles() {
@@ -110,8 +103,12 @@ public class Mod {
         this.description = description;
     }
 
-    public ArrayList<Mod> getOverwrites() {
+    public ArrayList<String> getOverwrites() {
         return overwrites;
+    }
+
+    public String getFileContent(String relativePath) {
+        return "";
     }
 
     @Override

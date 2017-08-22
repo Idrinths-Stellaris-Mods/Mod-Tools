@@ -1,56 +1,49 @@
 package de.idrinth.stellaris.modtools.entity;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.HashMap;
+import java.util.LinkedList;
+import name.fraser.neil.plaintext.diff_match_patch.Patch;
+import name.fraser.neil.plaintext.diff_match_patch;
 
 public class Collision {
+    protected String original;
     protected String file;
-    protected ArrayList<Mod> inMods = new ArrayList<>();
-    protected HashSet<Mod> resolved = new HashSet<>();
-    protected boolean solved=true;
-
-    public Collision(String file,Mod mod) {
+    protected HashMap<String,LinkedList<Patch>> diffs = new HashMap<>();
+    protected ModCollection collection;
+    protected PatchedFile patch;
+    protected diff_match_patch patcher;
+    Collision(String original, ModCollection collection, String file, diff_match_patch patcher) {
+        this.original = original;
         this.file = file;
-        addMod(mod);
+        this.patcher = patcher;
+        this.collection = collection;
     }
-    public final void addMod(Mod mod) {
-        inMods.add(mod);
-        resolved.addAll(mod.getOverwrites());
-        solved = resolved.size() == inMods.size()-1;
+    public void add(String modded,String key) {
+        diffs.put(key, patcher.patch_make(original, modded));
+        patch = null;
     }
-    public ArrayList<String> getUnresolved() {
-        ArrayList<String> unresolved = new ArrayList<>();
-        if(solved) {
-            return unresolved;
+    public PatchedFile get() throws Exception {
+        if(patch==null) {
+            String result = original;
+            int mCounter = 0;
+            for(String key:diffs.keySet()) {
+                if(notOverwritten(key)) {
+                    mCounter++;
+                    Object[] resultList = patcher.patch_apply(diffs.get(key), result);
+                    result = (String) resultList[0];
+                    boolean[] pL = (boolean[]) resultList[1];
+                    for(int c=1;c<pL.length;c++) {
+                        if(!pL[c]) {
+                            throw new Exception("Patching failed");
+                        }
+                    }
+                }
+            }
+            patch = new PatchedFile(result,mCounter,file);
         }
-        inMods.stream().filter((mod) -> (!resolved.contains(mod))).forEachOrdered((mod) -> {
-            unresolved.add(mod.name);
-        });
-        return unresolved;
+        return patch;
     }
-
-    public String getFile() {
-        return file;
-    }
-
-    @Override
-    public int hashCode() {
-        return 19 * 7 + Objects.hashCode(this.file);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Collision other = (Collision) obj;
-        return file.equals(other.getFile());
+    protected boolean notOverwritten(String key) {
+        return diffs.keySet().stream().noneMatch((modKey) -> (collection.getMods().get(modKey).getOverwrites().contains(key)));
     }
 }

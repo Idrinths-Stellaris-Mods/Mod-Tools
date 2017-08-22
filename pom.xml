@@ -40,12 +40,25 @@
             <artifactId>windows-registry-util</artifactId>
             <version>0.3</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/google-diff-match-patch/google-diff-match-patch -->
+        <dependency>
+            <groupId>google-diff-match-patch</groupId>
+            <artifactId>google-diff-match-patch</artifactId>
+            <version>0.1</version>
+        </dependency>
     </dependencies>
 
     <organization>
         <!-- Used as the 'Vendor' for JNLP generation -->
         <name>Idrinth</name>
     </organization>
+    <repositories>
+        <repository>
+            <id>clojars</id>
+            <url>http://clojars.org/repo/</url>
+            <name>Clojars</name>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>
