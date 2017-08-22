@@ -1,6 +1,6 @@
 package de.idrinth.stellaris.modtools;
 
-import de.idrinth.stellaris.modtools.entity.ModCollection;
+import de.idrinth.stellaris.modtools.model.ModCollection;
 import de.idrinth.stellaris.modtools.parser.ModFiles;
 import java.net.URL;
 import java.util.ResourceBundle;

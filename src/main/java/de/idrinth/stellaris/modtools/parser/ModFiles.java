@@ -3,8 +3,8 @@ package de.idrinth.stellaris.modtools.parser;
 import com.github.sarxos.winreg.HKey;
 import com.github.sarxos.winreg.RegistryException;
 import com.github.sarxos.winreg.WindowsRegistry;
-import de.idrinth.stellaris.modtools.entity.Mod;
-import de.idrinth.stellaris.modtools.entity.ModCollection;
+import de.idrinth.stellaris.modtools.model.Mod;
+import de.idrinth.stellaris.modtools.model.ModCollection;
 import de.idrinth.stellaris.modtools.filter.FileExt;
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +40,7 @@ public class ModFiles {
         String[] conf = FileUtils.readFileToString(config).split("/\n/");
         for(String line:conf) {
             line = line.trim();
-            if(line.matches("/=/")&&!line.equals("}") && !line.endsWith("{")) {
+            if(!"}".equals(line) && !line.endsWith("{") && line.matches("/=/")) {
                 String[] parts = line.split("/=/");
                 String value = parts[1].trim();
                 switch(parts[0].trim()) {

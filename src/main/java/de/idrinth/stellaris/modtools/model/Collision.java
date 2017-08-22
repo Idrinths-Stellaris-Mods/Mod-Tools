@@ -1,5 +1,6 @@
-package de.idrinth.stellaris.modtools.entity;
+package de.idrinth.stellaris.modtools.model;
 
+import de.idrinth.stellaris.modtools.exception.FailedPatch;
 import java.util.HashMap;
 import java.util.LinkedList;
 import name.fraser.neil.plaintext.diff_match_patch.Patch;
@@ -22,7 +23,7 @@ public class Collision {
         diffs.put(key, patcher.patch_make(original, modded));
         patch = null;
     }
-    public PatchedFile get() throws Exception {
+    public PatchedFile get() throws FailedPatch {
         if(patch==null) {
             String result = original;
             int mCounter = 0;
@@ -34,7 +35,7 @@ public class Collision {
                     boolean[] pL = (boolean[]) resultList[1];
                     for(int c=1;c<pL.length;c++) {
                         if(!pL[c]) {
-                            throw new Exception("Patching failed");
+                            throw new FailedPatch("Patching failed");
                         }
                     }
                 }

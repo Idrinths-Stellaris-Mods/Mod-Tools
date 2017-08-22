@@ -1,4 +1,4 @@
-package de.idrinth.stellaris.modtools.entity;
+package de.idrinth.stellaris.modtools.model;
 
 import de.idrinth.stellaris.modtools.access.SteamDescription;
 import java.io.File;

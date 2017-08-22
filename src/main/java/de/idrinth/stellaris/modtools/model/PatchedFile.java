@@ -1,4 +1,4 @@
-package de.idrinth.stellaris.modtools.entity;
+package de.idrinth.stellaris.modtools.model;
 
 public class PatchedFile {
     protected String content;

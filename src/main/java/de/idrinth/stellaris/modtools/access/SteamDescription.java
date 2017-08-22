@@ -1,6 +1,6 @@
 package de.idrinth.stellaris.modtools.access;
 
-import de.idrinth.stellaris.modtools.entity.Mod;
+import de.idrinth.stellaris.modtools.model.Mod;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,7 +17,7 @@ public class SteamDescription implements Runnable{
     public void run() {
         try {
             Document doc = Jsoup.connect("http://steamcommunity.com/sharedfiles/filedetails/?id="+mod.getId()).get();
-            mod.setDescription(doc.getElementById("highlightContent").outerHtml());
+            mod.setDescription(doc.getElementById("highlightContent").html());
             doc.getElementById("RequiredItems").getElementsByTag("a").stream().filter((element) -> (element.hasAttr("href"))).map((element) -> Integer.parseInt(element.attributes().get("href").replaceAll("/^.*id=([0-9]+).*4/", "$1"),10)).map((id) -> {
                     Mod lMod = new Mod(mod.getList());
                     lMod.setId(id);
