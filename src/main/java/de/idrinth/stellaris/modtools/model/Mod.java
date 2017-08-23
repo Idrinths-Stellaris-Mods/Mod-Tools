@@ -1,6 +1,7 @@
 package de.idrinth.stellaris.modtools.model;
 
 import de.idrinth.stellaris.modtools.access.SteamDescription;
+import de.idrinth.stellaris.modtools.fx.Item;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 
-public class Mod {
+public class Mod implements Item{
     protected ModCollection list;
     //basics
     protected String name;
@@ -131,5 +132,17 @@ public class Mod {
         }
         final Mod other = (Mod) obj;
         return id == other.getId() && name.equals(other.getName());
+    }
+    @Override
+    public String toString() {
+        if(id>0) {
+            return name+" ("+String.valueOf(id)+")";
+        }
+        return name;
+    }
+
+    @Override
+    public String getKey() {
+        return name;
     }
 }

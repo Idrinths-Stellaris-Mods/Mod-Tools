@@ -6,9 +6,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="200" prefWidth="320" xmlns:fx="http://javafx.com/fxml" fx:controller="de.idrinth.stellaris.modtools.FXMLController">
+<AnchorPane id="AnchorPane" prefHeight="400" prefWidth="640" xmlns:fx="http://javafx.com/fxml" fx:controller="de.idrinth.stellaris.modtools.FXMLController">
     <children>
-        <Button layoutX="126" layoutY="90" text="Process Mods" onAction="#handleButtonAction" fx:id="button" />
-        <Label layoutX="126" layoutY="120" minHeight="16" minWidth="69" fx:id="label" />
+        <Label layoutX="16" layoutY="10" minHeight="16" minWidth="69" fx:id="label" text="Not run yet" />
+        <Button layoutX="126" layoutY="60" text="Process Mods" onAction="#handleButtonAction" fx:id="button" />
+        <Label layoutX="16" layoutY="100" minHeight="16" minWidth="69" text="Mods" />
+        <Label layoutX="336" layoutY="100" minHeight="16" minWidth="69" text="Collisions" />
+        <ListView layoutX="16" layoutY="120" minHeight="16" minWidth="69" fx:id="mods" />
+        <ListView layoutX="336" layoutY="120" minHeight="16" minWidth="69" fx:id="collisions" />
     </children>
 </AnchorPane>

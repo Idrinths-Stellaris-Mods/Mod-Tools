@@ -1,12 +1,13 @@
 package de.idrinth.stellaris.modtools.model;
 
 import de.idrinth.stellaris.modtools.exception.FailedPatch;
+import de.idrinth.stellaris.modtools.fx.Item;
 import java.util.HashMap;
 import java.util.LinkedList;
 import name.fraser.neil.plaintext.diff_match_patch.Patch;
 import name.fraser.neil.plaintext.diff_match_patch;
 
-public class Collision {
+public class Collision implements Item {
     protected String original;
     protected String file;
     protected HashMap<String,LinkedList<Patch>> diffs = new HashMap<>();
@@ -46,5 +47,17 @@ public class Collision {
     }
     protected boolean notOverwritten(String key) {
         return diffs.keySet().stream().noneMatch((modKey) -> (collection.getMods().get(modKey).getOverwrites().contains(key)));
+    }
+    @Override
+    public String toString() {
+        if(!get().isPatched()) {
+            return "X "+file;
+        }
+        return "O "+file;
+    }
+
+    @Override
+    public String getKey() {
+        return file;
     }
 }

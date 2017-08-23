@@ -1,8 +1,6 @@
 package de.idrinth.stellaris.modtools.parser;
 
-import com.github.sarxos.winreg.HKey;
 import com.github.sarxos.winreg.RegistryException;
-import com.github.sarxos.winreg.WindowsRegistry;
 import de.idrinth.stellaris.modtools.access.DirectoryLookup;
 import de.idrinth.stellaris.modtools.model.Mod;
 import de.idrinth.stellaris.modtools.model.ModCollection;
