@@ -12,7 +12,7 @@ public class ObservableItemList {
     public static ObservableList<String> getCollection(Collection<Collision> map) {
         ArrayList<Collision> items = new ArrayList<>();
         map.forEach((item) -> {
-            if(item.get().isPatched()) {
+            if(null != item && item.get().isPatched()) {
                 items.add(item);
             }
         });
@@ -21,7 +21,6 @@ public class ObservableItemList {
         items.forEach((item) -> {
             items2.add(item.toString());
         });
-        items.sort(new ItemComparator());
         return FXCollections.observableArrayList (items2);
     }
 
@@ -33,9 +32,10 @@ public class ObservableItemList {
         items.sort(new ItemComparator());
         ArrayList<String> items2 = new ArrayList<>();
         items.forEach((item) -> {
-            items2.add(item.toString());
+            if(null != item) {
+                items2.add(item.toString());
+            }
         });
-        items.sort(new ItemComparator());
         return FXCollections.observableArrayList (items2);
     }
 }

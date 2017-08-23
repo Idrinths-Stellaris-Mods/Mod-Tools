@@ -23,14 +23,14 @@ public class Configuration {
     protected int id;
     private File getWithPrefix(String path, String prefix) throws IOException {
         File file = new File(path);
-        if(file.isAbsolute() && file.exists()) {
+        if(/*file.isAbsolute() && */file.exists()) {
             return file;
         }
-        file = new File(prefix+"/"+path);
-        if(file.isAbsolute() && file.exists()) {
+        file = new File(prefix+"\\"+path);
+        if(/*file.isAbsolute() && */file.exists()) {
             return file;
         }
-        throw new IOException("No valid path to mod found");
+        throw new IOException("No valid path to mod found: "+file.getAbsolutePath());
     }
     public Configuration(File file) throws IOException, RegistryException {
         for(String line:FileUtils.readFileToString(file, "utf-8").split("\\r?\\n\\r?")) {
@@ -49,7 +49,7 @@ public class Configuration {
                         name = value;
                         break;
                     case "path"://local mod
-                        path = getWithPrefix(value, DirectoryLookup.getModDir().getAbsolutePath());
+                        path = getWithPrefix(value, DirectoryLookup.getModDir().getParent());
                         break;
                     case "supported_version":
                         version = value;

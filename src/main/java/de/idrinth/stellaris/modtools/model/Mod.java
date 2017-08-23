@@ -135,10 +135,7 @@ public class Mod implements Item{
     }
     @Override
     public String toString() {
-        if(id>0) {
-            return name+" ("+String.valueOf(id)+")";
-        }
-        return name;
+        return (broken?"BROKEN: ":"")+(name == null?path:name)+(id>0?" ("+String.valueOf(id)+")":"");
     }
 
     @Override

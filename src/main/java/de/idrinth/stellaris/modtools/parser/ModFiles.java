@@ -18,12 +18,15 @@ public class ModFiles {
     protected void parse(File config, ModCollection list) throws RegistryException {
         Mod mod = new Mod(list);
         System.out.println("Adding Mod: "+config.getName());
-            try {
-                new Configuration(config).configure(mod);
-            } catch(IOException exception) {
-                System.out.println(exception.getLocalizedMessage());
-                mod.broken = true;
-            }
+        try {
+            new Configuration(config).configure(mod);
+        } catch(IOException exception) {
+            System.out.println(exception.getLocalizedMessage());
+            mod.broken = true;
+        }
+        if(mod.broken) {
+            mod.setName(config.getName());
+        }
         System.out.println("Mod added: "+config.getName());
         mod.lock();
     }
