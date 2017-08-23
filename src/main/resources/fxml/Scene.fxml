@@ -2,17 +2,22 @@
 
 <?import java.lang.*?>
 <?import java.util.*?>
+<?import java.net.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import de.idrinth.stellaris.modtools.fx.ModTableView?>
+<?import de.idrinth.stellaris.modtools.fx.CollisionTableView?>
 
 <AnchorPane id="AnchorPane" prefHeight="400" prefWidth="640" xmlns:fx="http://javafx.com/fxml" fx:controller="de.idrinth.stellaris.modtools.FXMLController">
+    <stylesheets>
+        <URL value="@/styles/Styles.css"/>
+    </stylesheets>
     <children>
-        <Label layoutX="16" layoutY="10" minHeight="16" minWidth="69" fx:id="label" text="Not run yet" />
-        <Button layoutX="126" layoutY="60" text="Process Mods" onAction="#handleButtonAction" fx:id="button" />
-        <Label layoutX="16" layoutY="100" minHeight="16" minWidth="69" text="Mods" />
-        <Label layoutX="336" layoutY="100" minHeight="16" minWidth="69" text="Collisions" />
-        <ListView layoutX="16" layoutY="120" minHeight="16" minWidth="69" fx:id="mods" />
-        <ListView layoutX="336" layoutY="120" minHeight="16" minWidth="69" fx:id="collisions" />
+        <Button layoutX="16" layoutY="10" text="Process Mods" onAction="#handleButtonAction" fx:id="button" />
+        <Label layoutX="16" layoutY="60" minHeight="16" minWidth="69" text="Mods" />
+        <Label layoutX="336" layoutY="60" minHeight="16" minWidth="69" text="Collisions" />
+        <ModTableView onMouseClicked="#showModPopup" layoutX="16" layoutY="80" minHeight="16" minWidth="69" fx:id="mods" />
+        <CollisionTableView onMouseClicked="#showCollisionPopup"  layoutX="336" layoutY="80" minHeight="16" minWidth="69" fx:id="collisions" />
     </children>
 </AnchorPane>

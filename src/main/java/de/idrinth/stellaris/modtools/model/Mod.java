@@ -1,7 +1,6 @@
 package de.idrinth.stellaris.modtools.model;
 
 import de.idrinth.stellaris.modtools.access.SteamDescription;
-import de.idrinth.stellaris.modtools.fx.Item;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 
-public class Mod implements Item{
+public class Mod{
     protected ModCollection list;
     //basics
     protected String name;
@@ -136,10 +135,5 @@ public class Mod implements Item{
     @Override
     public String toString() {
         return (broken?"BROKEN: ":"")+(name == null?path:name)+(id>0?" ("+String.valueOf(id)+")":"");
-    }
-
-    @Override
-    public String getKey() {
-        return name;
     }
 }

@@ -9,16 +9,11 @@ import javafx.stage.Stage;
 
 
 public class MainApp extends Application {
-
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
-        
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add("/styles/Styles.css");
-        
         stage.setTitle("Idrinth's Stellaris Mod-Tools");
-        stage.setScene(scene);
+        stage.setScene(new Scene(root));
         stage.show();
     }
 
