@@ -27,7 +27,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkEvent.EventType;
-import org.codefx.libfx.control.webview.WebViewHyperlinkListener;
 import org.codefx.libfx.control.webview.WebViews;
 
 public class FXMLController implements Initializable {
@@ -41,8 +40,6 @@ public class FXMLController implements Initializable {
     private CollisionTableView collisions;
     
     private Stage popup;
-    
-    private ModCollection col;
 
     public Stage getPopup() throws IOException {
         if(popup == null) {
@@ -76,7 +73,7 @@ public class FXMLController implements Initializable {
     @FXML
     private void handleButtonAction(ActionEvent event) {
         try {
-            col = new ModCollection();
+            ModCollection col = new ModCollection();
             new ModFiles().get(col);
             collisions.addItems(col.getFiles().values());
             mods.addItems(col.getMods().values());

@@ -44,17 +44,22 @@ public class SteamDescription implements Runnable{
         System.out.println("Mod loading: "+mod.getId());
         try {
             Document doc = Jsoup.connect("http://steamcommunity.com/sharedfiles/filedetails/?id="+mod.getId()).get();
-            mod.setDescription(clean(doc.getElementById("highlightContent")).html());
-            if(null == doc.getElementById("RequiredItems")) {
-                return;
+            if(null != doc.getElementById("highlightContent")) {
+                mod.setDescription(clean(doc.getElementById("highlightContent")).html());
             }
-            doc.getElementById("RequiredItems").getElementsByTag("a").stream().filter((element) -> (element.hasAttr("href"))).map((element) -> Integer.parseInt(element.attributes().get("href").replaceAll("/^.*id=([0-9]+).*4/", "$1"),10)).map((id) -> {
+            System.out.println(doc.getElementById("RequiredItems"));
+            if(null != doc.getElementById("RequiredItems")) {
+                doc.getElementById("RequiredItems").getElementsByTag("a").stream().filter((a) -> (a.hasAttr("href"))).map((a) -> Integer.parseInt(a.attributes().get("href").replaceAll("^.*id=([0-9]+).*$", "$1"),10)).filter((id) -> (id>0)).map((id) -> {
                     Mod lMod = new Mod(mod.getList());
                     lMod.setId(id);
+                    return lMod;
+                }).map((lMod) -> {
                     lMod.broken = true;
+                    return lMod;
+                }).forEachOrdered((lMod) -> {
                     lMod.lock();
-                    return id;
-            });
+                });
+            }
         } catch (IOException ex) {
             Logger.getLogger(SteamDescription.class.getName()).log(Level.SEVERE, null, ex);
         }
