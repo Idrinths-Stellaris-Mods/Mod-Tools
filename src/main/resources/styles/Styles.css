@@ -1,3 +1,6 @@
 .button {
     -fx-font-weight: bold;
 }
+.root {
+    color: #000;
+}

@@ -23,11 +23,11 @@ public class Configuration {
     protected int id;
     private File getWithPrefix(String path, String prefix) throws IOException {
         File file = new File(path);
-        if(/*file.isAbsolute() && */file.exists()) {
+        if(file.exists()) {
             return file;
         }
         file = new File(prefix+"\\"+path);
-        if(/*file.isAbsolute() && */file.exists()) {
+        if(file.exists()) {
             return file;
         }
         throw new IOException("No valid path to mod found: "+file.getAbsolutePath());
@@ -37,7 +37,6 @@ public class Configuration {
             if(null != line && line.matches("\\s*[a-z_]+\\s*=\\s*\".*?\"")) {
                 String[] parts = line.trim().split("=",2);
                 String value = parts[1].trim().replaceAll("^\"|\"$", "");
-                System.out.println(" => "+value);
                 switch(parts[0].trim()) {
                     case "archive"://downloaded mod
                         path = getWithPrefix(value, DirectoryLookup.getSteamDir().getAbsolutePath());

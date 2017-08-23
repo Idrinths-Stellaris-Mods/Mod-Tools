@@ -6,12 +6,13 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.web.WebView?>
 
-<AnchorPane id="Popup" prefHeight="300" prefWidth="300" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="Popup" prefHeight="300" prefWidth="600" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1">
     <stylesheets>
         <URL value="@/styles/Styles.css"/>
     </stylesheets>
     <children>
-        <Label layoutX="10" layoutY="30" minHeight="16" prefWidth="280" fx:id="description" />
+        <WebView layoutX="10" layoutY="30" minHeight="16" prefWidth="580" fx:id="description" />
     </children>
 </AnchorPane>

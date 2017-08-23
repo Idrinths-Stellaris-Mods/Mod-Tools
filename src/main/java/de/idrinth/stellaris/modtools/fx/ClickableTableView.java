@@ -8,12 +8,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 abstract public class ClickableTableView<E,T> extends TableView<E> {
     protected E current;
+    protected boolean modified;
     public ClickableTableView(String[] columns) {
         setRowFactory( tv -> {
             TableRow<E> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (!row.isEmpty()) {
                     current = row.getItem();
+                    modified = true;
                 }
             });
             return row ;
@@ -32,6 +34,10 @@ abstract public class ClickableTableView<E,T> extends TableView<E> {
     }
     public abstract void addItems(Collection<T> items);
     public E getCurrent() {
+        if(!modified) {
+            return null;
+        }
+        modified = false;
         return current;
     }
 }

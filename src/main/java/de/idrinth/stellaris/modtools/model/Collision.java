@@ -26,10 +26,10 @@ public class Collision {
     public PatchedFile get() throws FailedPatch {
         if(patch==null) {
             String result = original;
-            int mCounter = 0;
+            HashMap<String,Mod> mods = new HashMap<>();
             for(String key:diffs.keySet()) {
                 if(notOverwritten(key)) {
-                    mCounter++;
+                    mods.put(key,collection.getMods().get(key));
                     Object[] resultList = patcher.patch_apply(diffs.get(key), result);
                     result = (String) resultList[0];
                     boolean[] pL = (boolean[]) resultList[1];
@@ -40,7 +40,7 @@ public class Collision {
                     }
                 }
             }
-            patch = new PatchedFile(result,mCounter,file);
+            patch = new PatchedFile(result,mods,file);
         }
         return patch;
     }

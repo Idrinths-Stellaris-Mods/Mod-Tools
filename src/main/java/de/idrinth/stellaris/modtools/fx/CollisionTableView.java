@@ -6,13 +6,16 @@ import java.util.Collection;
 
 public class CollisionTableView extends ClickableTableView<PatchedFile,Collision> {
     public CollisionTableView() {
-        super("File,Patched".split(","));
+        super("File,Mods".split(","));
     }
     @Override
     public final void addItems(Collection<Collision> collisions) {
         super.getItems().clear();
         collisions.forEach((collision) -> {
-            super.getItems().add(collision.get());
+            PatchedFile file = collision.get();
+            if(file.isPatched()) {
+                super.getItems().add(file);
+            }
         });
     }
 }

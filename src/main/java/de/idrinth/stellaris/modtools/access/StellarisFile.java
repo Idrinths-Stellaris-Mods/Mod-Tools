@@ -9,13 +9,14 @@ public class StellarisFile {
     public static String get(String relativePath) {
         try {
             return FileUtils.readFileToString(new File(
-                DirectoryLookup.getSteamDir()+
+                DirectoryLookup.getSteamDir().getAbsolutePath()+
                         "\\SteamApps\\common\\Stellaris\\"+
                         relativePath
                 ),
                 "utf-8"
             );
         } catch(IOException|RegistryException exception) {
+            System.out.println(exception.getLocalizedMessage());
             return "";
         }
     }

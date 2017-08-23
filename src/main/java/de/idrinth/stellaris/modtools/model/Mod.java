@@ -66,7 +66,7 @@ public class Mod{
                 ZipArchiveEntry entry = (ZipArchiveEntry) entries.nextElement();
                 for(String ext:exts) {
                     if(entry.getName().endsWith(ext)) {
-                        files.add(entry.getName());
+                        addToFiles(entry.getName());
                     }
                 }
             }
@@ -74,12 +74,17 @@ public class Mod{
     }
     protected void fillFilesFromFolder(String[] exts) throws IOException {
         FileUtils.listFiles(new File(path), exts, true).forEach((file) -> {
-            files.add(file.getAbsolutePath().substring(path.length()));//relative path
+            addToFiles(file.getAbsolutePath().substring(path.length()));//relative path
         });
+    }
+    protected void addToFiles(String fPath) {
+        if(fPath.contains("/")) {
+            files.add(fPath);
+        }
     }
     public void setPath(String path) {
         this.path = path;
-        String[] ext = ".txt,.yml,.dds,.gfx,.gui".split("/,/");
+        String[] ext = ".txt,.yml,.dds,.gfx,.gui".split(",");
         files.clear();
         try {
             if(path.endsWith(".zip")) {
@@ -98,7 +103,7 @@ public class Mod{
     }
 
     public String getDescription() {
-        return description;
+        return "<h1>"+name+"</h1>"+description;
     }
 
     public void setDescription(String description) {

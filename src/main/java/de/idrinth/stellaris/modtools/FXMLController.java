@@ -2,12 +2,19 @@ package de.idrinth.stellaris.modtools;
 
 import com.github.sarxos.winreg.RegistryException;
 import de.idrinth.stellaris.modtools.fx.CollisionTableView;
+import de.idrinth.stellaris.modtools.fx.ModFx;
 import de.idrinth.stellaris.modtools.fx.ModTableView;
 import de.idrinth.stellaris.modtools.model.ModCollection;
+import de.idrinth.stellaris.modtools.model.PatchedFile;
 import de.idrinth.stellaris.modtools.parser.ModFiles;
+import java.awt.Desktop;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -15,13 +22,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
+import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkEvent.EventType;
+import org.codefx.libfx.control.webview.WebViewHyperlinkListener;
+import org.codefx.libfx.control.webview.WebViews;
 
 public class FXMLController implements Initializable {
     @FXML
-    private Label description;
+    private WebView description;
     
     @FXML
     private ModTableView mods;
@@ -30,6 +41,8 @@ public class FXMLController implements Initializable {
     private CollisionTableView collisions;
     
     private Stage popup;
+    
+    private ModCollection col;
 
     public Stage getPopup() throws IOException {
         if(popup == null) {
@@ -39,6 +52,23 @@ public class FXMLController implements Initializable {
             popup.setScene(new Scene(loader.load(getClass().getResource("/fxml/TextPopup.fxml").openStream())));
             popup.initModality(Modality.APPLICATION_MODAL);
             popup.initOwner(mods.getScene().getWindow());
+            description.setContextMenuEnabled(false);
+            description.getEngine().setJavaScriptEnabled(false);
+            description.getEngine().setUserAgent("Idrinth's Stellaris Mod Tools/"+getClass().getPackage().getImplementationVersion()+" (https://github.com/Idrinths-Stellaris-Mods/Mod-Tools)");
+            WebViews.addHyperlinkListener(
+                    description,
+                    (HyperlinkEvent event) -> {
+                        if (event.getEventType() == EventType.ACTIVATED) {
+                            try {
+                                Desktop.getDesktop().browse(new URI(event.getURL().toString()));
+                            } catch (URISyntaxException|IOException ex) {
+                                Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                        return true;//do NOT navigate
+                    },
+                    EventType.ACTIVATED
+            );
         }
         return popup;
     }
@@ -46,7 +76,7 @@ public class FXMLController implements Initializable {
     @FXML
     private void handleButtonAction(ActionEvent event) {
         try {
-            ModCollection col = new ModCollection();
+            col = new ModCollection();
             new ModFiles().get(col);
             collisions.addItems(col.getFiles().values());
             mods.addItems(col.getMods().values());
@@ -57,8 +87,12 @@ public class FXMLController implements Initializable {
 
     @FXML
     private void showModPopup(Event event) throws IOException {
-        getPopup().setTitle("Description: "+mods.getCurrent().getName());
-        description.setText(mods.getCurrent().getDescription());
+        ModFx current = mods.getCurrent();
+        if(current == null) {
+            return;
+        }
+        getPopup().setTitle("Description: "+current.getName());
+        description.getEngine().loadContent(current.getDescription());
         getPopup().showAndWait();
     }
 
@@ -73,8 +107,12 @@ public class FXMLController implements Initializable {
 
     @FXML
     private void showCollisionPopup(Event event) throws IOException {
-        getPopup().setTitle("Patched "+collisions.getCurrent().getFile());
-        description.setText(collisions.getCurrent().getContent());
+        PatchedFile current = collisions.getCurrent();
+        if(current == null) {
+            return;
+        }
+        getPopup().setTitle("Patched "+current.getFile());
+        description.getEngine().loadContent(current.getContent());
         getPopup().showAndWait();
     }
 
