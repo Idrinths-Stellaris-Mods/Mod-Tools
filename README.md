@@ -6,13 +6,8 @@
 
 This Application helps modding stellaris by:
 
-- finding files overwritten by mulltiple mods
+- finding files overwritten by multiple mods
 
 ## Future Plans
 
-For the future the following things are planned:
-
-- automatic patching of files
-- automatic merge-mod creation
-- considering actived status of mods or loadinglists
-- unit tests
+See the [issue tracker for enhancement](https://github.com/Idrinths-Stellaris-Mods/Mod-Tools/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) and feel free to add some more.
