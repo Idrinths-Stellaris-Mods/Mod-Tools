@@ -25,25 +25,27 @@ import java.io.File;
 import java.io.IOException;
 
 public class ModFiles {
+
     public ModCollection get(ModCollection list) throws IOException, RegistryException {
-        for(File mod:DirectoryLookup.getModDir().listFiles(new FileExt("mod"))) {
+        for (File mod : DirectoryLookup.getModDir().listFiles(new FileExt("mod"))) {
             parse(mod, list);
         }
         return list;
     }
+
     protected void parse(File config, ModCollection list) throws RegistryException {
         Mod mod = new Mod(list);
-        System.out.println("Adding Mod: "+config.getName());
+        System.out.println("Adding Mod: " + config.getName());
         try {
             new Configuration(config).configure(mod);
-        } catch(IOException exception) {
+        } catch (IOException exception) {
             System.out.println(exception.getLocalizedMessage());
             mod.broken = true;
         }
-        if(mod.broken) {
+        if (mod.broken) {
             mod.setName(config.getName());
         }
-        System.out.println("Mod added: "+config.getName());
+        System.out.println("Mod added: " + config.getName());
         mod.lock();
     }
 }

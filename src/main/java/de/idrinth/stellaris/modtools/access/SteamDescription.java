@@ -24,12 +24,14 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-public class SteamDescription implements Runnable{
+public class SteamDescription implements Runnable {
+
     protected Mod mod;
 
     public SteamDescription(Mod mod) {
         this.mod = mod;
     }
+
     protected Element clean(Element element) {
         Element work = element.clone();
         work.getElementsByTag("img").forEach((el) -> {
@@ -55,17 +57,18 @@ public class SteamDescription implements Runnable{
         });
         return work;
     }
+
     @Override
     public void run() {
-        System.out.println("Mod loading: "+mod.getId());
+        System.out.println("Mod loading: " + mod.getId());
         try {
-            Document doc = Jsoup.connect("http://steamcommunity.com/sharedfiles/filedetails/?id="+mod.getId()).get();
-            if(null != doc.getElementById("highlightContent")) {
+            Document doc = Jsoup.connect("http://steamcommunity.com/sharedfiles/filedetails/?id=" + mod.getId()).get();
+            if (null != doc.getElementById("highlightContent")) {
                 mod.setDescription(clean(doc.getElementById("highlightContent")).html());
             }
             System.out.println(doc.getElementById("RequiredItems"));
-            if(null != doc.getElementById("RequiredItems")) {
-                doc.getElementById("RequiredItems").getElementsByTag("a").stream().filter((a) -> (a.hasAttr("href"))).map((a) -> Integer.parseInt(a.attributes().get("href").replaceAll("^.*id=([0-9]+).*$", "$1"),10)).filter((id) -> (id>0)).map((id) -> {
+            if (null != doc.getElementById("RequiredItems")) {
+                doc.getElementById("RequiredItems").getElementsByTag("a").stream().filter((a) -> (a.hasAttr("href"))).map((a) -> Integer.parseInt(a.attributes().get("href").replaceAll("^.*id=([0-9]+).*$", "$1"), 10)).filter((id) -> (id > 0)).map((id) -> {
                     Mod lMod = new Mod(mod.getList());
                     lMod.setId(id);
                     return lMod;

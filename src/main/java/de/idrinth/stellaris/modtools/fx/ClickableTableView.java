@@ -22,11 +22,13 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-abstract public class ClickableTableView<E,T> extends TableView<E> {
+abstract public class ClickableTableView<E, T> extends TableView<E> {
+
     protected E current;
     protected boolean modified;
+
     public ClickableTableView(String[] columns) {
-        setRowFactory( tv -> {
+        setRowFactory(tv -> {
             TableRow<E> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (!row.isEmpty()) {
@@ -34,23 +36,26 @@ abstract public class ClickableTableView<E,T> extends TableView<E> {
                     modified = true;
                 }
             });
-            return row ;
+            return row;
         });
-        for(String column:columns) {
-            addColumn(column,300/columns.length);
+        for (String column : columns) {
+            addColumn(column, 300 / columns.length);
         }
     }
-    private void addColumn(String name,int width) {
-        TableColumn<E,String> column = new TableColumn<>(name);
+
+    private void addColumn(String name, int width) {
+        TableColumn<E, String> column = new TableColumn<>(name);
         column.setCellValueFactory(
-            new PropertyValueFactory<>(name)
+                new PropertyValueFactory<>(name)
         );
         column.setMinWidth(width);
         getColumns().add(column);
     }
+
     public abstract void addItems(Collection<T> items);
+
     public E getCurrent() {
-        if(!modified) {
+        if (!modified) {
             return null;
         }
         modified = false;

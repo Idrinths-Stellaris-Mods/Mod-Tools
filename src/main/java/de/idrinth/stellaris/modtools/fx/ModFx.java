@@ -20,6 +20,7 @@ import de.idrinth.stellaris.modtools.model.Mod;
 import javafx.beans.property.SimpleStringProperty;
 
 public class ModFx {
+
     protected SimpleStringProperty description;
     protected SimpleStringProperty id;
     protected SimpleStringProperty name;
@@ -47,5 +48,5 @@ public class ModFx {
     public String getDescription() {
         return description.get();
     }
-    
+
 }
