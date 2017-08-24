@@ -17,7 +17,8 @@
 package de.idrinth.stellaris.modtools;
 
 import javafx.fxml.Initializable;
-import junit.framework.Assert;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
@@ -25,9 +26,6 @@ import org.junit.Test;
  * @author bbuettner
  */
 public class FXMLControllerTest {
-    
-    public FXMLControllerTest() {
-    }
 
     /**
      * Test of constructor of class FXMLController.
@@ -35,7 +33,7 @@ public class FXMLControllerTest {
     @Test
     public void testFXMLController() {
         System.out.println("construct");
-        Assert.assertNotNull("FXMLController can't be constructed", new FXMLController());
+        assertNotNull("FXMLController can't be constructed", new FXMLController());
     }
 
     /**
@@ -46,7 +44,7 @@ public class FXMLControllerTest {
         System.out.println("initialize");
         FXMLController instance = new FXMLController();
         instance.initialize(null, null);
-        Assert.assertTrue("FXMLController can't be initialized",Initializable.class.isAssignableFrom(instance.getClass()));
+        assertTrue("FXMLController can't be initialized",Initializable.class.isAssignableFrom(instance.getClass()));
     }
     
 }

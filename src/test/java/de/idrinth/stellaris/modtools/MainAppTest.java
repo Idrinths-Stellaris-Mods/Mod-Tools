@@ -17,19 +17,15 @@
 package de.idrinth.stellaris.modtools;
 
 import javafx.application.Application;
-import javafx.stage.Stage;
-import org.junit.Assert;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
  * @author bbuettner
  */
 public class MainAppTest {
-    
-    public MainAppTest() {
-    }
 
     /**
      * Test of constructor of class MainApp.
@@ -37,8 +33,7 @@ public class MainAppTest {
     @Test
     public void testMainApp() {
         System.out.println("constructor");
-        Assert.assertTrue("MainApp is an Application",Application.class.isAssignableFrom(MainApp.class));
-        Assert.assertNotNull("MainApp can be constructed",new MainApp());
+        assertTrue("MainApp is an Application",Application.class.isAssignableFrom(MainApp.class));
+        assertNotNull("MainApp can be constructed",new MainApp());
     }
-    
 }

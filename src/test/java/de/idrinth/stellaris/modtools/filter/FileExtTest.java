@@ -17,8 +17,9 @@
 package de.idrinth.stellaris.modtools.filter;
 
 import java.io.FilenameFilter;
-import java.util.regex.Pattern;
-import junit.framework.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
@@ -26,9 +27,6 @@ import org.junit.Test;
  * @author bbuettner
  */
 public class FileExtTest {
-    
-    public FileExtTest() {
-    }
 
     /**
      * Test of accept method, of class FileExt.
@@ -37,11 +35,11 @@ public class FileExtTest {
     public void testAccept() {
         System.out.println("accept");
         FileExt instance = new FileExt("example");
-        Assert.assertTrue("my.example doesn't seem to end with .example", instance.accept(null, "my.example"));
-        Assert.assertFalse("my.example.not does seem to end with .example", instance.accept(null, "my.example.not"));
+        assertTrue("my.example doesn't seem to end with .example", instance.accept(null, "my.example"));
+        assertFalse("my.example.not does seem to end with .example", instance.accept(null, "my.example.not"));
         FileExt dottedInstance = new FileExt(".example");
-        Assert.assertTrue("my.example doesn't seem to end with .example", dottedInstance.accept(null, "my.example"));
-        Assert.assertFalse("my.example.not does seem to end with .example", dottedInstance.accept(null, "my.example.not"));
+        assertTrue("my.example doesn't seem to end with .example", dottedInstance.accept(null, "my.example"));
+        assertFalse("my.example.not does seem to end with .example", dottedInstance.accept(null, "my.example.not"));
     }
 
     /**
@@ -50,8 +48,7 @@ public class FileExtTest {
     @Test
     public void testFileExtTest() {
         System.out.println("constructor");
-        org.junit.Assert.assertTrue("FileExt is a FilenameFilter",FilenameFilter.class.isAssignableFrom(FileExt.class));
-        org.junit.Assert.assertNotNull("FileExt can be constructed",new FileExt("a"));
+        assertTrue("FileExt is a FilenameFilter",FilenameFilter.class.isAssignableFrom(FileExt.class));
+        assertNotNull("FileExt can be constructed",new FileExt("a"));
     }
-    
 }
