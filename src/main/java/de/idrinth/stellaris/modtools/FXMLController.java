@@ -58,7 +58,7 @@ public class FXMLController implements Initializable {
 
     private Stage popup;
 
-    public Stage getPopup() throws IOException {
+    private Stage getPopup() throws IOException {
         if (popup == null) {
             popup = new Stage();
             FXMLLoader loader = new FXMLLoader();
