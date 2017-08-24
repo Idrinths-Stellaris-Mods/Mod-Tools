@@ -23,7 +23,9 @@ public class FileExt implements java.io.FilenameFilter {
     protected String extension;
 
     public FileExt(String extension) {
-        this.extension = "." + extension;
+        this.extension = extension.charAt(0) == ".".charAt(0) ? extension : "." + extension;
+        System.out.println(extension.matches("^\\."));
+        System.out.println(this.extension);
     }
 
     @Override
