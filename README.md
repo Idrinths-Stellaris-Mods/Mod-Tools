@@ -12,3 +12,7 @@ This Application helps modding stellaris by:
 ## Future Plans
 
 See the [issue tracker for enhancement](https://github.com/Idrinths-Stellaris-Mods/Mod-Tools/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) and feel free to add some more.
+
+## Alternatives
+
+There is another Mod Manager, [Emurian Mod Manager for Stellaris](https://steamcommunity.com/app/281990/discussions/0/133259956022179056/), that is strictly for windows with no (known) intention to expand the support to other operating systems.
