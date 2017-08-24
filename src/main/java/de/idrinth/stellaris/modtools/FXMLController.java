@@ -17,6 +17,7 @@
 package de.idrinth.stellaris.modtools;
 
 import com.github.sarxos.winreg.RegistryException;
+import de.idrinth.stellaris.modtools.access.DirectoryLookup;
 import de.idrinth.stellaris.modtools.fx.CollisionTableView;
 import de.idrinth.stellaris.modtools.fx.ModTableView;
 import de.idrinth.stellaris.modtools.model.Mod;
@@ -90,8 +91,7 @@ public class FXMLController implements Initializable {
     @FXML
     private void handleButtonAction(ActionEvent event) {
         try {
-            ModCollection col = new ModCollection();
-            new ModFiles().get(col);
+            ModCollection col = new ModFiles(DirectoryLookup.getModDir()).get();
             collisions.addItems(col.getFiles().values());
             mods.addItems(col.getMods().values());
         } catch (RegistryException | IOException exception) {

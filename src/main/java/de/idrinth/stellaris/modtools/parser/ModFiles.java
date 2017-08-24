@@ -17,7 +17,6 @@
 package de.idrinth.stellaris.modtools.parser;
 
 import com.github.sarxos.winreg.RegistryException;
-import de.idrinth.stellaris.modtools.access.DirectoryLookup;
 import de.idrinth.stellaris.modtools.model.Mod;
 import de.idrinth.stellaris.modtools.model.ModCollection;
 import de.idrinth.stellaris.modtools.filter.FileExt;
@@ -25,9 +24,15 @@ import java.io.File;
 import java.io.IOException;
 
 public class ModFiles {
+    private final File modDir;
 
-    public ModCollection get(ModCollection list) throws IOException, RegistryException {
-        for (File mod : DirectoryLookup.getModDir().listFiles(new FileExt("mod"))) {
+    public ModFiles(File modDir) {
+        this.modDir = modDir;
+    }
+
+    public ModCollection get() throws RegistryException {
+        ModCollection list = new ModCollection();
+        for (File mod : modDir.listFiles(new FileExt("mod"))) {
             parse(mod, list);
         }
         return list;
