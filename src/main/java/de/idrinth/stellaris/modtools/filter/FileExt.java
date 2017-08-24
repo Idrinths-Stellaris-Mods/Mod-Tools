@@ -17,15 +17,14 @@
 package de.idrinth.stellaris.modtools.filter;
 
 import java.io.File;
+import java.io.FilenameFilter;
 
-public class FileExt implements java.io.FilenameFilter {
+public class FileExt implements FilenameFilter {
 
     protected String extension;
 
     public FileExt(String extension) {
-        this.extension = extension.charAt(0) == ".".charAt(0) ? extension : "." + extension;
-        System.out.println(extension.matches("^\\."));
-        System.out.println(this.extension);
+        this.extension = extension.startsWith(".") ? extension : "." + extension;
     }
 
     @Override

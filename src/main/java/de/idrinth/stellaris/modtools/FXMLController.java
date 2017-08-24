@@ -18,8 +18,8 @@ package de.idrinth.stellaris.modtools;
 
 import com.github.sarxos.winreg.RegistryException;
 import de.idrinth.stellaris.modtools.fx.CollisionTableView;
-import de.idrinth.stellaris.modtools.fx.ModFx;
 import de.idrinth.stellaris.modtools.fx.ModTableView;
+import de.idrinth.stellaris.modtools.model.Mod;
 import de.idrinth.stellaris.modtools.model.ModCollection;
 import de.idrinth.stellaris.modtools.model.PatchedFile;
 import de.idrinth.stellaris.modtools.parser.ModFiles;
@@ -101,7 +101,7 @@ public class FXMLController implements Initializable {
 
     @FXML
     private void showModPopup(Event event) throws IOException {
-        ModFx current = mods.getCurrent();
+        Mod current = mods.getCurrent();
         if (current == null) {
             return;
         }

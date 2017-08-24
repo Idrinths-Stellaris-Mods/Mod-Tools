@@ -68,12 +68,4 @@ public class Collision {
     protected boolean notOverwritten(String key) {
         return diffs.keySet().stream().noneMatch((modKey) -> (collection.getMods().get(modKey).getOverwrites().contains(key)));
     }
-
-    @Override
-    public String toString() {
-        if (!get().isPatched()) {
-            return "X " + file;
-        }
-        return "O " + file;
-    }
 }

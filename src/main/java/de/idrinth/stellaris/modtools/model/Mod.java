@@ -139,29 +139,4 @@ public class Mod {
     public String getFileContent(String relativePath) {
         return "";
     }
-
-    @Override
-    public int hashCode() {
-        return 11 * (77 + Objects.hashCode(this.name)) + this.id;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Mod other = (Mod) obj;
-        return id == other.getId() && name.equals(other.getName());
-    }
-
-    @Override
-    public String toString() {
-        return (broken ? "BROKEN: " : "") + (name == null ? path : name) + (id > 0 ? " (" + String.valueOf(id) + ")" : "");
-    }
 }
