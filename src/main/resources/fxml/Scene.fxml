@@ -31,9 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </stylesheets>
     <children>
         <Button layoutX="16" layoutY="10" text="Process Mods" onAction="#handleButtonAction" fx:id="button" />
-        <Label layoutX="16" layoutY="60" minHeight="16" minWidth="69" text="Mods" />
-        <Label layoutX="336" layoutY="60" minHeight="16" minWidth="69" text="Collisions" />
         <ModTableView onMouseClicked="#showModPopup" layoutX="16" layoutY="80" minHeight="16" minWidth="69" fx:id="mods" />
-        <CollisionTableView onMouseClicked="#showCollisionPopup"  layoutX="336" layoutY="80" minHeight="16" minWidth="69" fx:id="collisions" />
     </children>
 </AnchorPane>

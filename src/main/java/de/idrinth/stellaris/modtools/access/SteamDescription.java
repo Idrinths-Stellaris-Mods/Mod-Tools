@@ -16,10 +16,12 @@
  */
 package de.idrinth.stellaris.modtools.access;
 
+import de.idrinth.stellaris.modtools.MainApp;
 import de.idrinth.stellaris.modtools.model.Mod;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.EntityManager;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -60,13 +62,15 @@ public class SteamDescription implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Mod loading: " + mod.getId());
         try {
             Document doc = Jsoup.connect("http://steamcommunity.com/sharedfiles/filedetails/?id=" + mod.getId()).get();
+            EntityManager manager = MainApp.entityManager.createEntityManager();
+            if(!manager.getTransaction().isActive()) {
+                manager.getTransaction().begin();
+            }
             if (null != doc.getElementById("highlightContent")) {
                 mod.setDescription(clean(doc.getElementById("highlightContent")).html());
             }
-            System.out.println(doc.getElementById("RequiredItems"));
             if (null != doc.getElementById("RequiredItems")) {
                 doc.getElementById("RequiredItems").getElementsByTag("a").stream().filter((a) -> (a.hasAttr("href"))).map((a) -> Integer.parseInt(a.attributes().get("href").replaceAll("^.*id=([0-9]+).*$", "$1"), 10)).filter((id) -> (id > 0)).map((id) -> {
                     Mod lMod = new Mod(mod.getList());
@@ -79,6 +83,7 @@ public class SteamDescription implements Runnable {
                     lMod.lock();
                 });
             }
+            manager.getTransaction().commit();
         } catch (IOException ex) {
             Logger.getLogger(SteamDescription.class.getName()).log(Level.SEVERE, null, ex);
         }

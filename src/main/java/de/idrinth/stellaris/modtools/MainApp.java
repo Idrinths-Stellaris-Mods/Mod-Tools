@@ -22,8 +22,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 public class MainApp extends Application {
+    public static EntityManagerFactory entityManager;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -31,6 +34,7 @@ public class MainApp extends Application {
         stage.setTitle("Idrinth's Stellaris Mod-Tools");
         stage.setScene(new Scene(root));
         stage.show();
+        entityManager = Persistence.createEntityManagerFactory( "de.idrinth_Stellaris.ModTools" );
     }
 
     /**

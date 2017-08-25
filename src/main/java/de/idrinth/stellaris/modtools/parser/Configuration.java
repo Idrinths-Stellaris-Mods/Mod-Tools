@@ -17,10 +17,13 @@
 package de.idrinth.stellaris.modtools.parser;
 
 import com.github.sarxos.winreg.RegistryException;
+import de.idrinth.stellaris.modtools.MainApp;
 import de.idrinth.stellaris.modtools.access.DirectoryLookup;
+import de.idrinth.stellaris.modtools.entity.Modification;
 import de.idrinth.stellaris.modtools.model.Mod;
 import java.io.File;
 import java.io.IOException;
+import javax.persistence.EntityManager;
 import org.apache.commons.io.FileUtils;
 
 /**
@@ -47,6 +50,15 @@ public class Configuration {
     }
 
     public Configuration(File file) throws IOException, RegistryException {
+        EntityManager manager = MainApp.entityManager.createEntityManager();
+        if(!manager.getTransaction().isActive()) {
+            manager.getTransaction().begin();
+        }
+        Modification mod = (Modification) manager.find(Modification.class, file.getName());
+        if(null == mod) {
+            mod = new Modification();
+            mod.setRelativePath(file.getName());
+        }
         for (String line : FileUtils.readFileToString(file, "utf-8").split("\\r?\\n\\r?")) {
             if (null != line && line.matches("\\s*[a-z_]+\\s*=\\s*\".*?\"")) {
                 String[] parts = line.trim().split("=", 2);
@@ -57,21 +69,27 @@ public class Configuration {
                         break;
                     case "remote_file_id"://downloaded mod
                         id = Integer.parseInt(value, 10);
+                        mod.setId(id);
                         break;
                     case "name":
                         name = value;
+                        mod.setName(name);
                         break;
                     case "path"://local mod
                         path = getWithPrefix(value, DirectoryLookup.getModDir().getParent());
                         break;
                     case "supported_version":
                         version = value;
+                        mod.setVersion(version);
                         break;
                     default:
                     //TODO: tags, dependencies, image?
                 }
             }
         }
+        manager.persist(mod);
+        manager.getTransaction().commit();
+        System.out.print(MainApp.entityManager.createEntityManager().find(Modification.class, file.getName()));
     }
 
     public void configure(Mod mod) {

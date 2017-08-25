@@ -16,20 +16,24 @@
  */
 package de.idrinth.stellaris.modtools.fx;
 
-import de.idrinth.stellaris.modtools.model.Mod;
+import de.idrinth.stellaris.modtools.MainApp;
+import de.idrinth.stellaris.modtools.entity.Modification;
 import java.util.Collection;
 
-public class ModTableView extends ClickableTableView<Mod, Mod> {
+public class ModTableView extends ClickableTableView<ModDataRow, ModDataRow> {
 
     public ModTableView() {
-        super("Id,Name,Version".split(","));
+        super("Id,Name,Version,Collisions".split(","));
+    }
+
+    public final void addItems() {
+        super.getItems().clear();
+        MainApp.entityManager.createEntityManager().createNamedQuery("all_modifications",Modification.class).getResultList().forEach((mod) -> {
+            super.getItems().add(new ModDataRow(mod));
+        });
     }
 
     @Override
-    public final void addItems(Collection<Mod> mods) {
-        super.getItems().clear();
-        mods.forEach((mod) -> {
-            super.getItems().add(mod);
-        });
+    public void addItems(Collection<ModDataRow> items) {
     }
 }
