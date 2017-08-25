@@ -25,9 +25,9 @@ import javax.persistence.ManyToOne;
 public class ModKey implements Serializable {
 
     @Id
-    String keyname;
+    protected String keyname;
     @ManyToOne
-    Modification modification;
+    protected Modification modification;
 
     public ModKey() {
     }

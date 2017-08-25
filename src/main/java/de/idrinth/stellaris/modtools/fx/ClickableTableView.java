@@ -52,7 +52,7 @@ abstract public class ClickableTableView<E, T> extends TableView<E> {
         getColumns().add(column);
     }
 
-    public abstract void addItems(Collection<T> items);
+    public abstract void addItems();
 
     public E getCurrent() {
         if (!modified) {

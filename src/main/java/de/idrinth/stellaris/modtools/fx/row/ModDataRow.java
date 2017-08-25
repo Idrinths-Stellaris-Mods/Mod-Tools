@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.fx;
+package de.idrinth.stellaris.modtools.fx.row;
 
 import de.idrinth.stellaris.modtools.entity.Modification;
 import java.util.HashSet;
 
-public class ModDataRow {
+public class ModDataRow extends AbstractDataRow{
 
     private final Modification mod;
 
@@ -43,28 +43,14 @@ public class ModDataRow {
         return mod.getDescription();
     }
 
-    private boolean isModCovered(Modification m, HashSet<Modification> list) {
-        if (m == mod) {
-            return true;
-        }
-        return list.stream().anyMatch((m2) -> (m2.getOverwrite().contains(m)));
-    }
-
-    public String getCollisions() {
+    @Override
+    protected HashSet<Modification> getRelatedModifications() {
         HashSet<Modification> collisions = new HashSet<>();
         mod.getFiles().forEach((mf) -> {
             mf.getFile().getMods().forEach((fm) -> {
                 collisions.add(fm.getMod());
             });
         });
-        String result = "";
-        int counter = 0;
-        for (Modification m : collisions) {
-            if (!isModCovered(m, collisions)) {
-                result = result + "\\n" + m.getName() + " [" + m.getId() + "]";
-                counter++;
-            }
-        }
-        return counter > 0 && result.length() > 0 ? result.substring(1) : result;
+        return collisions;
     }
 }

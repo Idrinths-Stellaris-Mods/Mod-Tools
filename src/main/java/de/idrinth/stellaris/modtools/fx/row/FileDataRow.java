@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.fx;
+package de.idrinth.stellaris.modtools.fx.row;
 
 import de.idrinth.stellaris.modtools.entity.ModFile;
 import de.idrinth.stellaris.modtools.entity.Modification;
@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import com.sksamuel.diffpatch.DiffMatchPatch;
 
-public class FileDataRow {
+public class FileDataRow extends AbstractDataRow {
 
     private final StellarisFile file;
 
@@ -73,29 +73,12 @@ public class FileDataRow {
         return result;
     }
 
-    private boolean isModCovered(Modification m, HashSet<Modification> list) {
-        return list.stream().anyMatch((m2) -> (m2.getOverwrite().contains(m)));
-    }
-
-    public String getCollisions() {
-        String result = "";
-        int counter = 0;
-        for (Modification m : getColliding()) {
-            result = result + "\\n" + m.getName() + " [" + m.getId() + "]";
-            counter++;
-        }
-        return counter > 0 && result.length() > 0 ? result.substring(1) : result;
-    }
-
-    private HashSet<Modification> getColliding() {
+    @Override
+    protected HashSet<Modification> getRelatedModifications() {
         HashSet<Modification> collisions = new HashSet<>();
-        HashSet<Modification> colliding = new HashSet<>();
         file.getMods().forEach((mf) -> {
             collisions.add(mf.getMod());
         });
-        collisions.stream().filter((m) -> (!isModCovered(m, collisions))).forEachOrdered((m) -> {
-            colliding.add(m);
-        });
-        return colliding;
+        return collisions;
     }
 }
