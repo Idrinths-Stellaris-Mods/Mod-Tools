@@ -16,7 +16,6 @@
  */
 package de.idrinth.stellaris.modtools.fx;
 
-import java.util.Collection;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
