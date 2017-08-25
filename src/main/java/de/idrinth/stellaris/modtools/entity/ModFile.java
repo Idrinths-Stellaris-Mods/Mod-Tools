@@ -25,15 +25,32 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 public class ModFile implements Serializable {
+
     @Id
-    @GeneratedValue(generator="increment")
-    @GenericGenerator(name="increment", strategy = "increment")
+    @GeneratedValue(generator = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
     protected int id;
     @ManyToOne
     protected Modification mod;
     @ManyToOne
-    protected File file;
+    protected StellarisFile file;
     protected String diff;
+
+    public ModFile(Modification mod, StellarisFile file) {
+        this.mod = mod;
+        this.file = file;
+    }
+
+    public ModFile(Modification mod) {
+        this.mod = mod;
+    }
+
+    public ModFile(StellarisFile file) {
+        this.file = file;
+    }
+
+    public ModFile() {
+    }
 
     public int getId() {
         return id;
@@ -51,11 +68,11 @@ public class ModFile implements Serializable {
         this.mod = mod;
     }
 
-    public File getFile() {
+    public StellarisFile getFile() {
         return file;
     }
 
-    public void setFile(File file) {
+    public void setFile(StellarisFile file) {
         this.file = file;
     }
 
@@ -66,5 +83,5 @@ public class ModFile implements Serializable {
     public void setDiff(String diff) {
         this.diff = diff;
     }
-    
+
 }

@@ -16,15 +16,16 @@
  */
 package de.idrinth.stellaris.modtools;
 
-import com.github.sarxos.winreg.RegistryException;
 import de.idrinth.stellaris.modtools.access.DirectoryLookup;
+import de.idrinth.stellaris.modtools.access.Queue;
+import de.idrinth.stellaris.modtools.filter.FileExt;
 import de.idrinth.stellaris.modtools.fx.CollisionTableView;
+import de.idrinth.stellaris.modtools.fx.FileDataRow;
 import de.idrinth.stellaris.modtools.fx.ModDataRow;
 import de.idrinth.stellaris.modtools.fx.ModTableView;
-import de.idrinth.stellaris.modtools.model.ModCollection;
-import de.idrinth.stellaris.modtools.model.PatchedFile;
-import de.idrinth.stellaris.modtools.parser.ModFiles;
+import de.idrinth.stellaris.modtools.parser.LocalModParser;
 import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -91,10 +92,18 @@ public class FXMLController implements Initializable {
     @FXML
     private void handleButtonAction(ActionEvent event) {
         try {
-            ModCollection col = new ModFiles(DirectoryLookup.getModDir()).get();
- //           collisions.addItems(col.getFiles().values());
+            for (File mod : DirectoryLookup.getModDir().listFiles(new FileExt("mod"))) {
+                Queue.add(new LocalModParser(mod.getName()));
+            }
+            while (!Queue.isDone()) {
+                try {
+                    Thread.currentThread().wait(666);
+                } catch (InterruptedException ex) {
+                }
+            }
+            collisions.addItems();
             mods.addItems();
-        } catch (RegistryException | IOException exception) {
+        } catch (IOException exception) {
             showExceptionPopup(exception);
         }
     }
@@ -120,12 +129,12 @@ public class FXMLController implements Initializable {
 
     @FXML
     private void showCollisionPopup(Event event) throws IOException {
-        PatchedFile current = collisions.getCurrent();
+        FileDataRow current = collisions.getCurrent();
         if (current == null) {
             return;
         }
-        getPopup().setTitle("Patched " + current.getFile());
-        description.getEngine().loadContent(current.getContent());
+        getPopup().setTitle("Patched " + current.getName());
+        description.getEngine().loadContent(current.getPatch());
         getPopup().showAndWait();
     }
 

@@ -25,12 +25,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <?import de.idrinth.stellaris.modtools.fx.ModTableView?>
 <?import de.idrinth.stellaris.modtools.fx.CollisionTableView?>
 
-<AnchorPane id="AnchorPane" prefHeight="400" prefWidth="640" xmlns:fx="http://javafx.com/fxml" fx:controller="de.idrinth.stellaris.modtools.FXMLController">
+<TabPane id="TabPane" prefHeight="400" prefWidth="640" xmlns:fx="http://javafx.com/fxml" fx:controller="de.idrinth.stellaris.modtools.FXMLController">
     <stylesheets>
         <URL value="@/styles/Styles.css"/>
     </stylesheets>
-    <children>
-        <Button layoutX="16" layoutY="10" text="Process Mods" onAction="#handleButtonAction" fx:id="button" />
-        <ModTableView onMouseClicked="#showModPopup" layoutX="16" layoutY="80" minHeight="16" minWidth="69" fx:id="mods" />
-    </children>
-</AnchorPane>
+    <tabs>
+        <Tab fx:id="StartTabPage" text="Start">
+            <Button layoutX="16" layoutY="10" text="Process Mods" onAction="#handleButtonAction" fx:id="button" />
+        </Tab>
+        <Tab fx:id="ModTabPage" text="Mods">
+            <ModTableView onMouseClicked="#showModPopup" layoutX="16" layoutY="10" minHeight="16" fx:id="mods" />
+        </Tab>
+        <Tab fx:id="CollisionTabPage" text="Files">
+            <CollisionTableView onMouseClicked="#showCollisionPopup" layoutX="16" layoutY="10" minHeight="16" fx:id="collisions" />
+        </Tab>
+    </tabs>
+</TabPane>

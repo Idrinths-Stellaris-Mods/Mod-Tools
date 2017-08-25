@@ -17,22 +17,37 @@
 package de.idrinth.stellaris.modtools.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
+@NamedQueries({
+    @NamedQuery(
+            name = "all_files",
+            query = "select f from StellarisFile f"
+    )
+})
 @Entity
-public class File implements Serializable {
+public class StellarisFile implements Serializable {
+
     //original
     protected String content;
-    protected boolean patchable=true;
+    protected boolean patchable = true;
     @Id
     protected String relativePath;
     //connection
     @OneToMany
     protected Set<ModFile> mods;
+
+    public StellarisFile() {
+    }
+
+    public StellarisFile(String relativePath) {
+        this.relativePath = relativePath;
+    }
 
     public String getContent() {
         return content;
@@ -65,5 +80,5 @@ public class File implements Serializable {
     public void setMods(Set<ModFile> mods) {
         this.mods = mods;
     }
-    
+
 }

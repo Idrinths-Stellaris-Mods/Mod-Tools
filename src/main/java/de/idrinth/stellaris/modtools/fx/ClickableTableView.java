@@ -39,7 +39,7 @@ abstract public class ClickableTableView<E, T> extends TableView<E> {
             return row;
         });
         for (String column : columns) {
-            addColumn(column, 300 / columns.length);
+            addColumn(column, 600 / columns.length);
         }
     }
 

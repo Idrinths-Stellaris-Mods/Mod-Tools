@@ -28,7 +28,7 @@ public class ModTableView extends ClickableTableView<ModDataRow, ModDataRow> {
 
     public final void addItems() {
         super.getItems().clear();
-        MainApp.entityManager.createEntityManager().createNamedQuery("all_modifications",Modification.class).getResultList().forEach((mod) -> {
+        MainApp.entityManager.createEntityManager().createNamedQuery("all_modifications", Modification.class).getResultList().forEach((mod) -> {
             super.getItems().add(new ModDataRow(mod));
         });
     }

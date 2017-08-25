@@ -16,12 +16,11 @@
  */
 package de.idrinth.stellaris.modtools.fx;
 
-import de.idrinth.stellaris.modtools.entity.ModFile;
 import de.idrinth.stellaris.modtools.entity.Modification;
 import java.util.HashSet;
 
-
 public class ModDataRow {
+
     private final Modification mod;
 
     public ModDataRow(Modification mod) {
@@ -44,13 +43,13 @@ public class ModDataRow {
         return mod.getDescription();
     }
 
-    private boolean isModCovered(Modification m,HashSet<Modification> list) {
-        if(m == mod) {
+    private boolean isModCovered(Modification m, HashSet<Modification> list) {
+        if (m == mod) {
             return true;
         }
         return list.stream().anyMatch((m2) -> (m2.getOverwrite().contains(m)));
     }
-    
+
     public String getCollisions() {
         HashSet<Modification> collisions = new HashSet<>();
         mod.getFiles().forEach((mf) -> {
@@ -60,12 +59,12 @@ public class ModDataRow {
         });
         String result = "";
         int counter = 0;
-        for(Modification m:collisions) {
-            if(!isModCovered(m,collisions)) {
-                result = result+"\\n"+m.getName()+" ["+m.getId()+"]";
+        for (Modification m : collisions) {
+            if (!isModCovered(m, collisions)) {
+                result = result + "\\n" + m.getName() + " [" + m.getId() + "]";
                 counter++;
             }
         }
-        return counter>0&&result.length()>0?result.substring(1):result;
+        return counter > 0 && result.length() > 0 ? result.substring(1) : result;
     }
 }

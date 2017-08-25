@@ -24,14 +24,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+
 @NamedQueries({
     @NamedQuery(
-	name = "all_modifications",
-	query = "select m from Modification m"
+            name = "all_modifications",
+            query = "select m from Modification m"
     )
 })
 @Entity
 public class Modification implements Serializable {
+
     @Id
     protected String relativePath;
     //basics
@@ -45,6 +47,13 @@ public class Modification implements Serializable {
     protected Set<ModFile> files;
     @ManyToMany
     protected Set<Modification> overwrite;
+
+    public Modification() {
+    }
+
+    public Modification(String relativePath) {
+        this.relativePath = relativePath;
+    }
 
     public String getName() {
         return name;
@@ -101,5 +110,5 @@ public class Modification implements Serializable {
     public void setFiles(Set<ModFile> files) {
         this.files = files;
     }
-    
+
 }

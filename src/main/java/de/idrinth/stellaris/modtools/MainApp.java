@@ -26,6 +26,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 public class MainApp extends Application {
+
     public static EntityManagerFactory entityManager;
 
     @Override
@@ -34,7 +35,7 @@ public class MainApp extends Application {
         stage.setTitle("Idrinth's Stellaris Mod-Tools");
         stage.setScene(new Scene(root));
         stage.show();
-        entityManager = Persistence.createEntityManagerFactory( "de.idrinth_Stellaris.ModTools" );
+        entityManager = Persistence.createEntityManagerFactory("de.idrinth_Stellaris.ModTools");
     }
 
     /**

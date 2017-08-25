@@ -21,17 +21,17 @@ import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 
-public class StellarisFile {
+public class StellarisFileContent {
 
     public static String get(String relativePath) {
         try {
             return FileUtils.readFileToString(
-                new File(
-                    DirectoryLookup.getSteamDir().getAbsolutePath()
-                    + "\\SteamApps\\common\\Stellaris\\"
-                    + relativePath
-                ),
-                "utf-8"
+                    new File(
+                            DirectoryLookup.getSteamDir().getAbsolutePath()
+                            + "SteamApps/common/Stellaris/"
+                            + relativePath
+                    ),
+                    "utf-8"
             );
         } catch (IOException | RegistryException exception) {
             System.out.println(exception.getLocalizedMessage());
