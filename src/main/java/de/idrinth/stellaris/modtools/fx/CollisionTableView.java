@@ -18,7 +18,7 @@ package de.idrinth.stellaris.modtools.fx;
 
 import de.idrinth.stellaris.modtools.fx.row.FileDataRow;
 import de.idrinth.stellaris.modtools.MainApp;
-import de.idrinth.stellaris.modtools.entity.StellarisFile;
+import de.idrinth.stellaris.modtools.entity.Original;
 
 public class CollisionTableView extends ClickableTableView<FileDataRow, FileDataRow> {
 
@@ -29,7 +29,7 @@ public class CollisionTableView extends ClickableTableView<FileDataRow, FileData
     @Override
     public final void addItems() {
         super.getItems().clear();
-        MainApp.entityManager.createEntityManager().createNamedQuery("all_files", StellarisFile.class).getResultList().forEach((mod) -> {
+        MainApp.entityManager.createEntityManager().createNamedQuery("originals", Original.class).getResultList().forEach((mod) -> {
             super.getItems().add(new FileDataRow(mod));
         });
     }

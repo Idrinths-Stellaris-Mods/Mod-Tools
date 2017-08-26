@@ -17,7 +17,9 @@
 package de.idrinth.stellaris.modtools.entity;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Set;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
@@ -26,28 +28,21 @@ import javax.persistence.OneToMany;
 
 @NamedQueries({
     @NamedQuery(
-            name = "all_files",
-            query = "select f from StellarisFile f"
+            name = "originals",
+            query = "select f from Original f"
     )
 })
 @Entity
-public class StellarisFile implements Serializable {
+public class Original implements Serializable {
 
     //original
+    @Column(columnDefinition="TEXT")
     protected String content;
-    protected boolean patchable = true;
     @Id
     protected String relativePath;
     //connection
     @OneToMany
-    protected Set<ModFile> mods;
-
-    public StellarisFile() {
-    }
-
-    public StellarisFile(String relativePath) {
-        this.relativePath = relativePath;
-    }
+    protected Set<Patch> patches;
 
     public String getContent() {
         return content;
@@ -57,28 +52,37 @@ public class StellarisFile implements Serializable {
         this.content = content;
     }
 
-    public boolean isPatchable() {
-        return patchable;
-    }
-
-    public void setPatchable(boolean patchable) {
-        this.patchable = patchable;
-    }
-
     public String getRelativePath() {
         return relativePath;
     }
 
-    public void setRelativePath(String path) {
-        this.relativePath = path;
+    public void setRelativePath(String relativePath) {
+        this.relativePath = relativePath;
     }
 
-    public Set<ModFile> getMods() {
-        return mods;
+    public Set<Patch> getPatches() {
+        return patches;
     }
 
-    public void setMods(Set<ModFile> mods) {
-        this.mods = mods;
+    public void setPatches(Set<Patch> patches) {
+        this.patches = patches;
+    }
+
+    @Override
+    public int hashCode() {
+        return 177 + Objects.hashCode(this.relativePath);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final Original other = (Original) obj;
+        return Objects.equals(this.relativePath, other.relativePath);
     }
 
 }

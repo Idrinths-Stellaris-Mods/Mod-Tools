@@ -17,48 +17,28 @@
 package de.idrinth.stellaris.modtools.entity;
 
 import java.io.Serializable;
+import java.util.Objects;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NaturalId;
 
 @Entity
-public class ModFile implements Serializable {
+public class Patch implements Serializable {
 
     @Id
-    @GeneratedValue(generator = "increment")
-    @GenericGenerator(name = "increment", strategy = "increment")
-    protected int id;
+    @GeneratedValue
+    protected long id;
     @ManyToOne
+    @NaturalId
     protected Modification mod;
     @ManyToOne
-    protected StellarisFile file;
+    @NaturalId
+    protected Original file;
+    @Column(columnDefinition="TEXT")
     protected String diff;
-
-    public ModFile(Modification mod, StellarisFile file) {
-        this.mod = mod;
-        this.file = file;
-    }
-
-    public ModFile(Modification mod) {
-        this.mod = mod;
-    }
-
-    public ModFile(StellarisFile file) {
-        this.file = file;
-    }
-
-    public ModFile() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public Modification getMod() {
         return mod;
@@ -68,11 +48,11 @@ public class ModFile implements Serializable {
         this.mod = mod;
     }
 
-    public StellarisFile getFile() {
+    public Original getFile() {
         return file;
     }
 
-    public void setFile(StellarisFile file) {
+    public void setFile(Original file) {
         this.file = file;
     }
 
@@ -82,6 +62,23 @@ public class ModFile implements Serializable {
 
     public void setDiff(String diff) {
         this.diff = diff;
+    }
+
+    @Override
+    public int hashCode() {
+        return 2023 + 17 * Objects.hashCode(this.mod) + Objects.hashCode(this.file);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final Patch other = (Patch) obj;
+        return Objects.equals(this.mod, other.mod) && Objects.equals(this.file, other.file);
     }
 
 }

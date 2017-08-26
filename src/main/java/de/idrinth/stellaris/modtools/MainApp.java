@@ -18,10 +18,12 @@ package de.idrinth.stellaris.modtools;
 
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
@@ -35,7 +37,14 @@ public class MainApp extends Application {
         stage.setTitle("Idrinth's Stellaris Mod-Tools");
         stage.setScene(new Scene(root));
         stage.show();
+        stage.setOnCloseRequest((WindowEvent e) -> {
+            Platform.exit();
+        });
         entityManager = Persistence.createEntityManagerFactory("de.idrinth_Stellaris.ModTools");
+    }
+    @Override
+    public void stop() {
+        System.exit(0);
     }
 
     /**

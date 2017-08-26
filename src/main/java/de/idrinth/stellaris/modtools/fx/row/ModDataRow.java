@@ -16,38 +16,44 @@
  */
 package de.idrinth.stellaris.modtools.fx.row;
 
+import de.idrinth.stellaris.modtools.MainApp;
 import de.idrinth.stellaris.modtools.entity.Modification;
 import java.util.HashSet;
 
 public class ModDataRow extends AbstractDataRow{
 
-    private final Modification mod;
+    private final long mod;
 
     public ModDataRow(Modification mod) {
-        this.mod = mod;
+        this.mod = mod.getAid();
     }
 
     public String getName() {
-        return mod.getName();
+        Modification modO = (Modification) MainApp.entityManager.createEntityManager().find(Modification.class, mod);
+        return modO.getName();
     }
 
     public String getVersion() {
-        return mod.getVersion();
+        Modification modO = (Modification) MainApp.entityManager.createEntityManager().find(Modification.class, mod);
+        return modO.getVersion();
     }
 
     public int getId() {
-        return mod.getId();
+        Modification modO = (Modification) MainApp.entityManager.createEntityManager().find(Modification.class, mod);
+        return modO.getId();
     }
 
     public String getDescription() {
-        return mod.getDescription();
+        Modification modO = (Modification) MainApp.entityManager.createEntityManager().find(Modification.class, mod);
+        return modO.getDescription();
     }
 
     @Override
     protected HashSet<Modification> getRelatedModifications() {
         HashSet<Modification> collisions = new HashSet<>();
-        mod.getFiles().forEach((mf) -> {
-            mf.getFile().getMods().forEach((fm) -> {
+        Modification modO = (Modification) MainApp.entityManager.createEntityManager().find(Modification.class, mod);
+        modO.getPatches().forEach((mf) -> {
+            mf.getFile().getPatches().forEach((fm) -> {
                 collisions.add(fm.getMod());
             });
         });

@@ -17,46 +17,70 @@
 package de.idrinth.stellaris.modtools.entity;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Set;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import org.hibernate.annotations.NaturalId;
 
 @NamedQueries({
     @NamedQuery(
-            name = "all_modifications",
-            query = "select m from Modification m"
+        name = "modifications",
+        query = "select m from Modification m"
+    ),
+    @NamedQuery(
+        name = "modifications.id",
+        query = "select m from Modification m where m.id=:id"
+    ),
+    @NamedQuery(
+        name = "modifications.config",
+        query = "select m from Modification m where m.configPath=:configPath"
     )
 })
 @Entity
 public class Modification implements Serializable {
-
     @Id
-    protected String relativePath;
+    @GeneratedValue
+    private long aid;
     //basics
+    @NaturalId
+    protected String configPath;
+    @NaturalId
+    protected int id;
     protected String name;
     protected String version;
-    //Remote only
-    protected int id = 0;
+    @Column(columnDefinition="TEXT")
     protected String description;
     //connection
     @OneToMany
-    protected Set<ModFile> files;
+    protected Set<Patch> files;
     @ManyToMany
     protected Set<Modification> overwrite;
 
-    public Modification() {
-    }
-
-    public Modification(String relativePath) {
-        this.relativePath = relativePath;
-    }
-
     public String getName() {
         return name;
+    }
+
+    public long getAid() {
+        return aid;
+    }
+
+    public void setAid(long aid) {
+        this.aid = aid;
+    }
+
+    public String getConfigPath() {
+        return configPath;
+    }
+
+    public void setConfigPath(String configPath) {
+        this.configPath = configPath;
     }
 
     public void setName(String name) {
@@ -79,14 +103,6 @@ public class Modification implements Serializable {
         this.id = id;
     }
 
-    public String getRelativePath() {
-        return relativePath;
-    }
-
-    public void setRelativePath(String relativePath) {
-        this.relativePath = relativePath;
-    }
-
     public Set<Modification> getOverwrite() {
         return overwrite;
     }
@@ -103,12 +119,29 @@ public class Modification implements Serializable {
         this.description = description;
     }
 
-    public Set<ModFile> getFiles() {
+    public Set<Patch> getPatches() {
         return files;
     }
 
-    public void setFiles(Set<ModFile> files) {
+    public void setPatches(Set<Patch> files) {
         this.files = files;
+    }
+
+    @Override
+    public int hashCode() {
+        return 18605 + 61 * Objects.hashCode(this.configPath) + this.id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final Modification other = (Modification) obj;
+        return this.id == other.id && Objects.equals(this.configPath, other.configPath);
     }
 
 }

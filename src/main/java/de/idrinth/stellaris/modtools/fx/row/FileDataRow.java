@@ -16,47 +16,46 @@
  */
 package de.idrinth.stellaris.modtools.fx.row;
 
-import de.idrinth.stellaris.modtools.entity.ModFile;
+import de.idrinth.stellaris.modtools.entity.Patch;
 import de.idrinth.stellaris.modtools.entity.Modification;
-import de.idrinth.stellaris.modtools.entity.StellarisFile;
+import de.idrinth.stellaris.modtools.entity.Original;
 import java.util.HashSet;
 import java.util.LinkedList;
 import com.sksamuel.diffpatch.DiffMatchPatch;
+import de.idrinth.stellaris.modtools.MainApp;
 
 public class FileDataRow extends AbstractDataRow {
 
-    private final StellarisFile file;
+    private final String file;
 
-    public FileDataRow(StellarisFile file) {
-        this.file = file;
+    public FileDataRow(Original file) {
+        this.file = file.getRelativePath();
     }
 
     public String getName() {
-        return file.getRelativePath();
-    }
-
-    public String getPatchable() {
-        return String.valueOf(file.isPatchable());
+        return file;
     }
 
     public String getImportance() {
-        if (null == file.getMods() || file.getMods().size() < 2) {
+        Original fileO = (Original) MainApp.entityManager.createEntityManager().find(Original.class, file);
+        if (null == fileO.getPatches() || fileO.getPatches().size() < 2) {
             return "none";
         }
-        if (!file.isPatchable()) {
-            return "low";
+        if (file.endsWith(".txt")||file.endsWith(".yml")) {
+            return getColliding().size() > 1 ? "high" : "medium";
         }
-        return getColliding().size() > 1 ? "high" : "medium";
+        return "low";
     }
 
     public String getPatch() {
-        if (!file.isPatchable()) {
+        if (!(file.endsWith(".txt")||file.endsWith(".yml"))) {
             return "- not patchable, but unimportant -";
         }
         DiffMatchPatch patcher = new DiffMatchPatch();
-        String result = file.getContent();
+        Original fileO = (Original) MainApp.entityManager.createEntityManager().find(Original.class, file);
+        String result = fileO.getContent();
         HashSet<Modification> colliding = getColliding();
-        for (ModFile mf : file.getMods()) {
+        for (Patch mf : fileO.getPatches()) {
             if (colliding.contains(mf.getMod())) {
                 Object[] data = patcher.patch_apply(
                         new LinkedList<>(patcher.patch_fromText(mf.getDiff())),
@@ -76,7 +75,8 @@ public class FileDataRow extends AbstractDataRow {
     @Override
     protected HashSet<Modification> getRelatedModifications() {
         HashSet<Modification> collisions = new HashSet<>();
-        file.getMods().forEach((mf) -> {
+        Original fileO = (Original) MainApp.entityManager.createEntityManager().find(Original.class, file);
+        fileO.getPatches().forEach((mf) -> {
             collisions.add(mf.getMod());
         });
         return collisions;

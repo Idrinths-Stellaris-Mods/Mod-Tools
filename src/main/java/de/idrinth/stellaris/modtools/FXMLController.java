@@ -16,20 +16,17 @@
  */
 package de.idrinth.stellaris.modtools;
 
-import de.idrinth.stellaris.modtools.access.DirectoryLookup;
-import de.idrinth.stellaris.modtools.access.Queue;
-import de.idrinth.stellaris.modtools.filter.FileExt;
+import de.idrinth.stellaris.modtools.fx.ClickableTableView;
 import de.idrinth.stellaris.modtools.fx.CollisionTableView;
 import de.idrinth.stellaris.modtools.fx.row.FileDataRow;
 import de.idrinth.stellaris.modtools.fx.row.ModDataRow;
 import de.idrinth.stellaris.modtools.fx.ModTableView;
-import de.idrinth.stellaris.modtools.parser.LocalModParser;
 import java.awt.Desktop;
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,6 +37,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -57,6 +55,9 @@ public class FXMLController implements Initializable {
 
     @FXML
     private CollisionTableView collisions;
+
+    @FXML
+    private ProgressBar pbar;
 
     private Stage popup;
 
@@ -91,21 +92,10 @@ public class FXMLController implements Initializable {
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        try {
-            for (File mod : DirectoryLookup.getModDir().listFiles(new FileExt("mod"))) {
-                Queue.add(new LocalModParser(mod.getName()));
-            }
-            while (!Queue.isDone()) {
-                try {
-                    Thread.currentThread().wait(666);
-                } catch (InterruptedException ex) {
-                }
-            }
-            collisions.addItems();
-            mods.addItems();
-        } catch (IOException exception) {
-            showExceptionPopup(exception);
-        }
+        ArrayList<ClickableTableView> list = new ArrayList<>();
+        list.add(mods);
+        list.add(collisions);
+        new Thread(new FillerThread(list,pbar)).start();
     }
 
     @FXML
