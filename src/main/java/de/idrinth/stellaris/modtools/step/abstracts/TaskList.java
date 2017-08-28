@@ -16,9 +16,13 @@
  */
 package de.idrinth.stellaris.modtools.step.abstracts;
 
+import de.idrinth.stellaris.modtools.MainApp;
 import de.idrinth.stellaris.modtools.access.Queue;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.persistence.EntityManager;
 
 abstract public class TaskList implements Runnable{
     protected final Queue queue;
@@ -26,14 +30,13 @@ abstract public class TaskList implements Runnable{
 
     public TaskList(Queue queue) {
         this.queue = queue;
-        System.out.println(this.getClass().getName()+" startet");
     }
 
     abstract protected void fill() throws IOException;
 
     @Override
     public void run() {
-        System.out.println("   Running "+String.valueOf(this.hashCode()));
+        System.out.println("   Running "+this.getClass().getName());
         try {
             fill();
         } catch (IOException ex) {
@@ -42,6 +45,18 @@ abstract public class TaskList implements Runnable{
         tasks.forEach((task) -> {
             queue.add(task);
         });
-        System.out.println("   Finished "+String.valueOf(this.hashCode()));
+        System.out.println("   Finished "+this.getClass().getName());
+    }
+    protected EntityManager getEntityManager() {
+        try {
+            return MainApp.entityManager.createEntityManager();
+        } catch(javax.persistence.PersistenceException exe) {
+            try {
+                Thread.sleep(2500);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(TaskList.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return getEntityManager();
+        }
     }
 }

@@ -33,7 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <Tab fx:id="StartTabPage" text="Start">
             <AnchorPane>
                 <Button layoutX="16" layoutY="50" text="Process Mods" onAction="#handleButtonAction" fx:id="button" />
-                <ProgressBar layoutX="316" layoutY="50" fx:id="pbar" progress="0" />
             </AnchorPane>
         </Tab>
         <Tab fx:id="ModTabPage" text="Mods">

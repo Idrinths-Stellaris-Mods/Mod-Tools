@@ -57,7 +57,7 @@ public class ConfigParser extends TaskList {
     }
     private void persist(Modification mod) {
         mod.setConfigPath(configuration.getName());
-        EntityManager manager = MainApp.entityManager.createEntityManager();
+        EntityManager manager = getEntityManager();
         if(!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }

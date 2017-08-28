@@ -37,7 +37,7 @@ public class FileSystemParser extends Files implements Runnable {
 
     @Override
     protected void fill() throws IOException {
-        EntityManager manager = MainApp.entityManager.createEntityManager();
+        EntityManager manager = getEntityManager();
         if(!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }

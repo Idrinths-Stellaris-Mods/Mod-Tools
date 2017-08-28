@@ -20,16 +20,15 @@ import de.idrinth.stellaris.modtools.FillerThread;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Queue implements Runnable {
 
-    private final ExecutorService executor = new ThreadPoolExecutor(5, 5, 100, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());//Executors.newFixedThreadPool(5);//25% of maximum, just to be on the save side
+    private final ExecutorService executor = Executors.newFixedThreadPool(15);//75% of maximum, just to be on the save side
     private final List<Future<?>> futures = new ArrayList<>();
     private final FillerThread c;
 
@@ -58,11 +57,10 @@ public class Queue implements Runnable {
                 }
             }
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2500);
             } catch (InterruptedException ex) {
                 Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);
             }
-            c.setProgress(counter, futures.size());
         } while(counter< futures.size()&&!isDone());
         executor.shutdown();
         try {

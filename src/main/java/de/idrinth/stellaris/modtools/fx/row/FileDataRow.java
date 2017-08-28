@@ -36,7 +36,7 @@ public class FileDataRow extends AbstractDataRow {
         return file;
     }
 
-    public String getImportance() {
+    public String getImportance() {return "";/*
         Original fileO = (Original) MainApp.entityManager.createEntityManager().find(Original.class, file);
         if (null == fileO.getPatches() || fileO.getPatches().size() < 2) {
             return "none";
@@ -44,7 +44,7 @@ public class FileDataRow extends AbstractDataRow {
         if (file.endsWith(".txt")||file.endsWith(".yml")) {
             return getColliding().size() > 1 ? "high" : "medium";
         }
-        return "low";
+        return "low";*/
     }
 
     public String getPatch() {

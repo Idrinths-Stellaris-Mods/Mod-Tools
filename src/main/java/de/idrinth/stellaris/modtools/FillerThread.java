@@ -25,22 +25,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.Tooltip;
 
 public class FillerThread implements Runnable,Callable {
     private final ArrayList<ClickableTableView> list;
-    private final ProgressBar pbar;
 
-    public FillerThread(ArrayList<ClickableTableView> list, ProgressBar pbar) {
+    public FillerThread(ArrayList<ClickableTableView> list) {
         this.list = list;
-        this.pbar = pbar;
-    }
-    public void setProgress(int cur, int max) {
-        pbar.setVisible(true);
-        pbar.setProgress(cur/max);
-        pbar.setTooltip(new Tooltip(cur + " of " + max));
-        System.out.println(cur + " of " + max);
     }
     @Override
     public void run() {
@@ -57,7 +47,6 @@ public class FillerThread implements Runnable,Callable {
 
     @Override
     public Object call() throws Exception {
-        pbar.setVisible(false);
         list.forEach((ctv) -> {
             ctv.addItems();
         });

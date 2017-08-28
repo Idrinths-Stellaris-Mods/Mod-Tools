@@ -16,49 +16,28 @@
  */
 package de.idrinth.stellaris.modtools.step;
 
-import com.github.sarxos.winreg.RegistryException;
-import de.idrinth.stellaris.modtools.access.DirectoryLookup;
 import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.step.abstracts.TaskList;
-import java.io.File;
-import java.io.IOException;
 import javax.persistence.EntityManager;
-import org.apache.commons.io.FileUtils;
 
-/**
- *
- * @author Björn
- */
-public class OriginalFileFiller extends TaskList {
-    private final String path;
-
-    public OriginalFileFiller(String path) {
+public class PatchFile extends TaskList {
+    private String file;
+    public PatchFile(String file) {
         super(null);
-        this.path = path;
     }
-    
+
     @Override
-    public void fill() {
+    protected void fill() {
         EntityManager manager = getEntityManager();
+        Original original = (Original) manager.find(Original.class, file);
+        if(original.getPatches().size()<2) {
+            return;
+        }
         if(!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }
-        Original file = (Original) manager.find(Original.class, path);
-        if(null == file.getContent() || "".equals(file.getContent())) {
-            try {
-                file.setContent(FileUtils.readFileToString(
-                    new File(
-                        DirectoryLookup.getSteamDir().getAbsolutePath()
-                        + "SteamApps/common/Stellaris/"
-                        + path
-                    ),
-                    "utf-8"
-                ));
-            } catch (IOException | RegistryException exception) {
-                System.out.println(exception.getLocalizedMessage());
-            }
-            manager.persist(file);
-        }
+        String data = original.getContent();
+       // manager.persist(mod);
         manager.getTransaction().commit();
     }
     

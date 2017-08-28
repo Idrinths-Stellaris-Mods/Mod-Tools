@@ -37,7 +37,7 @@ public class RemoteModParser extends TaskList {
 
     @Override
     public void fill() {
-        EntityManager manager = MainApp.entityManager.createEntityManager();
+        EntityManager manager = getEntityManager();
         if (!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }
@@ -98,7 +98,7 @@ public class RemoteModParser extends TaskList {
             }
             if (null != doc.getElementById("RequiredItems")) {
                 doc.getElementById("RequiredItems").getElementsByTag("a").stream().filter((a) -> (a.hasAttr("href"))).map((a) -> "ugc_" + a.attributes().get("href").replaceAll("^.*id=([0-9]+).*$", "$1")).forEachOrdered((lId) -> {
-                    Modification lMod = (Modification) MainApp.entityManager.createEntityManager().createNamedQuery("modifications.id",Modification.class).setParameter("id", lId).getSingleResult();
+                    Modification lMod = (Modification) getEntityManager().createNamedQuery("modifications.id",Modification.class).setParameter("id", lId).getSingleResult();
                     if(null == lMod) {
                         lMod = new Modification();
                         lMod.setId(Integer.parseInt(lId));

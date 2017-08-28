@@ -56,9 +56,6 @@ public class FXMLController implements Initializable {
     @FXML
     private CollisionTableView collisions;
 
-    @FXML
-    private ProgressBar pbar;
-
     private Stage popup;
 
     private Stage getPopup() throws IOException {
@@ -95,7 +92,7 @@ public class FXMLController implements Initializable {
         ArrayList<ClickableTableView> list = new ArrayList<>();
         list.add(mods);
         list.add(collisions);
-        new Thread(new FillerThread(list,pbar)).start();
+        new Thread(new FillerThread(list)).start();
     }
 
     @FXML

@@ -23,14 +23,14 @@ abstract public class AbstractDataRow {
     protected boolean isModCovered(Modification m, HashSet<Modification> list) {
         return list.stream().anyMatch((m2) -> (m2.getOverwrite().contains(m)));
     }
-    public String getCollisions() {
-        String result = "";
+    public String getCollisions() {return "";
+        /*String result = "";
         int counter = 0;
         for (Modification m : getColliding()) {
             result = result + "\\n" + m.getName() + " [" + m.getId() + "]";
             counter++;
         }
-        return counter > 1 && result.length() > 0 ? result.substring(1) : result;
+        return counter > 1 && result.length() > 0 ? result.substring(1) : result;*/
     }
     protected abstract HashSet<Modification> getRelatedModifications();
     protected HashSet<Modification> getColliding() {
