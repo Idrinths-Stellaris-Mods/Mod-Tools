@@ -73,9 +73,7 @@ public class PatchFile extends TaskList {
         if(!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }
-        boolean patchable = file.endsWith(".txt") || file.endsWith(".yml");
-        ArrayList<Long> ignores = getOverwrittenMods(original);
-        manager.persist(applyPatches(original,ignores));
+        manager.persist(applyPatches(original,getOverwrittenMods(original)));
         manager.getTransaction().commit();
     }
 }
