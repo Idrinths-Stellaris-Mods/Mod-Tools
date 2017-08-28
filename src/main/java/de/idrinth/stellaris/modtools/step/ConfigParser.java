@@ -17,7 +17,6 @@
 package de.idrinth.stellaris.modtools.step;
 
 import com.github.sarxos.winreg.RegistryException;
-import de.idrinth.stellaris.modtools.MainApp;
 import de.idrinth.stellaris.modtools.access.DirectoryLookup;
 import de.idrinth.stellaris.modtools.entity.Modification;
 import java.io.File;

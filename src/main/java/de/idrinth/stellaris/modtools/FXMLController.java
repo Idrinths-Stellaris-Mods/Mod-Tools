@@ -37,7 +37,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -104,14 +103,6 @@ public class FXMLController implements Initializable {
         getPopup().setTitle("Description: " + current.getName());
         description.getEngine().loadContent(current.getDescription());
         getPopup().showAndWait();
-    }
-
-    @FXML
-    private void showExceptionPopup(Exception exception) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setContentText(exception.getLocalizedMessage());
-        alert.setHeaderText("Error");
-        alert.showAndWait();
     }
 
     @FXML

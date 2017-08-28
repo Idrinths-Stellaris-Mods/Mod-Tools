@@ -16,7 +16,6 @@
  */
 package de.idrinth.stellaris.modtools.step;
 
-import de.idrinth.stellaris.modtools.MainApp;
 import de.idrinth.stellaris.modtools.access.Queue;
 import de.idrinth.stellaris.modtools.entity.Modification;
 import de.idrinth.stellaris.modtools.step.abstracts.Files;
