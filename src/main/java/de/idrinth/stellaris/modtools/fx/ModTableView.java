@@ -17,7 +17,6 @@
 package de.idrinth.stellaris.modtools.fx;
 
 import de.idrinth.stellaris.modtools.fx.row.ModDataRow;
-import de.idrinth.stellaris.modtools.MainApp;
 import de.idrinth.stellaris.modtools.entity.Modification;
 
 public class ModTableView extends ClickableTableView<ModDataRow, ModDataRow> {
@@ -29,8 +28,8 @@ public class ModTableView extends ClickableTableView<ModDataRow, ModDataRow> {
     @Override
     public final void addItems() {
         super.getItems().clear();
-        MainApp.entityManager.createEntityManager().createNamedQuery("modifications", Modification.class).getResultList().forEach((mod) -> {
-            super.getItems().add(new ModDataRow(mod));
+        manager.createNamedQuery("modifications", Modification.class).getResultList().forEach((mod) -> {
+            super.getItems().add(new ModDataRow(mod, manager));
         });
     }
 }

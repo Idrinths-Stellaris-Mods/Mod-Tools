@@ -20,11 +20,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javax.persistence.EntityManager;
 
 abstract public class ClickableTableView<E, T> extends TableView<E> {
 
     protected E current;
     protected boolean modified;
+    protected EntityManager manager;
 
     public ClickableTableView(String[] columns) {
         setRowFactory(tv -> {
@@ -40,6 +42,10 @@ abstract public class ClickableTableView<E, T> extends TableView<E> {
         for (String column : columns) {
             addColumn(column, 600 / columns.length);
         }
+    }
+
+    public void setManager(EntityManager manager) {
+        this.manager = manager;
     }
 
     private void addColumn(String name, int width) {

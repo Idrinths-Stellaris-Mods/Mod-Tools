@@ -20,12 +20,14 @@ import de.idrinth.stellaris.modtools.MainApp;
 import de.idrinth.stellaris.modtools.entity.Modification;
 import de.idrinth.stellaris.modtools.entity.PatchedFile;
 import java.util.Set;
+import javax.persistence.EntityManager;
 
 public class FileDataRow extends AbstractDataRow {
 
     private final String file;
 
-    public FileDataRow(PatchedFile file) {
+    public FileDataRow(PatchedFile file, EntityManager manager) {
+        super(manager);
         this.file = file.getRelativePath();
     }
 
@@ -34,19 +36,19 @@ public class FileDataRow extends AbstractDataRow {
     }
 
     public String getImportance() {
-        PatchedFile fileO = (PatchedFile) MainApp.entityManager.createEntityManager().find(PatchedFile.class, file);
+        PatchedFile fileO = (PatchedFile) manager.find(PatchedFile.class, file);
         int i = fileO.getImportance();
         return i==0?"low":i==1?"medium":"high";
     }
 
     public String getPatch() {
-        PatchedFile fileO = (PatchedFile) MainApp.entityManager.createEntityManager().find(PatchedFile.class, file);
+        PatchedFile fileO = (PatchedFile) manager.find(PatchedFile.class, file);
         return fileO.getContent();
     }
 
     @Override
     protected Set<Modification> getCollisionList() {
-        PatchedFile fileO = (PatchedFile) MainApp.entityManager.createEntityManager().find(PatchedFile.class, file);
+        PatchedFile fileO = (PatchedFile) manager.find(PatchedFile.class, file);
         return fileO.getModifications();
     }
 }

@@ -18,8 +18,14 @@ package de.idrinth.stellaris.modtools.fx.row;
 
 import de.idrinth.stellaris.modtools.entity.Modification;
 import java.util.Set;
+import javax.persistence.EntityManager;
 
 abstract public class AbstractDataRow {
+    protected final EntityManager manager;
+
+    public AbstractDataRow(EntityManager manager) {
+        this.manager = manager;
+    }
     public String getCollisions() {
         Set<Modification> list = getCollisionList();
         String output="";

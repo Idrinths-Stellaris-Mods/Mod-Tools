@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
+import javax.persistence.EntityManager;
 
 public class FillerThread implements Runnable,Callable {
     private final ArrayList<ClickableTableView> list;
@@ -47,7 +48,9 @@ public class FillerThread implements Runnable,Callable {
 
     @Override
     public Object call() throws Exception {
+        EntityManager manager = MainApp.entityManager.createEntityManager();
         list.forEach((ctv) -> {
+            ctv.setManager(manager);
             ctv.addItems();
         });
         return null;
