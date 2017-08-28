@@ -16,9 +16,8 @@
  */
 package de.idrinth.stellaris.modtools.step;
 
-import com.sksamuel.diffpatch.DiffMatchPatch;
+import de.idrinth.stellaris.service.MultiDiffPatch;
 import de.idrinth.stellaris.modtools.entity.Original;
-import de.idrinth.stellaris.modtools.entity.Patch;
 import de.idrinth.stellaris.modtools.entity.PatchedFile;
 import de.idrinth.stellaris.modtools.step.abstracts.TaskList;
 import java.util.ArrayList;
@@ -39,28 +38,18 @@ public class PatchFile extends TaskList {
         });
         return ignores;
     }
-    protected PatchedFile applyPatches(Original original, ArrayList<Long> ignores, String data) {
+    protected PatchedFile applyPatches(Original original, ArrayList<Long> ignores) {
         PatchedFile pf = new PatchedFile();
         pf.setRelativePath(file);
         pf.setImportance(file.endsWith(".txt")?2:file.endsWith(".yml")?1:0);
-        boolean patchable = file.endsWith(".txt") || file.endsWith(".yml");
-        DiffMatchPatch patcher = new DiffMatchPatch();
-        for (Patch patch:original.getPatches()) {
-            if(!ignores.contains(patch.getMod().getAid())) {
-                pf.getModifications().add(patch.getMod());
-                if(patchable) {
-                    Object[] dat = patcher.patch_apply(patcher.patch_make(original.getContent(), patch.getDiff()), data);
-                    for(boolean s:(boolean[]) dat[1]) {
-                        patchable = patchable && s;
-                    }
-                    data = patchable?(String) dat[0]:"Failed patching automatically";
-                }
-            }
-        }
-        if(pf.getModifications().size()<2) {
-            data = "No patching needed";
-        }
-        pf.setContent(data);
+        MultiDiffPatch mdp = new MultiDiffPatch(file.endsWith(".txt") || file.endsWith(".yml"),original.getContent());
+        original.getPatches().stream().filter((patch) -> (!ignores.contains(patch.getMod().getAid()))).map((patch) -> {
+            pf.getModifications().add(patch.getMod());
+            return patch;
+        }).forEachOrdered((patch) -> {
+            mdp.addText(patch.getDiff());
+        });
+        pf.setContent(mdp.getResult());
         addCollisionsToMods(pf);
         return pf;
     }
@@ -85,9 +74,8 @@ public class PatchFile extends TaskList {
             manager.getTransaction().begin();
         }
         boolean patchable = file.endsWith(".txt") || file.endsWith(".yml");
-        String data = patchable?original.getContent():"file type can't be patched, but shouldn't break anything.";
         ArrayList<Long> ignores = getOverwrittenMods(original);
-        manager.persist(applyPatches(original,ignores,data));
+        manager.persist(applyPatches(original,ignores));
         manager.getTransaction().commit();
     }
 }
