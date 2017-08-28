@@ -25,9 +25,10 @@ import java.util.ArrayList;
 import javax.persistence.EntityManager;
 
 public class PatchFile extends TaskList {
-    private String file;
+    private final String file;
     public PatchFile(String file) {
         super(null);
+        this.file = file;
     }
 
     @Override

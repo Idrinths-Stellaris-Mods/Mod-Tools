@@ -16,7 +16,6 @@
  */
 package de.idrinth.stellaris.modtools.fx.row;
 
-import de.idrinth.stellaris.modtools.MainApp;
 import de.idrinth.stellaris.modtools.entity.Modification;
 import de.idrinth.stellaris.modtools.entity.PatchedFile;
 import java.util.Set;
