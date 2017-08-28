@@ -16,19 +16,16 @@
  */
 package de.idrinth.stellaris.modtools.fx.row;
 
-import de.idrinth.stellaris.modtools.entity.Patch;
-import de.idrinth.stellaris.modtools.entity.Modification;
-import de.idrinth.stellaris.modtools.entity.Original;
-import java.util.HashSet;
-import java.util.LinkedList;
-import com.sksamuel.diffpatch.DiffMatchPatch;
 import de.idrinth.stellaris.modtools.MainApp;
+import de.idrinth.stellaris.modtools.entity.Modification;
+import de.idrinth.stellaris.modtools.entity.PatchedFile;
+import java.util.Set;
 
 public class FileDataRow extends AbstractDataRow {
 
     private final String file;
 
-    public FileDataRow(Original file) {
+    public FileDataRow(PatchedFile file) {
         this.file = file.getRelativePath();
     }
 
@@ -36,49 +33,20 @@ public class FileDataRow extends AbstractDataRow {
         return file;
     }
 
-    public String getImportance() {return "";/*
-        Original fileO = (Original) MainApp.entityManager.createEntityManager().find(Original.class, file);
-        if (null == fileO.getPatches() || fileO.getPatches().size() < 2) {
-            return "none";
-        }
-        if (file.endsWith(".txt")||file.endsWith(".yml")) {
-            return getColliding().size() > 1 ? "high" : "medium";
-        }
-        return "low";*/
+    public String getImportance() {
+        PatchedFile fileO = (PatchedFile) MainApp.entityManager.createEntityManager().find(PatchedFile.class, file);
+        int i = fileO.getImportance();
+        return i==0?"low":i==1?"medium":"high";
     }
 
     public String getPatch() {
-        if (!(file.endsWith(".txt")||file.endsWith(".yml"))) {
-            return "- not patchable, but unimportant -";
-        }
-        DiffMatchPatch patcher = new DiffMatchPatch();
-        Original fileO = (Original) MainApp.entityManager.createEntityManager().find(Original.class, file);
-        String result = fileO.getContent();
-        HashSet<Modification> colliding = getColliding();
-        for (Patch mf : fileO.getPatches()) {
-            if (colliding.contains(mf.getMod())) {
-                Object[] data = patcher.patch_apply(
-                        new LinkedList<>(patcher.patch_fromText(mf.getDiff())),
-                        result
-                );
-                result = (String) data[0];
-                for (boolean success : (boolean[]) data[1]) {
-                    if (!success) {
-                        return "failed to automatically patch";
-                    }
-                }
-            }
-        }
-        return result;
+        PatchedFile fileO = (PatchedFile) MainApp.entityManager.createEntityManager().find(PatchedFile.class, file);
+        return fileO.getContent();
     }
 
     @Override
-    protected HashSet<Modification> getRelatedModifications() {
-        HashSet<Modification> collisions = new HashSet<>();
-        Original fileO = (Original) MainApp.entityManager.createEntityManager().find(Original.class, file);
-        fileO.getPatches().forEach((mf) -> {
-            collisions.add(mf.getMod());
-        });
-        return collisions;
+    protected Set<Modification> getCollisionList() {
+        PatchedFile fileO = (PatchedFile) MainApp.entityManager.createEntityManager().find(PatchedFile.class, file);
+        return fileO.getModifications();
     }
 }

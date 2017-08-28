@@ -18,7 +18,7 @@ package de.idrinth.stellaris.modtools.fx.row;
 
 import de.idrinth.stellaris.modtools.MainApp;
 import de.idrinth.stellaris.modtools.entity.Modification;
-import java.util.HashSet;
+import java.util.Set;
 
 public class ModDataRow extends AbstractDataRow{
 
@@ -49,14 +49,8 @@ public class ModDataRow extends AbstractDataRow{
     }
 
     @Override
-    protected HashSet<Modification> getRelatedModifications() {
-        HashSet<Modification> collisions = new HashSet<>();
-        Modification modO = (Modification) MainApp.entityManager.createEntityManager().find(Modification.class, mod);
-        modO.getPatches().forEach((mf) -> {
-            mf.getFile().getPatches().forEach((fm) -> {
-                collisions.add(fm.getMod());
-            });
-        });
-        return collisions;
+    protected Set<Modification> getCollisionList() {
+        Modification m = (Modification) MainApp.entityManager.createEntityManager().find(Modification.class, mod);
+        return m.getCollides();
     }
 }

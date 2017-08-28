@@ -17,28 +17,19 @@
 package de.idrinth.stellaris.modtools.fx.row;
 
 import de.idrinth.stellaris.modtools.entity.Modification;
-import java.util.HashSet;
+import java.util.Set;
 
 abstract public class AbstractDataRow {
-    protected boolean isModCovered(Modification m, HashSet<Modification> list) {
-        return list.stream().anyMatch((m2) -> (m2.getOverwrite().contains(m)));
-    }
-    public String getCollisions() {return "";
-        /*String result = "";
-        int counter = 0;
-        for (Modification m : getColliding()) {
-            result = result + "\\n" + m.getName() + " [" + m.getId() + "]";
-            counter++;
+    public String getCollisions() {
+        Set<Modification> list = getCollisionList();
+        String output="";
+        if(list.size()<1) {
+            return output;
         }
-        return counter > 1 && result.length() > 0 ? result.substring(1) : result;*/
+        for(Modification collision:list) {
+            output = output + "\n" +collision.getName()+" ["+collision.getId()+"]";
+        }
+        return output.substring(1);
     }
-    protected abstract HashSet<Modification> getRelatedModifications();
-    protected HashSet<Modification> getColliding() {
-        HashSet<Modification> collisions = getRelatedModifications();
-        HashSet<Modification> colliding = new HashSet<>();
-        collisions.stream().filter((m) -> (!isModCovered(m, collisions))).forEachOrdered((m) -> {
-            colliding.add(m);
-        });
-        return colliding;
-    }
+    protected abstract Set<Modification> getCollisionList();
 }

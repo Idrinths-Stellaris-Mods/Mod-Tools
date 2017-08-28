@@ -17,6 +17,9 @@
 package de.idrinth.stellaris.modtools.access;
 
 import de.idrinth.stellaris.modtools.FillerThread;
+import de.idrinth.stellaris.modtools.MainApp;
+import de.idrinth.stellaris.modtools.entity.Original;
+import de.idrinth.stellaris.modtools.step.PatchFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -45,9 +48,7 @@ public class Queue implements Runnable {
         done = futures.stream().map((future) -> future.isDone()).reduce(done, (accumulator, _item) -> accumulator & _item); // check if future is done
         return done;
     }
-
-    @Override
-    public void run() {
+    private void check() {
         int counter;
         do {
             counter =0;
@@ -62,6 +63,14 @@ public class Queue implements Runnable {
                 Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);
             }
         } while(counter< futures.size()&&!isDone());
+    }
+    @Override
+    public void run() {
+        check();
+        MainApp.entityManager.createEntityManager().createNamedQuery("originals",Original.class).getResultList().forEach((o) -> {
+            this.add(new PatchFile(o.getRelativePath()));
+        });
+        check();
         executor.shutdown();
         try {
             executor.awaitTermination(1, TimeUnit.DAYS);

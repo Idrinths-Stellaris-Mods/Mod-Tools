@@ -62,6 +62,24 @@ public class Modification implements Serializable {
     protected Set<Patch> files;
     @ManyToMany
     protected Set<Modification> overwrite;
+    @OneToMany
+    protected Set<Modification> collides;
+
+    public Set<Patch> getFiles() {
+        return files;
+    }
+
+    public void setFiles(Set<Patch> files) {
+        this.files = files;
+    }
+
+    public Set<Modification> getCollides() {
+        return collides;
+    }
+
+    public void setCollides(Set<Modification> collides) {
+        this.collides = collides;
+    }
 
     public String getName() {
         return name;

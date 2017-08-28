@@ -18,15 +18,26 @@ package de.idrinth.stellaris.modtools.entity;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-
+@NamedQueries({
+    @NamedQuery(
+            name = "patched",
+            query = "select f from PatchedFile f"
+    )
+})
 @Entity
 public class PatchedFile implements Serializable {
     @Id
     private String relativePath;
+    @Column(columnDefinition="TEXT")
     private String content;
+    private int importance;
     @OneToMany
     private HashSet<Modification> modifications;
 
@@ -52,6 +63,31 @@ public class PatchedFile implements Serializable {
 
     public void setModifications(HashSet<Modification> modifications) {
         this.modifications = modifications;
+    }
+
+    public int getImportance() {
+        return importance;
+    }
+
+    public void setImportance(int importance) {
+        this.importance = importance;
+    }
+
+    @Override
+    public int hashCode() {
+        return 83 * 7 + Objects.hashCode(this.relativePath);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final PatchedFile other = (PatchedFile) obj;
+        return Objects.equals(this.relativePath, other.relativePath);
     }
     
 }
