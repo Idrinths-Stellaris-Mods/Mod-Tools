@@ -23,8 +23,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import org.hibernate.annotations.NaturalId;
@@ -62,7 +62,7 @@ public class Modification implements Serializable {
     protected Set<Patch> files;
     @ManyToMany
     protected Set<Modification> overwrite;
-    @OneToMany
+    @ManyToMany
     protected Set<Modification> collides;
 
     public Set<Patch> getFiles() {
