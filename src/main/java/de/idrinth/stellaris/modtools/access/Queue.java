@@ -19,6 +19,7 @@ package de.idrinth.stellaris.modtools.access;
 import de.idrinth.stellaris.modtools.FillerThread;
 import de.idrinth.stellaris.modtools.MainApp;
 import de.idrinth.stellaris.modtools.entity.Original;
+import de.idrinth.stellaris.modtools.fx.ProgressElement;
 import de.idrinth.stellaris.modtools.step.PatchFile;
 import de.idrinth.stellaris.modtools.step.abstracts.TaskList;
 import java.util.ArrayList;
@@ -33,13 +34,15 @@ import javax.persistence.EntityManager;
 
 public class Queue implements Runnable {
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(15);//75% of maximum, just to be on the save side
+    private final ExecutorService executor = Executors.newFixedThreadPool(20);//75% of maximum, just to be on the save side
     private final List<Future<?>> futures = new ArrayList<>();
     private final List<String> known = new ArrayList<>();
     private final FillerThread c;
+    private final ProgressElement progress;
 
-    public Queue(FillerThread c) {
+    public Queue(FillerThread c, ProgressElement progress) {
         this.c = c;
+        this.progress = progress;
     }
 
     public synchronized void add(TaskList task) {
@@ -56,26 +59,27 @@ public class Queue implements Runnable {
         done = futures.stream().map((future) -> future.isDone()).reduce(done, (accumulator, _item) -> accumulator & _item); // check if future is done
         return done;
     }
-    private void check() {
+    private void check(boolean first) {
         int counter;
         do {
             counter =0;
             for(Future future:futures) {
-                if(!future.isDone()) {
+                if(future.isDone()) {
                     counter++;
                 }
             }
             try {
-                Thread.sleep(2500);
+                Thread.sleep(500);
             } catch (InterruptedException ex) {
                 Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println(counter+" of "+futures.size()+" todo; is considered "+(isDone()?"":"not ")+"done");
+            progress.update(counter,futures.size()*(first?2:1));
         } while(!isDone());
+        progress.update(futures.size(),futures.size()*(first?2:1));
     }
     @Override
     public void run() {
-        check();
+        check(true);
         EntityManager manager = MainApp.getEntityManager();
         executor.shutdown();
         try {
@@ -86,9 +90,10 @@ public class Queue implements Runnable {
         ExecutorService local = Executors.newFixedThreadPool(15);
         manager.createNamedQuery("originals",Original.class).getResultList().forEach((o) -> {
             System.out.println("adding "+o.getRelativePath());
-            local.submit(new PatchFile(o.getRelativePath()));
+            futures.add(local.submit(new PatchFile(o.getRelativePath())));
         });
         local.shutdown();
+        check(false);
         try {
             local.awaitTermination(1, TimeUnit.DAYS);
         } catch (InterruptedException ex) {

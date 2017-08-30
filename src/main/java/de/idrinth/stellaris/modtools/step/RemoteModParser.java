@@ -23,6 +23,8 @@ import de.idrinth.stellaris.modtools.step.abstracts.TaskList;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.persistence.EntityManager;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -112,22 +114,38 @@ public class RemoteModParser extends TaskList {
                 System.out.println("Added title for remote id "+id);
             }
             if (null != doc.getElementById("RequiredItems")) {
-                doc.getElementById("RequiredItems").getElementsByTag("a").stream().filter((a) -> (a.hasAttr("href"))).map((a) -> "ugc_" + a.attributes().get("href").replaceAll("^.*id=([0-9]+).*$", "$1")).forEachOrdered((lId) -> {
-                    Modification lMod = (Modification) getEntityManager().createNamedQuery("modifications.id",Modification.class).setParameter("id", lId).getSingleResult();
-                    if(null == lMod) {
-                        lMod = new Modification();
-                        lMod.setId(Integer.parseInt(lId));
-                        tasks.add(new RemoteModParser(lMod.getId(),queue));
+                Pattern reg = Pattern.compile("https?://(www\\.)?steamcommunity\\.com/workshop/filedetails/\\?id=([0-9]+).*");
+                for(Element link:doc.getElementById("RequiredItems").getElementsByTag("a")) {
+                    if(link.hasAttr("href")) {
+                        int lId = match(reg.matcher(link.attr("href")));
+                        if(lId>0) {
+                            Modification lMod = (Modification) getEntityManager().createNamedQuery("modifications.id",Modification.class).setParameter("id", lId).getSingleResult();
+                            if(null == lMod) {
+                                lMod = new Modification("",lId);
+                                tasks.add(new RemoteModParser(lMod.getId(),queue));
+                                getEntityManager().persist(lMod);
+                            }
+                            mod.getOverwrite().add(lMod);
+                        }
                     }
-                    mod.getOverwrite().add(lMod);
-                });
+                }
                 System.out.println("Added required items for remote id "+id);
             }
         } catch (IOException ex) {
             System.out.println(ex.getLocalizedMessage());
         }
     }
-
+    private int match(Matcher matcher) {
+        try {
+            if(matcher.find()) {
+                String result = matcher.group(2);
+                return Integer.parseInt(result,10);
+            }
+        } catch(NumberFormatException e) {
+            System.out.println("failed matching number in link");
+        }
+        return -1;
+    }
     @Override
     protected String getIdentifier() {
         return String.valueOf(id);

@@ -48,6 +48,8 @@ public class ZipContentParser extends Files implements Runnable {
                     System.out.println(ex.getCause().getLocalizedMessage());
                 }
             }
+        } catch(Exception e) {
+            System.err.println(e.getLocalizedMessage());
         }
     }
 

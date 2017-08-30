@@ -21,6 +21,7 @@ import de.idrinth.stellaris.modtools.access.Queue;
 import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.filter.FileExt;
 import de.idrinth.stellaris.modtools.fx.ClickableTableView;
+import de.idrinth.stellaris.modtools.fx.ProgressElement;
 import de.idrinth.stellaris.modtools.step.ConfigParser;
 import java.io.File;
 import java.io.IOException;
@@ -30,9 +31,11 @@ import javax.persistence.EntityManager;
 
 public class FillerThread implements Runnable,Callable {
     private final ArrayList<ClickableTableView> list;
+    private final ProgressElement progress;
 
-    public FillerThread(ArrayList<ClickableTableView> list) {
+    public FillerThread(ArrayList<ClickableTableView> list, ProgressElement progress) {
         this.list = list;
+        this.progress = progress;
     }
     @Override
     public void run() {
@@ -43,7 +46,7 @@ public class FillerThread implements Runnable,Callable {
             manager.getTransaction().begin();
             manager.persist(o);
             manager.getTransaction().commit();
-            Queue queue = new Queue(this);
+            Queue queue = new Queue(this, progress);
             for (File mod : DirectoryLookup.getModDir().listFiles(new FileExt("mod"))) {
                 queue.add(new ConfigParser(mod,queue));
             }

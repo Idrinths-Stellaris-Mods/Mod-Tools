@@ -16,7 +16,6 @@
  */
 package de.idrinth.stellaris.modtools;
 
-import de.idrinth.stellaris.modtools.step.abstracts.TaskList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -25,6 +24,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javax.persistence.EntityManager;
@@ -44,6 +44,7 @@ public class MainApp extends Application {
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
             stage.setTitle("Idrinth's Stellaris Mod-Tools");
             stage.setScene(new Scene(root));
+            stage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/logo.png")));
             stage.show();
             stage.setOnCloseRequest((WindowEvent e) -> {
                 Platform.exit();

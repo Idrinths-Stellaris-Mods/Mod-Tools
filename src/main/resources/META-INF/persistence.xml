@@ -29,9 +29,9 @@
     <class>de.idrinth.stellaris.modtools.entity.Original</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/smt?zeroDateTimeBehavior=CONVERT_TO_NULL&amp;serverTimezone=UTC&amp;useLegacyDatetimeCode=false"/>
-      <property name="javax.persistence.jdbc.user" value="smt"/>
+      <property name="javax.persistence.jdbc.user" value="root"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-      <property name="javax.persistence.jdbc.password" value="smt"/>
+      <property name="javax.persistence.jdbc.password" value=""/>
       <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
       <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
       <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
