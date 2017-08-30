@@ -16,10 +16,13 @@
  */
 package de.idrinth.stellaris.modtools.step;
 
+import de.idrinth.stellaris.modtools.MainApp;
 import de.idrinth.stellaris.modtools.access.Queue;
 import de.idrinth.stellaris.modtools.entity.Modification;
 import de.idrinth.stellaris.modtools.step.abstracts.TaskList;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -40,21 +43,17 @@ public class RemoteModParser extends TaskList {
         if (!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }
-        try {
-            Modification mod = (Modification) manager.createNamedQuery("modifications.id",Modification.class).setParameter("id", id).getSingleResult();
-            if(null == mod) {
-                mod = new Modification();
-                mod.setId(id);
-            }
-            if (null == mod.getDescription() || "".equals(mod.getDescription())) {//not already processed
-                filli(mod);
-                manager.persist(mod);
-            }
-            manager.getTransaction().commit();
-        } catch (Exception ex) {
-            System.out.println(ex.getLocalizedMessage());
-            manager.getTransaction().rollback();
+        Modification mod = (Modification) manager.createNamedQuery("modifications.id",Modification.class).setParameter("id", id).getSingleResult();
+        if(null == mod) {
+            System.out.println("Creating new mod for remote id "+id);
+            mod = new Modification("", id);
+            mod.getCollides().setModification(mod);
+            manager.persist(mod);
         }
+        if (null == mod.getDescription() || "".equals(mod.getDescription())) {//not already processed
+            filli(mod);
+        }
+        manager.getTransaction().commit();
     }
 
     protected Element clean(Element element) {
@@ -82,18 +81,35 @@ public class RemoteModParser extends TaskList {
         });
         return work;
     }
-
+    /**
+     * 0.1-10s of waiting
+     * @return 
+     */
+    private int getRandom() {
+        return (int)(Math.random()*9900)+100;
+    }
+    private Document getDocument() throws IOException {
+        try {
+            Thread.sleep(getRandom());
+        } catch (InterruptedException ex) {
+            Logger.getLogger(RemoteModParser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Jsoup
+                .connect("http://steamcommunity.com/sharedfiles/filedetails/?id=" + String.valueOf(id))
+                .userAgent("IdrinthStellarisModTools/v"+MainApp.version+" (https://github.com/Idrinths-Stellaris-Mods)")
+                .timeout(10000)//10s
+                .get();
+    }
     protected void filli(Modification mod) {
         try {
-            Document doc = Jsoup.connect("http://steamcommunity.com/sharedfiles/filedetails/?id=" + String.valueOf(id)).get();
+            Document doc = getDocument();
             if (null != doc.getElementById("highlightContent")) {
                 mod.setDescription(clean(doc.getElementById("highlightContent")).html());
+                System.out.println("Added description for remote id "+id);
             }
             if (null != doc.getElementsByClass("workshopItemTitle").first()) {
                 mod.setName(doc.getElementsByClass("workshopItemTitle").first().text());
-            }
-            if (null != doc.getElementById("highlightContent")) {
-                mod.setDescription(clean(doc.getElementById("highlightContent")).html());
+                System.out.println("Added title for remote id "+id);
             }
             if (null != doc.getElementById("RequiredItems")) {
                 doc.getElementById("RequiredItems").getElementsByTag("a").stream().filter((a) -> (a.hasAttr("href"))).map((a) -> "ugc_" + a.attributes().get("href").replaceAll("^.*id=([0-9]+).*$", "$1")).forEachOrdered((lId) -> {
@@ -105,9 +121,15 @@ public class RemoteModParser extends TaskList {
                     }
                     mod.getOverwrite().add(lMod);
                 });
+                System.out.println("Added required items for remote id "+id);
             }
         } catch (IOException ex) {
             System.out.println(ex.getLocalizedMessage());
         }
+    }
+
+    @Override
+    protected String getIdentifier() {
+        return String.valueOf(id);
     }
 }

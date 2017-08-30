@@ -19,24 +19,37 @@ package de.idrinth.stellaris.modtools.step;
 import com.github.sarxos.winreg.RegistryException;
 import de.idrinth.stellaris.modtools.access.DirectoryLookup;
 import de.idrinth.stellaris.modtools.entity.Original;
+import de.idrinth.stellaris.modtools.service.FileExtensions;
 import de.idrinth.stellaris.modtools.step.abstracts.TaskList;
 import java.io.File;
 import java.io.IOException;
 import javax.persistence.EntityManager;
 import org.apache.commons.io.FileUtils;
 
-/**
- *
- * @author Björn
- */
 public class OriginalFileFiller extends TaskList {
-    private final String path;
+    private final String path;    
+    protected final String[] extsPatch = ".txt,.yml".split(",");
 
     public OriginalFileFiller(String path) {
         super(null);
         this.path = path;
     }
-    
+    protected String getContent() {
+        if(!FileExtensions.isPatchable(path)) {
+            return "-unpatchable-";//nothing to do
+        }
+        try {
+            File file = new File(
+                    DirectoryLookup.getSteamDir().getAbsolutePath()
+                    + "SteamApps/common/Stellaris/"
+                    + path
+                );
+            return file.exists()&&file.canRead()?FileUtils.readFileToString(file, "utf-8"):"";
+        } catch (IOException | RegistryException exception) {
+            System.out.println(exception.getLocalizedMessage());
+            return "-not readable-";
+        }
+    }
     @Override
     public void fill() {
         EntityManager manager = getEntityManager();
@@ -45,21 +58,14 @@ public class OriginalFileFiller extends TaskList {
         }
         Original file = (Original) manager.find(Original.class, path);
         if(null == file.getContent() || "".equals(file.getContent())) {
-            try {
-                file.setContent(FileUtils.readFileToString(
-                    new File(
-                        DirectoryLookup.getSteamDir().getAbsolutePath()
-                        + "SteamApps/common/Stellaris/"
-                        + path
-                    ),
-                    "utf-8"
-                ));
-            } catch (IOException | RegistryException exception) {
-                System.out.println(exception.getLocalizedMessage());
-            }
-            manager.persist(file);
+            file.setContent(getContent());
         }
         manager.getTransaction().commit();
+    }
+
+    @Override
+    protected String getIdentifier() {
+        return path;
     }
     
 }

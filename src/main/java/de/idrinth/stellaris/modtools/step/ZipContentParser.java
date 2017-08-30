@@ -17,20 +17,16 @@
 package de.idrinth.stellaris.modtools.step;
 
 import de.idrinth.stellaris.modtools.access.Queue;
-import de.idrinth.stellaris.modtools.entity.Modification;
+import de.idrinth.stellaris.modtools.service.FileExtensions;
 import de.idrinth.stellaris.modtools.step.abstracts.Files;
 import java.io.File;
 import java.io.IOException;
-import java.util.Enumeration;
-import javax.persistence.EntityManager;
+import org.apache.commons.collections4.iterators.EnumerationIterator;
+import org.apache.commons.collections4.iterators.IteratorIterable;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.io.IOUtils;
 
-/**
- *
- * @author Björn
- */
 public class ZipContentParser extends Files implements Runnable {
     private final File file;
 
@@ -41,31 +37,30 @@ public class ZipContentParser extends Files implements Runnable {
 
     @Override
     protected void fill() throws IOException {
-        EntityManager manager = getEntityManager();
-        if(!manager.getTransaction().isActive()) {
-            manager.getTransaction().begin();
-        }
-        Modification mod = (Modification) manager.createNamedQuery("modifications.config", Modification.class).setParameter("configPath", modConfigName).getSingleResult();
-
-        try (ZipFile zip = new ZipFile(file)) {
-            Enumeration entries = zip.getEntries();
-            while (entries.hasMoreElements()) {
-                handleSingleZipEntry(zip, (ZipArchiveEntry) entries.nextElement(), mod);
-            }
-        }
-        manager.persist(mod);
-        manager.getTransaction().commit();
-    }
-
-    protected void handleSingleZipEntry(ZipFile zip, ZipArchiveEntry entry, Modification mod) throws IOException {
-        if (entry.isDirectory()) {
+        if(!file.exists()) {
             return;
         }
-        for (String ext : exts) {
-            if (entry.getName().endsWith(ext)) {
-                addToFiles(entry.getName(), mod, IOUtils.toString(zip.getInputStream(entry), "utf-8"));
-                return;
+        try (ZipFile zip = new ZipFile(file)) {
+            for(ZipArchiveEntry entry:new IteratorIterable<>(new EnumerationIterator<>(zip.getEntries()))) {
+                try {
+                    handleSingleZipEntry(zip, entry);
+                } catch(IOException ex) {
+                    System.out.println(ex.getCause().getLocalizedMessage());
+                }
             }
+        }
+    }
+
+    protected void handleSingleZipEntry(ZipFile zip, ZipArchiveEntry entry) throws IOException {
+        if (entry.isDirectory() || !(entry.getName().contains("/")||entry.getName().contains("\\"))) {
+            return;
+        }
+        if(FileExtensions.isPatchable(entry.getName())) {
+            addToFiles(entry.getName(), IOUtils.toString(zip.getInputStream(entry), "utf-8"));
+            return;
+        }
+        if(FileExtensions.isReplaceable(entry.getName())) {
+            addToFiles(entry.getName(), "");
         }
     }
     

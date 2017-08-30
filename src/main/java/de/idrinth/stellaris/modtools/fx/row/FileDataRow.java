@@ -23,31 +23,32 @@ import javax.persistence.EntityManager;
 
 public class FileDataRow extends AbstractDataRow {
 
-    private final String file;
+    private final long id;
 
     public FileDataRow(PatchedFile file, EntityManager manager) {
         super(manager);
-        this.file = file.getRelativePath();
+        this.id = file.getId();
     }
 
     public String getName() {
-        return file;
+        PatchedFile fileO = (PatchedFile) manager.find(PatchedFile.class, id);
+        return fileO.getOriginal().getRelativePath();
     }
 
     public String getImportance() {
-        PatchedFile fileO = (PatchedFile) manager.find(PatchedFile.class, file);
+        PatchedFile fileO = (PatchedFile) manager.find(PatchedFile.class, id);
         int i = fileO.getImportance();
         return i==0?"low":i==1?"medium":"high";
     }
 
     public String getPatch() {
-        PatchedFile fileO = (PatchedFile) manager.find(PatchedFile.class, file);
+        PatchedFile fileO = (PatchedFile) manager.find(PatchedFile.class, id);
         return fileO.getContent();
     }
 
     @Override
     protected Set<Modification> getCollisionList() {
-        PatchedFile fileO = (PatchedFile) manager.find(PatchedFile.class, file);
+        PatchedFile fileO = (PatchedFile) manager.find(PatchedFile.class, id);
         return fileO.getModifications();
     }
 }

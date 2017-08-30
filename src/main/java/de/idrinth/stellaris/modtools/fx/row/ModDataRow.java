@@ -52,6 +52,6 @@ public class ModDataRow extends AbstractDataRow{
     @Override
     protected Set<Modification> getCollisionList() {
         Modification m = (Modification) manager.find(Modification.class, mod);
-        return m.getCollides();
+        return m.getCollides().getModifications();
     }
 }

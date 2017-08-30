@@ -17,6 +17,7 @@
 package de.idrinth.stellaris.modtools.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Column;
@@ -27,6 +28,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.NaturalId;
 
 @NamedQueries({
@@ -55,15 +59,24 @@ public class Modification implements Serializable {
     protected int id;
     protected String name;
     protected String version;
-    @Column(columnDefinition="TEXT")
+    @Column(columnDefinition="LONGTEXT")
     protected String description;
     //connection
     @OneToMany
-    protected Set<Patch> files;
+    protected Set<Patch> files = new HashSet<>();
     @ManyToMany
-    protected Set<Modification> overwrite;
-    @ManyToMany
-    protected Set<Modification> collides;
+    protected Set<Modification> overwrite = new HashSet<>();
+    @OneToOne
+    @Cascade({CascadeType.ALL})
+    protected Colliding collides = new Colliding();
+
+    public Modification() {
+    }
+
+    public Modification(String configPath, int id) {
+        this.configPath = configPath;
+        this.id = id;
+    }
 
     public Set<Patch> getFiles() {
         return files;
@@ -73,11 +86,11 @@ public class Modification implements Serializable {
         this.files = files;
     }
 
-    public Set<Modification> getCollides() {
+    public Colliding getCollides() {
         return collides;
     }
 
-    public void setCollides(Set<Modification> collides) {
+    public void setCollides(Colliding collides) {
         this.collides = collides;
     }
 

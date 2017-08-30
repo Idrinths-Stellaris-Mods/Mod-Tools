@@ -17,6 +17,7 @@
 package de.idrinth.stellaris.modtools.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Column;
@@ -36,13 +37,20 @@ import javax.persistence.OneToMany;
 public class Original implements Serializable {
 
     //original
-    @Column(columnDefinition="TEXT")
+    @Column(columnDefinition="LONGTEXT")
     protected String content;
     @Id
     protected String relativePath;
     //connection
     @OneToMany
-    protected Set<Patch> patches;
+    protected Set<Patch> patches= new HashSet<>();
+
+    public Original() {
+    }
+
+    public Original(String relativePath) {
+        this.relativePath = relativePath;
+    }
 
     public String getContent() {
         return content;

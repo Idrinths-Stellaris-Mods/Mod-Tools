@@ -19,12 +19,16 @@ package de.idrinth.stellaris.modtools.entity;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import org.hibernate.annotations.NaturalId;
 @NamedQueries({
     @NamedQuery(
             name = "patched",
@@ -34,19 +38,38 @@ import javax.persistence.OneToMany;
 @Entity
 public class PatchedFile implements Serializable {
     @Id
-    private String relativePath;
-    @Column(columnDefinition="TEXT")
+    @GeneratedValue
+    private long id;
+    @NaturalId
+    @OneToOne
+    private Original original;
+    @Column(columnDefinition="LONGTEXT")
     private String content;
     private int importance;
-    @OneToMany
-    private HashSet<Modification> modifications;
+    @ManyToMany
+    private Set<Modification> modifications = new HashSet<>();
 
-    public String getRelativePath() {
-        return relativePath;
+    public PatchedFile() {
     }
 
-    public void setRelativePath(String relativePath) {
-        this.relativePath = relativePath;
+    public PatchedFile(Original original) {
+        this.original = original;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Original getOriginal() {
+        return original;
+    }
+
+    public void setOriginal(Original original) {
+        this.original = original;
     }
 
     public String getContent() {
@@ -57,11 +80,11 @@ public class PatchedFile implements Serializable {
         this.content = content;
     }
 
-    public HashSet<Modification> getModifications() {
+    public Set<Modification> getModifications() {
         return modifications;
     }
 
-    public void setModifications(HashSet<Modification> modifications) {
+    public void setModifications(Set<Modification> modifications) {
         this.modifications = modifications;
     }
 
@@ -75,7 +98,7 @@ public class PatchedFile implements Serializable {
 
     @Override
     public int hashCode() {
-        return 83 * 7 + Objects.hashCode(this.relativePath);
+        return 83 * 7 + Objects.hashCode(this.original);
     }
 
     @Override
@@ -87,7 +110,7 @@ public class PatchedFile implements Serializable {
             return false;
         }
         final PatchedFile other = (PatchedFile) obj;
-        return Objects.equals(this.relativePath, other.relativePath);
+        return Objects.equals(this.original, other.original);
     }
     
 }

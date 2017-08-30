@@ -16,7 +16,7 @@
  */
 package de.idrinth.stellaris.modtools.step;
 
-import de.idrinth.stellaris.service.MultiDiffPatch;
+import de.idrinth.stellaris.modtools.service.MultiDiffPatch;
 import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.entity.PatchedFile;
 import de.idrinth.stellaris.modtools.step.abstracts.TaskList;
@@ -39,12 +39,14 @@ public class PatchFile extends TaskList {
         return ignores;
     }
     protected PatchedFile applyPatches(Original original, ArrayList<Long> ignores) {
+        System.out.println("patching "+file);
         PatchedFile pf = new PatchedFile();
-        pf.setRelativePath(file);
+        pf.setOriginal(original);
         pf.setImportance(file.endsWith(".txt")?2:file.endsWith(".yml")?1:0);
         MultiDiffPatch mdp = new MultiDiffPatch(file.endsWith(".txt") || file.endsWith(".yml"),original.getContent());
         original.getPatches().stream().filter((patch) -> (!ignores.contains(patch.getMod().getAid()))).map((patch) -> {
             pf.getModifications().add(patch.getMod());
+            System.out.println(patch.getMod().getName()+" will be patched in "+file);
             return patch;
         }).forEachOrdered((patch) -> {
             mdp.addText(patch.getDiff());
@@ -59,21 +61,28 @@ public class PatchFile extends TaskList {
         }
         pf.getModifications().forEach((mod) -> {
             pf.getModifications().stream().filter((m) -> (!mod.equals(m))).forEachOrdered((m) -> {
-                mod.getCollides().add(m);
+                mod.getCollides().getModifications().add(m);
             });
         });
     }
     @Override
     protected void fill() {
         EntityManager manager = getEntityManager();
-        Original original = (Original) manager.find(Original.class, file);
-        if(original.getPatches().size()<2) {
-            return;//nothing relevant, no patching required
-        }
         if(!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }
+        Original original = (Original) manager.find(Original.class, file);
+        if(original.getPatches().size()<2) {
+            System.out.println(file+" is without conflicts");
+            manager.getTransaction().commit();
+            return;//nothing relevant, no patching required
+        }
         manager.persist(applyPatches(original,getOverwrittenMods(original)));
         manager.getTransaction().commit();
+    }
+
+    @Override
+    protected String getIdentifier() {
+        return file;
     }
 }

@@ -16,6 +16,9 @@
  */
 package de.idrinth.stellaris.modtools;
 
+import de.idrinth.stellaris.modtools.step.abstracts.TaskList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.application.Platform;
@@ -24,27 +27,57 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import org.apache.commons.io.IOUtils;
 
 public class MainApp extends Application {
 
-    public static EntityManagerFactory entityManager;
+    private static EntityManagerFactory entityManager;
+    public static String version;
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
-        stage.setTitle("Idrinth's Stellaris Mod-Tools");
-        stage.setScene(new Scene(root));
-        stage.show();
-        stage.setOnCloseRequest((WindowEvent e) -> {
-            Platform.exit();
-        });
-        entityManager = Persistence.createEntityManagerFactory("de.idrinth_Stellaris.ModTools");
+        try{
+            version = IOUtils.toString(getClass().getResourceAsStream("/version"),"utf-8");
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
+            stage.setTitle("Idrinth's Stellaris Mod-Tools");
+            stage.setScene(new Scene(root));
+            stage.show();
+            stage.setOnCloseRequest((WindowEvent e) -> {
+                Platform.exit();
+            });
+            entityManager = Persistence.createEntityManagerFactory("de.idrinth_Stellaris.ModTools2");
+        } catch(Exception e) {
+            System.out.println(e.getLocalizedMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
     @Override
     public void stop() {
         System.exit(0);
+    }
+    private static int getRandom() {
+        return (int)(Math.random()*900)+100;
+    }
+    public static EntityManager getEntityManager() {
+        try {
+            try {
+                Thread.sleep(getRandom());
+            } catch (InterruptedException ex) {
+                Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return entityManager.createEntityManager();
+        } catch(javax.persistence.PersistenceException exe) {
+            try {
+                Thread.sleep(getRandom());
+            } catch (InterruptedException ex) {
+                Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return getEntityManager();
+        }
     }
 
     /**

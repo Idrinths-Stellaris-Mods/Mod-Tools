@@ -23,7 +23,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import org.hibernate.annotations.NaturalId;
 
 @Entity
 public class Patch implements Serializable {
@@ -32,13 +31,21 @@ public class Patch implements Serializable {
     @GeneratedValue
     protected long id;
     @ManyToOne
-    @NaturalId
+    //@NaturalId
     protected Modification mod;
     @ManyToOne
-    @NaturalId
+    //@NaturalId
     protected Original file;
-    @Column(columnDefinition="TEXT")
+    @Column(columnDefinition="LONGTEXT")
     protected String diff;
+
+    public Patch() {
+    }
+
+    public Patch(Modification mod, Original file) {
+        this.mod = mod;
+        this.file = file;
+    }
 
     public Modification getMod() {
         return mod;

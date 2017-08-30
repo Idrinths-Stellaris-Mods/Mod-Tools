@@ -20,6 +20,7 @@ import de.idrinth.stellaris.modtools.FillerThread;
 import de.idrinth.stellaris.modtools.MainApp;
 import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.step.PatchFile;
+import de.idrinth.stellaris.modtools.step.abstracts.TaskList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -28,19 +29,26 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.EntityManager;
 
 public class Queue implements Runnable {
 
     private final ExecutorService executor = Executors.newFixedThreadPool(15);//75% of maximum, just to be on the save side
     private final List<Future<?>> futures = new ArrayList<>();
+    private final List<String> known = new ArrayList<>();
     private final FillerThread c;
 
     public Queue(FillerThread c) {
         this.c = c;
     }
 
-    public synchronized void add(Runnable task) {
-        futures.add(executor.submit(task));
+    public synchronized void add(TaskList task) {
+        if(!known.contains(task.getFullIdentifier())) {
+            futures.add(executor.submit(task));
+            known.add(task.getFullIdentifier());
+        } else {
+            System.out.println("Ignoring "+task.getFullIdentifier()+", it's in already.");
+        }
     }
 
     private synchronized boolean isDone() {
@@ -62,18 +70,27 @@ public class Queue implements Runnable {
             } catch (InterruptedException ex) {
                 Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } while(counter< futures.size()&&!isDone());
+            System.out.println(counter+" of "+futures.size()+" todo; is considered "+(isDone()?"":"not ")+"done");
+        } while(!isDone());
     }
     @Override
     public void run() {
         check();
-        MainApp.entityManager.createEntityManager().createNamedQuery("originals",Original.class).getResultList().forEach((o) -> {
-            this.add(new PatchFile(o.getRelativePath()));
-        });
-        check();
+        EntityManager manager = MainApp.getEntityManager();
         executor.shutdown();
         try {
             executor.awaitTermination(1, TimeUnit.DAYS);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        ExecutorService local = Executors.newFixedThreadPool(15);
+        manager.createNamedQuery("originals",Original.class).getResultList().forEach((o) -> {
+            System.out.println("adding "+o.getRelativePath());
+            local.submit(new PatchFile(o.getRelativePath()));
+        });
+        local.shutdown();
+        try {
+            local.awaitTermination(1, TimeUnit.DAYS);
         } catch (InterruptedException ex) {
             Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);
         }

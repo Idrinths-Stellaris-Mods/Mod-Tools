@@ -18,6 +18,7 @@ package de.idrinth.stellaris.modtools;
 
 import de.idrinth.stellaris.modtools.access.DirectoryLookup;
 import de.idrinth.stellaris.modtools.access.Queue;
+import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.filter.FileExt;
 import de.idrinth.stellaris.modtools.fx.ClickableTableView;
 import de.idrinth.stellaris.modtools.step.ConfigParser;
@@ -36,6 +37,12 @@ public class FillerThread implements Runnable,Callable {
     @Override
     public void run() {
         try {
+            EntityManager manager = MainApp.getEntityManager();
+            Original o = new Original();
+            o.setRelativePath("common/readme-less.txt");
+            manager.getTransaction().begin();
+            manager.persist(o);
+            manager.getTransaction().commit();
             Queue queue = new Queue(this);
             for (File mod : DirectoryLookup.getModDir().listFiles(new FileExt("mod"))) {
                 queue.add(new ConfigParser(mod,queue));
@@ -48,7 +55,7 @@ public class FillerThread implements Runnable,Callable {
 
     @Override
     public Object call() throws Exception {
-        EntityManager manager = MainApp.entityManager.createEntityManager();
+        EntityManager manager = MainApp.getEntityManager();
         list.forEach((ctv) -> {
             ctv.setManager(manager);
             ctv.addItems();

@@ -36,6 +36,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -53,6 +55,12 @@ public class FXMLController implements Initializable {
 
     @FXML
     private CollisionTableView collisions;
+
+    @FXML
+    private Button button;
+
+    @FXML
+    private volatile ProgressBar pbar;
 
     private Stage popup;
 
@@ -87,6 +95,8 @@ public class FXMLController implements Initializable {
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
+        button.disarm();//no more events
+        button.setDisable(true);
         ArrayList<ClickableTableView> list = new ArrayList<>();
         list.add(mods);
         list.add(collisions);

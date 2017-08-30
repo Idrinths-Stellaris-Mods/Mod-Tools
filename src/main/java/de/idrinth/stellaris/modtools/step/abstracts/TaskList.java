@@ -18,45 +18,60 @@ package de.idrinth.stellaris.modtools.step.abstracts;
 
 import de.idrinth.stellaris.modtools.MainApp;
 import de.idrinth.stellaris.modtools.access.Queue;
+import de.idrinth.stellaris.modtools.entity.TaskCompletion;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Date;
 import javax.persistence.EntityManager;
 
 abstract public class TaskList implements Runnable{
     protected final Queue queue;
-    protected final ArrayList<Runnable> tasks = new ArrayList();
+    private EntityManager entityManager;
+    protected final ArrayList<TaskList> tasks = new ArrayList();
 
     public TaskList(Queue queue) {
         this.queue = queue;
     }
 
     abstract protected void fill() throws IOException;
-
+    abstract protected String getIdentifier();
     @Override
     public void run() {
-        System.out.println("   Running "+this.getClass().getName());
         try {
-            fill();
-        } catch (IOException ex) {
-            System.out.println(ex.getLocalizedMessage());
+            TaskCompletion tk = new TaskCompletion(this.getClass().getSimpleName(),getIdentifier());
+            EntityManager manager = getEntityManager();
+            System.out.println("   Running "+this.getClass().getName());
+            if(!manager.getTransaction().isActive()) {
+                manager.getTransaction().begin();
+            }
+            manager.persist(tk);
+            manager.getTransaction().commit();
+            try {
+                fill();
+            } catch (Exception ex) {
+                System.out.println(ex.getLocalizedMessage());
+            }
+            tasks.forEach((task) -> {
+                queue.add(task);
+            });
+            tk.setEndTime(new Date());
+            if(!manager.getTransaction().isActive()) {
+                manager.getTransaction().begin();
+            }
+            manager.persist(tk);
+            manager.getTransaction().commit();
+            System.out.println("   Finished "+this.getClass().getName());
+        } catch (Exception e) {
+            System.out.println("   Errored "+this.getClass().getName()+": "+e.getCause().getLocalizedMessage());
         }
-        tasks.forEach((task) -> {
-            queue.add(task);
-        });
-        System.out.println("   Finished "+this.getClass().getName());
+    }
+    public String getFullIdentifier() {
+        return this.getClass().getName()+"@"+getIdentifier();
     }
     protected EntityManager getEntityManager() {
-        try {
-            return MainApp.entityManager.createEntityManager();
-        } catch(javax.persistence.PersistenceException exe) {
-            try {
-                Thread.sleep(2500);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(TaskList.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return getEntityManager();
+        if(null == entityManager) {
+            entityManager = MainApp.getEntityManager();
         }
+        return entityManager;
     }
 }

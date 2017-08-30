@@ -17,7 +17,7 @@
 package de.idrinth.stellaris.modtools.step;
 
 import de.idrinth.stellaris.modtools.access.Queue;
-import de.idrinth.stellaris.modtools.entity.Modification;
+import de.idrinth.stellaris.modtools.service.FileExtensions;
 import de.idrinth.stellaris.modtools.step.abstracts.Files;
 import java.io.File;
 import java.io.IOException;
@@ -41,15 +41,22 @@ public class FileSystemParser extends Files implements Runnable {
             manager.getTransaction().begin();
         }
         int pathLength = folder.getAbsolutePath().length();
-        Modification mod = (Modification) manager.createNamedQuery("modifications.config", Modification.class).setParameter("configPath", modConfigName).getSingleResult();
-        FileUtils.listFiles(folder, exts, true).forEach((file) -> {
+        FileUtils.listFiles(folder, FileExtensions.getPatchable(), true).forEach((file) -> {
             try {
-                addToFiles(file.getAbsolutePath().substring(pathLength), mod, FileUtils.readFileToString(file, "utf-8"));//relative relativePath
+                addToFiles(file.getAbsolutePath().substring(pathLength), FileUtils.readFileToString(file, "utf-8"));//relative relativePath
             } catch (IOException ex) {
                 Logger.getLogger(FileSystemParser.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        manager.persist(mod);
-        manager.getTransaction().commit();
+        FileUtils.listFiles(folder, FileExtensions.getReplaceable(), true).forEach((file) -> {
+            addToFiles(file.getAbsolutePath().substring(pathLength), "");//relative relativePath
+        });
+    }
+    @Override
+    protected void addToFiles(String fPath, String content) {        
+        if (!(fPath.contains("/")||fPath.contains("\\"))) {
+            return;
+        }
+        super.addToFiles(fPath, content);
     }
 }

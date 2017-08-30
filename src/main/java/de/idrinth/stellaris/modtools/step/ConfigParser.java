@@ -47,7 +47,7 @@ public class ConfigParser extends TaskList {
         throw new IOException("No valid path to mod found: " + file.getAbsolutePath());
     }
 
-    private Runnable handlePath(String path) throws IOException, RegistryException {
+    private TaskList handlePath(String path) throws IOException, RegistryException {
         File file = getWithPrefix(path);
         if (path.endsWith(".zip")) {
             return new ZipContentParser(configuration.getName(),file,queue);
@@ -56,6 +56,7 @@ public class ConfigParser extends TaskList {
     }
     private void persist(Modification mod) {
         mod.setConfigPath(configuration.getName());
+        mod.getCollides().setModification(mod);
         EntityManager manager = getEntityManager();
         if(!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
@@ -64,6 +65,7 @@ public class ConfigParser extends TaskList {
         manager.getTransaction().commit();
     }
     private void handleLine(Modification mod, String key, String value) throws RegistryException, IOException {
+        System.out.println(key+" is "+value);
         switch (key) {
             case "archive":
                 tasks.add(handlePath(value));
@@ -104,5 +106,10 @@ public class ConfigParser extends TaskList {
         } catch (RegistryException | NumberFormatException ex) {
             System.out.println(ex.getLocalizedMessage());
         }
+    }
+
+    @Override
+    protected String getIdentifier() {
+        return configuration.getName();
     }
 }

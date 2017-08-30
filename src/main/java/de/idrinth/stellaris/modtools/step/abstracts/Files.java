@@ -16,7 +16,6 @@
  */
 package de.idrinth.stellaris.modtools.step.abstracts;
 
-import de.idrinth.stellaris.modtools.MainApp;
 import de.idrinth.stellaris.modtools.access.Queue;
 import de.idrinth.stellaris.modtools.entity.Modification;
 import de.idrinth.stellaris.modtools.entity.Original;
@@ -26,28 +25,41 @@ import javax.persistence.EntityManager;
 
 abstract public class Files extends TaskList {
     protected final String modConfigName;
-    protected final String[] exts = ".txt,.yml,.dds,.gfx,.gui".split(",");
 
     public Files(Queue queue, String modConfigName) {
         super(queue);
         this.modConfigName = modConfigName;
     }
+    @Override
+    protected String getIdentifier() {
+        return modConfigName;
+    }
 
-    protected void addToFiles(String fPath, Modification mod, String content) {
-        if (fPath.contains("/")) {
-            EntityManager manager = MainApp.entityManager.createEntityManager();
-            Original file = (Original) manager.find(Original.class, fPath);
-            if(null == file) {
-                file = new Original();
-                file.setRelativePath(fPath);
-                queue.add(new OriginalFileFiller(fPath));
-            }
-            Patch patch = new Patch();
-            file.getPatches().add(patch);
-            patch.setDiff(content);
-            patch.setFile(file);
-            patch.setMod(mod);
+    protected void addToFiles(String fPath, String content) {
+        fPath = fPath.replace("\\", "/");
+        System.out.println(fPath+" being added");
+        EntityManager manager = getEntityManager();
+        if(!manager.getTransaction().isActive()) {
+            manager.getTransaction().begin();
         }
+        Modification mod = (Modification) manager.createNamedQuery("modifications.config", Modification.class)
+                .setParameter("configPath", modConfigName)
+                .getSingleResult();
+        if(null == mod) {
+            mod = new Modification(modConfigName,0);
+        }
+        Original file = (Original) manager.find(Original.class, fPath);
+        if(null == file) {
+            file = new Original(fPath);
+            tasks.add(new OriginalFileFiller(fPath));
+            manager.persist(file);
+        }
+        Patch patch = new Patch(mod,file);
+        patch.setDiff(content);
+        mod.getPatches().add(patch);
+        file.getPatches().add(patch);
+        manager.persist(patch);
+        manager.getTransaction().commit();
     }
 
 }
