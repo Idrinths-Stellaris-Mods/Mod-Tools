@@ -36,8 +36,8 @@ abstract public class Files extends TaskList {
     }
 
     protected void addToFiles(String fPath, String content) {
-        fPath = fPath.replace("\\", "/");
-        System.out.println(fPath+" being added");
+        String lPath = fPath.replace("\\", "/");
+        System.out.println(lPath+" being added");
         EntityManager manager = getEntityManager();
         if(!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
@@ -48,10 +48,10 @@ abstract public class Files extends TaskList {
         if(null == mod) {
             mod = new Modification(modConfigName,0);
         }
-        Original file = (Original) manager.find(Original.class, fPath);
+        Original file = (Original) manager.find(Original.class, lPath);
         if(null == file) {
-            file = new Original(fPath);
-            tasks.add(new OriginalFileFiller(fPath));
+            file = new Original(lPath);
+            tasks.add(new OriginalFileFiller(lPath));
             manager.persist(file);
         }
         Patch patch = new Patch(mod,file);

@@ -50,9 +50,7 @@ public class Colliding implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 67 * hash + Objects.hashCode(this.modification);
-        return hash;
+        return 67 * 3 + Objects.hashCode(this.modification);
     }
 
     @Override
@@ -60,17 +58,11 @@ public class Colliding implements Serializable {
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
         final Colliding other = (Colliding) obj;
-        if (!Objects.equals(this.modification, other.modification)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.modification, other.modification);
     }
     
 }
