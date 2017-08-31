@@ -25,14 +25,12 @@ import java.util.LinkedList;
  */
 public class MultiDiffPatch {
     private boolean patchable;
-    private final String original;
     private int patched = 0;
     private String current;
     private final DiffMatchPatch patcher = new DiffMatchPatch();
 
     public MultiDiffPatch(boolean patchable, String original) {
         this.patchable = patchable;
-        this.original = original;
         this.current = patchable?original:"file type can't be patched, but shouldn't break anything.";
     }
     
