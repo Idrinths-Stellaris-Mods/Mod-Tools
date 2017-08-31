@@ -8,6 +8,8 @@
 This Application helps modding stellaris by:
 
 - finding files overwritten by multiple mods
+- create automatic patches as for text-based files(if possible)
+- consider dependants as desired collisions(i.e. not re-patching)
 
 ## Future Plans
 
