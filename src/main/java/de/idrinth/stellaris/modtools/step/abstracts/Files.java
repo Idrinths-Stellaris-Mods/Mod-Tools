@@ -19,12 +19,9 @@ package de.idrinth.stellaris.modtools.step.abstracts;
 import de.idrinth.stellaris.modtools.access.Queue;
 import de.idrinth.stellaris.modtools.entity.LazyText;
 import de.idrinth.stellaris.modtools.entity.Modification;
-import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.entity.Patch;
 import de.idrinth.stellaris.modtools.step.PatchConnector;
-import java.util.Set;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 
 abstract public class Files extends TaskList {
     protected final String modConfigName;
