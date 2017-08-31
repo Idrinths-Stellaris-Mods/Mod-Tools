@@ -18,6 +18,7 @@ package de.idrinth.stellaris.modtools.step;
 
 import com.github.sarxos.winreg.RegistryException;
 import de.idrinth.stellaris.modtools.access.DirectoryLookup;
+import de.idrinth.stellaris.modtools.entity.LazyText;
 import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.service.FileExtensions;
 import de.idrinth.stellaris.modtools.step.abstracts.TaskList;
@@ -57,7 +58,11 @@ public class OriginalFileFiller extends TaskList {
             manager.getTransaction().begin();
         }
         Original file = (Original) manager.find(Original.class, path);
-        if(null == file.getContent() || "".equals(file.getContent())) {
+        if(null == file.getContent()) {
+            file.setContent(new LazyText());
+            manager.persist(file.getContent());
+        }
+        if(null == file.getContent().getText() || "".equals(file.getContent().getText())) {
             file.setContent(getContent());
         }
         manager.getTransaction().commit();

@@ -17,6 +17,7 @@
 package de.idrinth.stellaris.modtools.service;
 
 import com.sksamuel.diffpatch.DiffMatchPatch;
+import java.util.LinkedList;
 
 /**
  *
@@ -35,13 +36,13 @@ public class MultiDiffPatch {
         this.current = patchable?original:"file type can't be patched, but shouldn't break anything.";
     }
     
-    public void addText(String modified) {
+    public void addText(String patch) {
         patched++;
         if(!patchable) {
             System.out.println("not patchable, nothing to do");
             return;
         }
-        Object[] dat = patcher.patch_apply(patcher.patch_make(original, modified), current);
+        Object[] dat = patcher.patch_apply((LinkedList) patcher.patch_fromText(patch), current);
         for(boolean s:(boolean[]) dat[1]) {
             patchable = patchable && s;
         }

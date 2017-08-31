@@ -46,7 +46,7 @@ public class ModDataRow extends AbstractDataRow{
 
     public String getDescription() {
         Modification modO = (Modification) manager.find(Modification.class, mod);
-        return modO.getDescription();
+        return modO.getDescription().toString();
     }
 
     @Override

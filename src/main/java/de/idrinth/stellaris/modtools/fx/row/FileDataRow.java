@@ -43,7 +43,7 @@ public class FileDataRow extends AbstractDataRow {
 
     public String getPatch() {
         PatchedFile fileO = (PatchedFile) manager.find(PatchedFile.class, id);
-        return fileO.getContent();
+        return fileO.getContent().toString();
     }
 
     @Override

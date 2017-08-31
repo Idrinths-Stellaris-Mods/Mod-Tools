@@ -20,8 +20,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
@@ -41,12 +41,12 @@ public class PatchedFile implements Serializable {
     @GeneratedValue
     private long id;
     @NaturalId
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private Original original;
-    @Column(columnDefinition="LONGTEXT")
-    private String content;
+    @OneToOne(fetch = FetchType.LAZY)
+    private LazyText content;
     private int importance;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Modification> modifications = new HashSet<>();
 
     public PatchedFile() {
@@ -72,12 +72,19 @@ public class PatchedFile implements Serializable {
         this.original = original;
     }
 
-    public String getContent() {
+    public LazyText getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(LazyText content) {
         this.content = content;
+    }
+
+    public void setContent(String content) {
+        if(null == this.content) {
+            throw new IllegalStateException("No LazyText initialized yet");
+        }
+        this.content.setText(content);
     }
 
     public Set<Modification> getModifications() {

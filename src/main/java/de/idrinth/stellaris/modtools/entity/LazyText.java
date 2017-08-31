@@ -17,49 +17,45 @@
 package de.idrinth.stellaris.modtools.entity;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-
 @Entity
-public class Colliding implements Serializable {
+public class LazyText implements Serializable {
     @Id
-    @OneToOne
-    private Modification modification;
-    @OneToMany(fetch = FetchType.LAZY)
-    private Set<Modification> modifications = new HashSet<>();
+    @GeneratedValue
+    private long id;
+    @Column(columnDefinition="LONGTEXT")
+    private String text="";
 
-    public Colliding() {
+    public LazyText() {
     }
 
-    public Colliding(Modification modification) {
-        this.modification = modification;
+    public LazyText(String text) {
+        this.text = text;
     }
 
-    public Modification getModification() {
-        return modification;
+    public long getId() {
+        return id;
     }
 
-    public void setModification(Modification modification) {
-        this.modification = modification;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public Set<Modification> getModifications() {
-        return modifications;
+    public String getText() {
+        return text;
     }
 
-    public void setModifications(Set<Modification> modifications) {
-        this.modifications = modifications;
+    public void setText(String text) {
+        this.text = text;
     }
 
     @Override
     public int hashCode() {
-        return 67 * 3 + Objects.hashCode(this.modification);
+        return 31 * 7 + (int) (this.id ^ (this.id >>> 32));
     }
 
     @Override
@@ -70,8 +66,13 @@ public class Colliding implements Serializable {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        final Colliding other = (Colliding) obj;
-        return Objects.equals(this.modification, other.modification);
+        final LazyText other = (LazyText) obj;
+        return Objects.equals(this.text, other.text);
+    }
+
+    @Override
+    public String toString() {
+        return text;
     }
     
 }

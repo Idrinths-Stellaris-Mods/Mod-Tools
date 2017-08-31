@@ -40,12 +40,6 @@ public class FillerThread implements Runnable,Callable {
     @Override
     public void run() {
         try {
-            EntityManager manager = MainApp.getEntityManager();
-            Original o = new Original();
-            o.setRelativePath("common/readme-less.txt");
-            manager.getTransaction().begin();
-            manager.persist(o);
-            manager.getTransaction().commit();
             Queue queue = new Queue(this, progress);
             for (File mod : DirectoryLookup.getModDir().listFiles(new FileExt("mod"))) {
                 queue.add(new ConfigParser(mod,queue));

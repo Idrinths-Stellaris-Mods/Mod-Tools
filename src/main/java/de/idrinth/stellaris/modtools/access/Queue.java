@@ -19,8 +19,11 @@ package de.idrinth.stellaris.modtools.access;
 import de.idrinth.stellaris.modtools.FillerThread;
 import de.idrinth.stellaris.modtools.MainApp;
 import de.idrinth.stellaris.modtools.entity.Original;
+import de.idrinth.stellaris.modtools.entity.Patch;
 import de.idrinth.stellaris.modtools.fx.ProgressElement;
+import de.idrinth.stellaris.modtools.step.GenerateFilePatch;
 import de.idrinth.stellaris.modtools.step.PatchFile;
+import de.idrinth.stellaris.modtools.step.RemoveOverwrittenFilePatch;
 import de.idrinth.stellaris.modtools.step.abstracts.TaskList;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +62,7 @@ public class Queue implements Runnable {
         done = futures.stream().map((future) -> future.isDone()).reduce(done, (accumulator, _item) -> accumulator & _item); // check if future is done
         return done;
     }
-    private void check(boolean first) {
+    private void check() {
         int counter;
         do {
             counter =0;
@@ -73,13 +76,13 @@ public class Queue implements Runnable {
             } catch (InterruptedException ex) {
                 Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);
             }
-            progress.update(counter,futures.size()*(first?2:1));
+            progress.update(counter,futures.size());
         } while(!isDone());
-        progress.update(futures.size(),futures.size()*(first?2:1));
+        progress.update(futures.size(),futures.size());
     }
     @Override
     public void run() {
-        check(true);
+        check();
         EntityManager manager = MainApp.getEntityManager();
         executor.shutdown();
         try {
@@ -87,22 +90,41 @@ public class Queue implements Runnable {
         } catch (InterruptedException ex) {
             Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);
         }
-        ExecutorService local = Executors.newFixedThreadPool(15);
-        manager.createNamedQuery("originals",Original.class).getResultList().forEach((o) -> {
-            System.out.println("adding "+o.getRelativePath());
-            futures.add(local.submit(new PatchFile(o.getRelativePath())));
+        System.out.println("Done with step 1");
+        ArrayList<Runnable> list = new ArrayList<>();
+        manager.createNamedQuery("patch.any",Patch.class).getResultList().forEach((o) -> {
+            list.add(new GenerateFilePatch(o.getId()));
         });
-        local.shutdown();
-        check(false);
-        try {
-            local.awaitTermination(1, TimeUnit.DAYS);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        addList(list,2);
+        list.clear();
+        manager.createNamedQuery("originals",Original.class).getResultList().forEach((o) -> {
+            list.add(new RemoveOverwrittenFilePatch(o.getRelativePath()));
+        });
+        addList(list,3);
+        list.clear();
+        manager.createNamedQuery("originals",Original.class).getResultList().forEach((o) -> {
+            list.add(new PatchFile(o.getRelativePath()));
+        });
+        addList(list,4);
         try {
             c.call();
         } catch (Exception ex) {
             Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    protected void addList(List<Runnable> results, int counter) {
+        System.out.println("Starting step "+counter);
+        ExecutorService local = Executors.newFixedThreadPool(5);
+        results.forEach((e) -> {
+            futures.add(local.submit(e));
+        });
+        local.shutdown();
+        check();
+        try {
+            local.awaitTermination(1, TimeUnit.DAYS);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("Done with step "+counter);
     }
 }

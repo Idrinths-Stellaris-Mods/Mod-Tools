@@ -16,11 +16,11 @@
  */
 package de.idrinth.stellaris.modtools.step;
 
+import de.idrinth.stellaris.modtools.entity.LazyText;
 import de.idrinth.stellaris.modtools.service.MultiDiffPatch;
 import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.entity.PatchedFile;
 import de.idrinth.stellaris.modtools.step.abstracts.TaskList;
-import java.util.ArrayList;
 import javax.persistence.EntityManager;
 
 public class PatchFile extends TaskList {
@@ -29,41 +29,25 @@ public class PatchFile extends TaskList {
         super(null);
         this.file = file;
     }
-    protected ArrayList<Long> getOverwrittenMods(Original original) {
-        ArrayList<Long> ignores = new ArrayList<>();
-        original.getPatches().forEach((patch) -> {
-            patch.getMod().getOverwrite().forEach((mod) -> {
-                ignores.add(mod.getAid());
-            });
-        });
-        return ignores;
-    }
-    protected PatchedFile applyPatches(Original original, ArrayList<Long> ignores) {
+    protected PatchedFile applyPatches(Original original) {
         System.out.println("patching "+file);
         PatchedFile pf = new PatchedFile();
         pf.setOriginal(original);
         pf.setImportance(file.endsWith(".txt")?2:file.endsWith(".yml")?1:0);
-        MultiDiffPatch mdp = new MultiDiffPatch(file.endsWith(".txt") || file.endsWith(".yml"),original.getContent());
-        original.getPatches().stream().filter((patch) -> (!ignores.contains(patch.getMod().getAid()))).map((patch) -> {
+        MultiDiffPatch mdp = new MultiDiffPatch(file.endsWith(".txt") || file.endsWith(".yml"),original.getContent().toString());
+        original.getPatches().stream().map((patch) -> {
             pf.getModifications().add(patch.getMod());
-            System.out.println(patch.getMod().getName()+" will be patched in "+file);
+            System.out.println(patch.getId()+" will be patched in "+file);
             return patch;
         }).forEachOrdered((patch) -> {
-            mdp.addText(patch.getDiff());
+            mdp.addText(patch.getDiff().toString());
         });
-        pf.setContent(mdp.getResult());
-        addCollisionsToMods(pf);
-        return pf;
-    }
-    protected void addCollisionsToMods(PatchedFile pf) {
-        if(pf.getModifications().size()<2) {
-            return;
+        if(null == pf.getContent()) {
+            pf.setContent(new LazyText());
+            getEntityManager().persist(pf.getContent());
         }
-        pf.getModifications().forEach((mod) -> {
-            pf.getModifications().stream().filter((m) -> (!mod.equals(m))).forEachOrdered((m) -> {
-                mod.getCollides().getModifications().add(m);
-            });
-        });
+        pf.setContent(mdp.getResult());
+        return pf;
     }
     @Override
     protected void fill() {
@@ -77,7 +61,7 @@ public class PatchFile extends TaskList {
             manager.getTransaction().commit();
             return;//nothing relevant, no patching required
         }
-        manager.persist(applyPatches(original,getOverwrittenMods(original)));
+        manager.persist(applyPatches(original));
         manager.getTransaction().commit();
     }
 

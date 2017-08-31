@@ -17,10 +17,12 @@
 package de.idrinth.stellaris.modtools.step.abstracts;
 
 import de.idrinth.stellaris.modtools.access.Queue;
+import de.idrinth.stellaris.modtools.entity.LazyText;
 import de.idrinth.stellaris.modtools.entity.Modification;
 import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.entity.Patch;
 import de.idrinth.stellaris.modtools.step.OriginalFileFiller;
+import java.util.Set;
 import javax.persistence.EntityManager;
 
 abstract public class Files extends TaskList {
@@ -47,6 +49,7 @@ abstract public class Files extends TaskList {
                 .getSingleResult();
         if(null == mod) {
             mod = new Modification(modConfigName,0);
+            manager.persist(mod);
         }
         Original file = (Original) manager.find(Original.class, lPath);
         if(null == file) {
@@ -55,11 +58,18 @@ abstract public class Files extends TaskList {
             manager.persist(file);
         }
         Patch patch = new Patch(mod,file);
+        if(null == patch.getDiff()) {
+            patch.setDiff(new LazyText());
+            manager.persist(patch.getDiff());
+        }
         patch.setDiff(content);
-        mod.getPatches().add(patch);
-        file.getPatches().add(patch);
+        Set mPatches = mod.getPatches();
+        mPatches.add(patch);
+        Set fPatches = file.getPatches();
+        fPatches.add(patch);
         manager.persist(patch);
         manager.getTransaction().commit();
+        System.out.println(lPath+" was added");
     }
 
 }

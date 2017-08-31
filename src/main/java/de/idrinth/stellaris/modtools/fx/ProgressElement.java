@@ -21,7 +21,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tooltip;
 
-public class ProgressElement  {
+public class ProgressElement {
     private final ProgressBar bar;
     private final Label text;
     private final Tooltip tooltip;
@@ -41,6 +41,9 @@ public class ProgressElement  {
         Platform.runLater(() -> {
             if(!bar.isVisible()) {
                 bar.setVisible(true);
+            }
+            if(!text.isVisible()) {
+                text.setVisible(true);
             }
             tooltip.setText(status);
             bar.setProgress(value);

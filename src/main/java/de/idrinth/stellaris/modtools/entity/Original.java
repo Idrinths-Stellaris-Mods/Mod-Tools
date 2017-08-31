@@ -20,12 +20,13 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @NamedQueries({
     @NamedQuery(
@@ -37,12 +38,12 @@ import javax.persistence.OneToMany;
 public class Original implements Serializable {
 
     //original
-    @Column(columnDefinition="LONGTEXT")
-    protected String content;
+    @OneToOne(fetch = FetchType.LAZY)
+    private LazyText content;
     @Id
     protected String relativePath;
     //connection
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     protected Set<Patch> patches= new HashSet<>();
 
     public Original() {
@@ -52,12 +53,19 @@ public class Original implements Serializable {
         this.relativePath = relativePath;
     }
 
-    public String getContent() {
+    public LazyText getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(LazyText content) {
         this.content = content;
+    }
+
+    public void setContent(String content) {
+        if(null == this.content) {
+            throw new IllegalStateException("No LazyText initialized yet");
+        }
+        this.content.setText(content);
     }
 
     public String getRelativePath() {

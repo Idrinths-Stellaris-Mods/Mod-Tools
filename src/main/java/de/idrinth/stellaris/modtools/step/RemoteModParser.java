@@ -18,6 +18,7 @@ package de.idrinth.stellaris.modtools.step;
 
 import de.idrinth.stellaris.modtools.MainApp;
 import de.idrinth.stellaris.modtools.access.Queue;
+import de.idrinth.stellaris.modtools.entity.LazyText;
 import de.idrinth.stellaris.modtools.entity.Modification;
 import de.idrinth.stellaris.modtools.step.abstracts.TaskList;
 import java.io.IOException;
@@ -52,36 +53,27 @@ public class RemoteModParser extends TaskList {
             mod.getCollides().setModification(mod);
             manager.persist(mod);
         }
-        if (null == mod.getDescription() || "".equals(mod.getDescription())) {//not already processed
+        if (null == mod.getDescription() || "".equals(mod.getDescription().toString())) {//not already processed
             filli(mod);
         }
         manager.getTransaction().commit();
     }
 
-    protected Element clean(Element element) {
+    protected String clean(Element element) {
         Element work = element.clone();
-        work.getElementsByTag("img").forEach((el) -> {
-            el.remove();
-        });
-        work.getElementsByTag("script").forEach((el) -> {
-            el.remove();
-        });
-        work.getElementsByTag("link").forEach((el) -> {
-            el.remove();
-        });
-        work.getElementsByTag("canvas").forEach((el) -> {
-            el.remove();
-        });
-        work.getElementsByAttribute("style").forEach((el) -> {
-            el.removeAttr("style");
-        });
-        work.getElementsByAttribute("class").forEach((el) -> {
-            el.removeAttr("class");
-        });
-        work.getElementsByAttribute("target").forEach((el) -> {
-            el.removeAttr("target");
-        });
-        return work;
+        String[] unwantedElements = "img,script,style,link,canvas".split(",");
+        String[] unwantedAttributes = "style,class,target,id,src".split(",");
+        for(String tag:unwantedElements) {
+            work.getElementsByTag(tag).forEach((el) -> {
+                el.remove();
+            });
+        }
+        for(String attr:unwantedAttributes) {
+            work.getElementsByAttribute(attr).forEach((el) -> {
+                el.removeAttr(attr);
+            });
+        }
+        return work.html().replaceAll("\\s{2,}", " ");
     }
     /**
      * 0.1-10s of waiting
@@ -106,7 +98,11 @@ public class RemoteModParser extends TaskList {
         try {
             Document doc = getDocument();
             if (null != doc.getElementById("highlightContent")) {
-                mod.setDescription(clean(doc.getElementById("highlightContent")).html());
+                if(null == mod.getDescription()) {
+                    mod.setDescription(new LazyText());
+                    getEntityManager().persist(mod.getDescription());
+                }
+                mod.setDescription(clean(doc.getElementById("highlightContent")));
                 System.out.println("Added description for remote id "+id);
             }
             if (null != doc.getElementsByClass("workshopItemTitle").first()) {

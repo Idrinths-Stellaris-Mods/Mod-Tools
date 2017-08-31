@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
@@ -59,12 +60,12 @@ public class Modification implements Serializable {
     protected int id;
     protected String name;
     protected String version;
-    @Column(columnDefinition="LONGTEXT")
-    protected String description;
+    @OneToOne(fetch = FetchType.LAZY)
+    private LazyText description;
     //connection
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     protected Set<Patch> files = new HashSet<>();
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     protected Set<Modification> overwrite = new HashSet<>();
     @OneToOne
     @Cascade({CascadeType.ALL})
@@ -142,12 +143,19 @@ public class Modification implements Serializable {
         this.overwrite = overwrite;
     }
 
-    public String getDescription() {
+    public LazyText getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(LazyText description) {
         this.description = description;
+    }
+
+    public void setDescription(String description) {
+        if(null == this.description) {
+            throw new IllegalStateException("No LazyText initialized yet");
+        }
+        this.description.setText(description);
     }
 
     public Set<Patch> getPatches() {
