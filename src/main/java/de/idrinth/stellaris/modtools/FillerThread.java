@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Idrinth
+ * Copyright (C) 2017 Björn Büttner
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@ package de.idrinth.stellaris.modtools;
 
 import de.idrinth.stellaris.modtools.access.DirectoryLookup;
 import de.idrinth.stellaris.modtools.access.Queue;
-import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.filter.FileExt;
 import de.idrinth.stellaris.modtools.fx.ClickableTableView;
 import de.idrinth.stellaris.modtools.fx.ProgressElement;
