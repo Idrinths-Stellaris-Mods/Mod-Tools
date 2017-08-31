@@ -63,6 +63,9 @@ abstract public class TaskList implements Runnable{
             System.out.println("   Finished "+this.getClass().getName());
         } catch (Exception e) {
             System.out.println("   Errored "+this.getClass().getName()+": "+e.getCause().getLocalizedMessage());
+        } catch( Throwable t) {
+            System.err.println("failed  "+getFullIdentifier()+" with a "+t.getClass().getName());
+            System.exit(1);
         }
     }
     public String getFullIdentifier() {

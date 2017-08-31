@@ -16,38 +16,20 @@
  */
 package de.idrinth.stellaris.modtools.step;
 
+import de.idrinth.stellaris.modtools.access.Queue;
 import de.idrinth.stellaris.modtools.entity.LazyText;
-import de.idrinth.stellaris.modtools.service.MultiDiffPatch;
 import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.entity.PatchedFile;
+import de.idrinth.stellaris.modtools.service.FileExtensions;
 import de.idrinth.stellaris.modtools.step.abstracts.TaskList;
+import java.util.LinkedList;
 import javax.persistence.EntityManager;
 
 public class PatchFile extends TaskList {
-    private final String file;
-    public PatchFile(String file) {
-        super(null);
-        this.file = file;
-    }
-    protected PatchedFile applyPatches(Original original) {
-        System.out.println("patching "+file);
-        PatchedFile pf = new PatchedFile();
-        pf.setOriginal(original);
-        pf.setImportance(file.endsWith(".txt")?2:file.endsWith(".yml")?1:0);
-        MultiDiffPatch mdp = new MultiDiffPatch(file.endsWith(".txt") || file.endsWith(".yml"),original.getContent().toString());
-        original.getPatches().stream().map((patch) -> {
-            pf.getModifications().add(patch.getMod());
-            System.out.println(patch.getId()+" will be patched in "+file);
-            return patch;
-        }).forEachOrdered((patch) -> {
-            mdp.addText(patch.getDiff().toString());
-        });
-        if(null == pf.getContent()) {
-            pf.setContent(new LazyText());
-            getEntityManager().persist(pf.getContent());
-        }
-        pf.setContent(mdp.getResult());
-        return pf;
+    private final long id;
+    public PatchFile(long id, Queue queue) {
+        super(queue);
+        this.id = id;
     }
     @Override
     protected void fill() {
@@ -55,18 +37,33 @@ public class PatchFile extends TaskList {
         if(!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }
-        Original original = (Original) manager.find(Original.class, file);
+        Original original = (Original) manager.find(Original.class, id);
         if(original.getPatches().size()<2) {
-            System.out.println(file+" is without conflicts");
+            System.out.println(id+" is without conflicts");
             manager.getTransaction().commit();
             return;//nothing relevant, no patching required
         }
-        manager.persist(applyPatches(original));
+        PatchedFile pf = new PatchedFile();
+        pf.setOriginal(original);
+        pf.setPatchable(FileExtensions.isPatchable(original.getRelativePath()));
+        pf.setPatchableExt(pf.isPatchable());
+        pf.setImportance(original.getRelativePath().endsWith(".txt")?2:original.getRelativePath().endsWith(".yml")?1:0);
+        if(null == pf.getContent()) {
+            pf.setContent(new LazyText());
+            getEntityManager().persist(pf.getContent());
+        }
+        pf.setContent(original.getContent().getText());
+        manager.persist(pf);
+        LinkedList<Long> ll = new LinkedList<>();
+        original.getPatches().forEach((patch) -> {
+            ll.add(patch.getId());
+        });
+        tasks.add(new ApplyPatchFile(ll, pf.getId(), queue));
         manager.getTransaction().commit();
     }
 
     @Override
     protected String getIdentifier() {
-        return file;
+        return String.valueOf(id);
     }
 }

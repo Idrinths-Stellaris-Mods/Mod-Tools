@@ -21,9 +21,10 @@ import de.idrinth.stellaris.modtools.entity.LazyText;
 import de.idrinth.stellaris.modtools.entity.Modification;
 import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.entity.Patch;
-import de.idrinth.stellaris.modtools.step.OriginalFileFiller;
+import de.idrinth.stellaris.modtools.step.PatchConnector;
 import java.util.Set;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 abstract public class Files extends TaskList {
     protected final String modConfigName;
@@ -38,8 +39,7 @@ abstract public class Files extends TaskList {
     }
 
     protected void addToFiles(String fPath, String content) {
-        String lPath = fPath.replace("\\", "/");
-        System.out.println(lPath+" being added");
+        System.out.println(fPath+" being added");
         EntityManager manager = getEntityManager();
         if(!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
@@ -47,29 +47,16 @@ abstract public class Files extends TaskList {
         Modification mod = (Modification) manager.createNamedQuery("modifications.config", Modification.class)
                 .setParameter("configPath", modConfigName)
                 .getSingleResult();
-        if(null == mod) {
-            mod = new Modification(modConfigName,0);
-            manager.persist(mod);
-        }
-        Original file = (Original) manager.find(Original.class, lPath);
-        if(null == file) {
-            file = new Original(lPath);
-            tasks.add(new OriginalFileFiller(lPath));
-            manager.persist(file);
-        }
-        Patch patch = new Patch(mod,file);
+        Patch patch = new Patch();
         if(null == patch.getDiff()) {
             patch.setDiff(new LazyText());
             manager.persist(patch.getDiff());
         }
         patch.setDiff(content);
-        Set mPatches = mod.getPatches();
-        mPatches.add(patch);
-        Set fPatches = file.getPatches();
-        fPatches.add(patch);
         manager.persist(patch);
+        tasks.add(new PatchConnector(patch.getId(),mod.getAid(),fPath.replace("\\", "/"),queue));
         manager.getTransaction().commit();
-        System.out.println(lPath+" was added");
+        System.out.println(fPath+" was added");
     }
 
 }

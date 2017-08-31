@@ -46,7 +46,9 @@ public class RemoteModParser extends TaskList {
         if (!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }
-        Modification mod = (Modification) manager.createNamedQuery("modifications.id",Modification.class).setParameter("id", id).getSingleResult();
+        Modification mod = (Modification) manager.createNamedQuery("modifications.id",Modification.class)
+                .setParameter("id", id)
+                .getSingleResult();
         if(null == mod) {
             System.out.println("Creating new mod for remote id "+id);
             mod = new Modification("", id);
@@ -115,7 +117,9 @@ public class RemoteModParser extends TaskList {
                     if(link.hasAttr("href")) {
                         int lId = match(reg.matcher(link.attr("href")));
                         if(lId>0) {
-                            Modification lMod = (Modification) getEntityManager().createNamedQuery("modifications.id",Modification.class).setParameter("id", lId).getSingleResult();
+                            Modification lMod = (Modification) getEntityManager().createNamedQuery("modifications.id",Modification.class)
+                                    .setParameter("id", lId)
+                                    .getSingleResult();
                             if(null == lMod) {
                                 lMod = new Modification("",lId);
                                 tasks.add(new RemoteModParser(lMod.getId(),queue));

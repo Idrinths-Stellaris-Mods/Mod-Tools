@@ -4,7 +4,7 @@
 
     <groupId>de.idrinth</groupId>
     <artifactId>Stellaris.ModTools</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.1.0</version>
     <packaging>jar</packaging>
 
     <name>Stellaris Mod-Tools</name>
@@ -21,25 +21,25 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.5</version><!-- Apache 2.0 -->
+            <version>2.5</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-compress -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>1.14</version><!-- Apache 2.0 -->
+            <version>1.14</version>
         </dependency>
         <!-- jsoup HTML parser library @ https://jsoup.org/ -->
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.10.3</version><!-- MIT -->
+            <version>1.10.3</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.github.sarxos/windows-registry-util -->
         <dependency>
             <groupId>com.github.sarxos</groupId>
             <artifactId>windows-registry-util</artifactId>
-            <version>0.3</version><!-- MIT -->
+            <version>0.3</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.sksamuel.diff/diff -->
         <dependency>
@@ -51,7 +51,7 @@
         <dependency>
             <groupId>org.codefx.libfx</groupId>
             <artifactId>LibFX</artifactId>
-            <version>0.3.0</version><!-- Gnu General Public License 3.0 -->
+            <version>0.3.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
         <dependency>
@@ -59,16 +59,12 @@
             <artifactId>commons-collections4</artifactId>
             <version>4.1</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>1.4.196</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.7-dmr</version>
+            <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
         <dependency>
@@ -82,6 +78,7 @@
             <artifactId>hibernate-c3p0</artifactId>
             <version>5.2.10.Final</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/junit/junit -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

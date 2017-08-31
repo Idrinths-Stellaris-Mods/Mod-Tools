@@ -49,11 +49,7 @@ public class MainApp extends Application {
             stage.setOnCloseRequest((WindowEvent e) -> {
                 Platform.exit();
             });
-            try{
-                entityManager = Persistence.createEntityManagerFactory("de.idrinth_Stellaris.ModTools.mysql");
-            } catch(Exception e) {
-                entityManager = Persistence.createEntityManagerFactory("de.idrinth_Stellaris.ModTools.h2");
-            }
+            entityManager = Persistence.createEntityManagerFactory("de.idrinth_Stellaris.ModTools");
         } catch(Exception e) {
             System.out.println(e.getLocalizedMessage());
             throw e;

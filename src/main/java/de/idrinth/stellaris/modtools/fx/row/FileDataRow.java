@@ -41,9 +41,17 @@ public class FileDataRow extends AbstractDataRow {
         return i==0?"low":i==1?"medium":"high";
     }
 
+    public String getPatchable() {
+        PatchedFile fileO = (PatchedFile) manager.find(PatchedFile.class, id);
+        if(fileO.isPatchable()) {
+            return "auto";
+        }
+        return fileO.isPatchableExt()?"manually":"no";
+    }
+
     public String getPatch() {
         PatchedFile fileO = (PatchedFile) manager.find(PatchedFile.class, id);
-        return fileO.getContent().toString();
+        return "<pre>"+fileO.getContent().toString()+"</pre>";
     }
 
     @Override

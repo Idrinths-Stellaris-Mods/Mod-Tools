@@ -21,7 +21,7 @@ import de.idrinth.stellaris.modtools.fx.CollisionTableView;
 import de.idrinth.stellaris.modtools.fx.row.FileDataRow;
 import de.idrinth.stellaris.modtools.fx.row.ModDataRow;
 import de.idrinth.stellaris.modtools.fx.ModTableView;
-import de.idrinth.stellaris.modtools.fx.ProgressElement;
+import de.idrinth.stellaris.modtools.fx.Progress;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
@@ -38,8 +38,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
@@ -61,12 +59,9 @@ public class FXMLController implements Initializable {
 
     @FXML
     private Button button;
-
-    @FXML
-    private volatile ProgressBar pbar;
     
     @FXML
-    private Label status;
+    private Progress test;
 
     private Stage popup;
 
@@ -107,7 +102,7 @@ public class FXMLController implements Initializable {
         ArrayList<ClickableTableView> list = new ArrayList<>();
         list.add(mods);
         list.add(collisions);
-        new Thread(new FillerThread(list,new ProgressElement(pbar,status))).start();
+        new Thread(new FillerThread(list,test)).start();
     }
 
     @FXML

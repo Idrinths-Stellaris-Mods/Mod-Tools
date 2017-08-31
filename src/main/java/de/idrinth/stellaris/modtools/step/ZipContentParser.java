@@ -65,5 +65,4 @@ public class ZipContentParser extends Files implements Runnable {
             addToFiles(entry.getName(), "");
         }
     }
-    
 }

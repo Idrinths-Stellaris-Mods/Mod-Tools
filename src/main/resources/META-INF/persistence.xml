@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-  <persistence-unit name="de.idrinth_Stellaris.ModTools.h2" transaction-type="RESOURCE_LOCAL">
+  <persistence-unit name="de.idrinth_Stellaris.ModTools" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
     <class>de.idrinth.stellaris.modtools.entity.Colliding</class>
     <class>de.idrinth.stellaris.modtools.entity.LazyText</class>
@@ -10,44 +10,21 @@
     <class>de.idrinth.stellaris.modtools.entity.PatchedFile</class>
     <class>de.idrinth.stellaris.modtools.entity.TaskCompletion</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:smt:DB_CLOSE_DELAY=-1"/>
-      <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
-      <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
-      <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
-      <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
-      <property name="hibernate.connection.provider_class" value="org.hibernate.c3p0.internal.C3P0ConnectionProvider"/>
-      <property name="hibernate.c3p0.max_size" value="50"/>
-      <property name="hibernate.c3p0.min_size" value="0"/>
-      <property name="hibernate.c3p0.timeout" value="120"/>
-      <property name="hibernate.c3p0.max_statements" value="100"/>
-      <property name="hibernate.c3p0.idle_test_period" value="90"/>
-      <property name="hibernate.c3p0.acquire_increment" value="2"/>
-    </properties>
-  </persistence-unit>
-  <persistence-unit name="de.idrinth_Stellaris.ModTools.mysql" transaction-type="RESOURCE_LOCAL">
-    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-    <class>de.idrinth.stellaris.modtools.entity.Colliding</class>
-    <class>de.idrinth.stellaris.modtools.entity.LazyText</class>
-    <class>de.idrinth.stellaris.modtools.entity.Modification</class>
-    <class>de.idrinth.stellaris.modtools.entity.Original</class>
-    <class>de.idrinth.stellaris.modtools.entity.Patch</class>
-    <class>de.idrinth.stellaris.modtools.entity.PatchedFile</class>
-    <class>de.idrinth.stellaris.modtools.entity.TaskCompletion</class>
-    <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/smt?zeroDateTimeBehavior=CONVERT_TO_NULL&amp;serverTimezone=UTC&amp;useLegacyDatetimeCode=false"/>
-      <property name="javax.persistence.jdbc.user" value="root"/>
-      <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-      <property name="javax.persistence.jdbc.password" value=""/>
-      <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
-      <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
-      <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
-      <property name="hibernate.connection.provider_class" value="org.hibernate.c3p0.internal.C3P0ConnectionProvider"/>
-      <property name="hibernate.c3p0.max_size" value="50"/>
-      <property name="hibernate.c3p0.min_size" value="0"/>
-      <property name="hibernate.c3p0.timeout" value="120"/>
-      <property name="hibernate.c3p0.max_statements" value="100"/>
-      <property name="hibernate.c3p0.idle_test_period" value="90"/>
-      <property name="hibernate.c3p0.acquire_increment" value="2"/>
+        <!--  Basic Settings -->     
+        <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
+        <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+        <property name="hibernate.connection.provider_class" value="org.hibernate.c3p0.internal.C3P0ConnectionProvider"/>
+        <!-- H2-DB Specifics -->
+        <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:smt:DB_CLOSE_DELAY=-1"/>
+        <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+        <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+        <!-- Connection Provider -->
+        <property name="hibernate.c3p0.max_size" value="50"/>
+        <property name="hibernate.c3p0.min_size" value="0"/>
+        <property name="hibernate.c3p0.timeout" value="120"/>
+        <property name="hibernate.c3p0.max_statements" value="100"/>
+        <property name="hibernate.c3p0.idle_test_period" value="90"/>
+        <property name="hibernate.c3p0.acquire_increment" value="2"/>
     </properties>
   </persistence-unit>
 </persistence>

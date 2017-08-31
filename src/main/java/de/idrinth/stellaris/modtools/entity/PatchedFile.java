@@ -48,6 +48,24 @@ public class PatchedFile implements Serializable {
     private int importance;
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Modification> modifications = new HashSet<>();
+    private boolean patchable;
+    private boolean patchableExt;
+
+    public boolean isPatchable() {
+        return patchable;
+    }
+
+    public void setPatchable(boolean patchable) {
+        this.patchable = patchable;
+    }
+
+    public boolean isPatchableExt() {
+        return patchableExt;
+    }
+
+    public void setPatchableExt(boolean patchableExt) {
+        this.patchableExt = patchableExt;
+    }
 
     public PatchedFile() {
     }

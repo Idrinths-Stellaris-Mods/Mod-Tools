@@ -66,7 +66,7 @@ public class Modification implements Serializable {
     protected Set<Patch> files = new HashSet<>();
     @ManyToMany(fetch = FetchType.LAZY)
     protected Set<Modification> overwrite = new HashSet<>();
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @Cascade({CascadeType.ALL})
     protected Colliding collides = new Colliding();
 

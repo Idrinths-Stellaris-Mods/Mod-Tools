@@ -20,32 +20,36 @@ import de.idrinth.stellaris.modtools.FillerThread;
 import de.idrinth.stellaris.modtools.MainApp;
 import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.entity.Patch;
-import de.idrinth.stellaris.modtools.fx.ProgressElement;
+import de.idrinth.stellaris.modtools.fx.Progress;
 import de.idrinth.stellaris.modtools.step.GenerateFilePatch;
 import de.idrinth.stellaris.modtools.step.PatchFile;
 import de.idrinth.stellaris.modtools.step.RemoveOverwrittenFilePatch;
 import de.idrinth.stellaris.modtools.step.abstracts.TaskList;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 
 public class Queue implements Runnable {
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(20);//75% of maximum, just to be on the save side
+    private final ExecutorService executor = Executors.newFixedThreadPool(20);//maximum, just to be on the save side
     private final List<Future<?>> futures = new ArrayList<>();
     private final List<String> known = new ArrayList<>();
     private final FillerThread c;
-    private final ProgressElement progress;
+    private final Progress progress;
 
-    public Queue(FillerThread c, ProgressElement progress) {
+    public Queue(FillerThread c, Progress progress) {
         this.c = c;
         this.progress = progress;
+        this.progress.addToStepLabels("Collecting data");
+        this.progress.addToStepLabels("Removing manually patched");
+        this.progress.addToStepLabels("Creating patches");
+        this.progress.addToStepLabels("Merging patches");
     }
 
     public synchronized void add(TaskList task) {
@@ -66,10 +70,14 @@ public class Queue implements Runnable {
         int counter;
         do {
             counter =0;
-            for(Future future:futures) {
-                if(future.isDone()) {
-                    counter++;
+            try {
+                for(Future future:futures) {
+                    if(future.isDone()) {
+                        counter++;
+                    }
                 }
+            } catch(ConcurrentModificationException e) {
+                // fine, not really important
             }
             try {
                 Thread.sleep(500);
@@ -82,30 +90,28 @@ public class Queue implements Runnable {
     }
     @Override
     public void run() {
-        check();
-        EntityManager manager = MainApp.getEntityManager();
-        executor.shutdown();
-        try {
-            executor.awaitTermination(1, TimeUnit.DAYS);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        System.out.println("Done with step 1");
         ArrayList<Runnable> list = new ArrayList<>();
+        EntityManager manager = MainApp.getEntityManager();
+        addList(list,1);
+
+        list.clear();
+        manager.createNamedQuery("originals",Original.class).getResultList().forEach((o) -> {
+            list.add(new RemoveOverwrittenFilePatch(o.getId()));
+        });
+        addList(list,2);
+
+        list.clear();
         manager.createNamedQuery("patch.any",Patch.class).getResultList().forEach((o) -> {
             list.add(new GenerateFilePatch(o.getId()));
         });
-        addList(list,2);
-        list.clear();
-        manager.createNamedQuery("originals",Original.class).getResultList().forEach((o) -> {
-            list.add(new RemoveOverwrittenFilePatch(o.getRelativePath()));
-        });
         addList(list,3);
+
         list.clear();
         manager.createNamedQuery("originals",Original.class).getResultList().forEach((o) -> {
-            list.add(new PatchFile(o.getRelativePath()));
+            list.add(new PatchFile(o.getId(), this));
         });
         addList(list,4);
+
         try {
             c.call();
         } catch (Exception ex) {
@@ -114,17 +120,10 @@ public class Queue implements Runnable {
     }
     protected void addList(List<Runnable> results, int counter) {
         System.out.println("Starting step "+counter);
-        ExecutorService local = Executors.newFixedThreadPool(5);
         results.forEach((e) -> {
-            futures.add(local.submit(e));
+            futures.add(executor.submit(e));
         });
-        local.shutdown();
         check();
-        try {
-            local.awaitTermination(1, TimeUnit.DAYS);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);
-        }
         System.out.println("Done with step "+counter);
     }
 }

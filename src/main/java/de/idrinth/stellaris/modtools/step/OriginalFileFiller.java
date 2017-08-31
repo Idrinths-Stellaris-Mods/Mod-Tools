@@ -57,7 +57,9 @@ public class OriginalFileFiller extends TaskList {
         if(!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }
-        Original file = (Original) manager.find(Original.class, path);
+        Original file = (Original) manager.createNamedQuery("original.path", Original.class)
+                .setParameter("path", path)
+                .getSingleResult();
         if(null == file.getContent()) {
             file.setContent(new LazyText());
             manager.persist(file.getContent());

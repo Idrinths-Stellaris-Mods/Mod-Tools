@@ -23,19 +23,18 @@ import java.util.ArrayList;
 import javax.persistence.EntityManager;
 
 public class RemoveOverwrittenFilePatch extends TaskList {
-    private final String file;
-    public RemoveOverwrittenFilePatch(String file) {
+    private final long id;
+    public RemoveOverwrittenFilePatch(long id) {
         super(null);
-        this.file = file;
+        this.id = id;
     }
     @Override
     protected void fill() {
-        try{
         EntityManager manager = getEntityManager();
         if(!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }
-        Original original = (Original) manager.find(Original.class, file);
+        Original original = (Original) manager.find(Original.class, id);
         ArrayList<Long> ignores = new ArrayList<>();
         original.getPatches().forEach((patch) -> {
             patch.getMod().getOverwrite().forEach((mod) -> {
@@ -60,13 +59,10 @@ public class RemoveOverwrittenFilePatch extends TaskList {
             });
         });
         manager.getTransaction().commit();
-        } catch(Throwable any) {
-            System.err.print(any);
-        }
     }
 
     @Override
     protected String getIdentifier() {
-        return file;
+        return String.valueOf(id);
     }
 }

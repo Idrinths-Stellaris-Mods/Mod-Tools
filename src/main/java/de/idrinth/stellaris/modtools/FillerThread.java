@@ -20,7 +20,7 @@ import de.idrinth.stellaris.modtools.access.DirectoryLookup;
 import de.idrinth.stellaris.modtools.access.Queue;
 import de.idrinth.stellaris.modtools.filter.FileExt;
 import de.idrinth.stellaris.modtools.fx.ClickableTableView;
-import de.idrinth.stellaris.modtools.fx.ProgressElement;
+import de.idrinth.stellaris.modtools.fx.Progress;
 import de.idrinth.stellaris.modtools.step.ConfigParser;
 import java.io.File;
 import java.io.IOException;
@@ -30,9 +30,9 @@ import javax.persistence.EntityManager;
 
 public class FillerThread implements Runnable,Callable {
     private final ArrayList<ClickableTableView> list;
-    private final ProgressElement progress;
+    private final Progress progress;
 
-    public FillerThread(ArrayList<ClickableTableView> list, ProgressElement progress) {
+    public FillerThread(ArrayList<ClickableTableView> list, Progress progress) {
         this.list = list;
         this.progress = progress;
     }
