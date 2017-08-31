@@ -1,7 +1,12 @@
-# [Stellaris Mod Tools](https://github.com/Idrinths-Stellaris-Mods/Mod-Tools/releases/latest/)
+# Stellaris Mod Tools
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/23bfdba23039450aa3c16f06f93362ee)](https://www.codacy.com/app/Idrinth/Mod-Tools?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Idrinths-Stellaris-Mods/Mod-Tools&amp;utm_campaign=Badge_Grade)
 [![Travis Build](https://api.travis-ci.org/Idrinths-Stellaris-Mods/Mod-Tools.svg?branch=master)](https://travis-ci.org/Idrinths-Stellaris-Mods/Mod-Tools)
+
+[![GitHub license](https://img.shields.io/badge/license-AGPL-blue.svg)](https://raw.githubusercontent.com/Idrinths-Stellaris-Mods/Mod-Tools/master/LICENSE)
+
+[![GitHub release](https://img.shields.io/github/release/Idrinths-Stellaris-Mods/Mod-Tools.svg)](https://github.com/Idrinths-Stellaris-Mods/Mod-Tools/releases/latest)
+[![Github All Releases](https://img.shields.io/github/downloads/Idrinths-Stellaris-Mods/Mod-Tools/total.svg)](https://github.com/Idrinths-Stellaris-Mods/Mod-Tools/releases/latest)
 
 ## Current Features
 
@@ -17,4 +22,7 @@ See the [issue tracker for enhancement](https://github.com/Idrinths-Stellaris-Mo
 
 ## Alternatives
 
-There is another Mod Manager, [Emurian Mod Manager for Stellaris](https://steamcommunity.com/app/281990/discussions/0/133259956022179056/), that is strictly for windows with no (known) intention to expand the support to other operating systems.
+There are two more Mod Managers:
+
+- [Emurian Mod Manager for Stellaris](https://steamcommunity.com/app/281990/discussions/0/133259956022179056/), that is strictly for windows with no (known) intention to expand the support to other operating systems.
+- [SCModManager](https://github.com/WojciechKrysiak/SCModManager/) is also for windows only currently and features a nice conflict-view
