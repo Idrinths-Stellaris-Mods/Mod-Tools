@@ -33,6 +33,10 @@ import org.hibernate.annotations.NaturalId;
     @NamedQuery(
             name = "patched",
             query = "select f from PatchedFile f"
+    ),
+    @NamedQuery(
+            name = "patched.able",
+            query = "select f from PatchedFile f where f.patchable=true"
     )
 })
 @Entity

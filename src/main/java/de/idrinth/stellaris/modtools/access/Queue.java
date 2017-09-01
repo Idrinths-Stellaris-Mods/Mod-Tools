@@ -21,6 +21,7 @@ import de.idrinth.stellaris.modtools.MainApp;
 import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.entity.Patch;
 import de.idrinth.stellaris.modtools.fx.Progress;
+import de.idrinth.stellaris.modtools.step.CreateMod;
 import de.idrinth.stellaris.modtools.step.GenerateFilePatch;
 import de.idrinth.stellaris.modtools.step.PatchFile;
 import de.idrinth.stellaris.modtools.step.RemoveOverwrittenFilePatch;
@@ -50,6 +51,7 @@ public class Queue implements Runnable {
         this.progress.addToStepLabels("Removing manually patched");
         this.progress.addToStepLabels("Creating patches");
         this.progress.addToStepLabels("Merging patches");
+        this.progress.addToStepLabels("Building Mod");
     }
 
     public synchronized void add(TaskList task) {
@@ -111,6 +113,10 @@ public class Queue implements Runnable {
             list.add(new PatchFile(o.getId(), this));
         });
         addList(list,4);
+
+        list.clear();
+        list.add(new CreateMod());
+        addList(list,5);
 
         try {
             c.call();
