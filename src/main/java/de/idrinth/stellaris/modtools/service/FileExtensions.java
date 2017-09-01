@@ -17,8 +17,8 @@
 package de.idrinth.stellaris.modtools.service;
 
 public class FileExtensions {
-    private static final String[] PATCH = ".txt,.yml,.asset,.csv,.gfx".split(",");
-    private static final String[] REPLACE = ".wav,.ogg,.ods,.dds,.bmp,.png,.psd,.jpg,.ani,.cur,.ttf,.fnt,.tga,.otf,.shader,.fxh,.anim,.mesh,.gui".split(",");
+    private static final String[] PATCH = ".txt,.yml,.asset,.csv,.gfx,.shader,.fxh,.gui".split(",");
+    private static final String[] REPLACE = ".wav,.ogg,.ods,.dds,.bmp,.png,.psd,.jpg,.ani,.cur,.ttf,.fnt,.tga,.otf,.anim,.mesh".split(",");
     public static boolean isPatchable(String filename) {
         return isInList(PATCH,filename);
     }
