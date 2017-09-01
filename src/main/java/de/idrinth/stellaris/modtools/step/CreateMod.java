@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Idrinth
+ * Copyright (C) 2017 Björn Büttner
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.compress.archivers.zip.ParallelScatterZipCreator;
-import org.apache.commons.compress.archivers.zip.ScatterZipOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.io.FileUtils;
