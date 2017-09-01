@@ -11,11 +11,12 @@
 
 ## Current Features
 
-This Application helps modding stellaris by:
+This Application helps modding Stellaris by:
 
-- finding files overwritten by multiple mods
-- create automatic patches as for text-based files(if possible)
-- consider dependants as desired collisions(i.e. not re-patching)
+- finding files overwritten by multiple mods [since [1.0.0]
+- create automatic patches as for text-based files(if possible) [since 1.1.0]
+- consider dependants as desired collisions(i.e. not re-patching) [since 1.1.0]
+- create an automatic patch where possible [since 1.2.0]
 
 ## Future Plans
 
