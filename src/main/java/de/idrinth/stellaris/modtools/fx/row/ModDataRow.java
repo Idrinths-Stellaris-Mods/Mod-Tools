@@ -39,14 +39,19 @@ public class ModDataRow extends AbstractDataRow{
         return modO.getVersion();
     }
 
-    public int getId() {
+    public String getId() {
         Modification modO = (Modification) manager.find(Modification.class, mod);
-        return modO.getId();
+        return modO.getId()==0?"local":String.valueOf(modO.getId());
     }
 
     public String getDescription() {
         Modification modO = (Modification) manager.find(Modification.class, mod);
         return "<h1>"+modO.getName()+"</h1>"+modO.getDescription().toString();
+    }
+
+    public String isMissing() {
+        Modification modO = (Modification) manager.find(Modification.class, mod);
+        return String.valueOf(null == modO.getConfigPath() || "".equals(modO.getConfigPath()));
     }
 
     @Override

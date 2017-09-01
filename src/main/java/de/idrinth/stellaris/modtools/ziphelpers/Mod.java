@@ -16,37 +16,62 @@
  */
 package de.idrinth.stellaris.modtools.ziphelpers;
 
-import java.util.HashMap;
+import de.idrinth.stellaris.modtools.access.DirectoryLookup;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Mod {
-    private final HashMap<String,ModLine> values = new HashMap<>();
+    private final String filename;
+    private final ModLine name = new SingleValue();
+    private final ModLine path = new SingleValue();
+    private final ModLine dependencies = new MultiValue();
+    private final ModLine supported_version = new SingleValue();
+    private final ModLine tags = new MultiValue();
 
-    public Mod() {
-        values.put("name", new SingleValue());
-        values.put("path", new SingleValue());
-        values.put("dependencies", new MultiValue());
-        values.put("supported_version", new SingleValue());
-        values.get("supported_version").addValue("*");
-        values.put("tags", new MultiValue());
-        values.get("tags").addValue("Merge");
+    public Mod(String filename, String modname) {
+        //defaults
+        addVersionValue("*");
+        addTagValue("Merge");
+        path.addValue("mod/"+filename+".zip");
+        name.addValue(modname);
+        this.filename = filename;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        values.keySet().stream().map((key) -> {
-            sb.append(key);
-            return key;
-        }).map((key) -> {
-            sb.append(" = ");
-            sb.append(values.get(key).toString());
-            return key;
-        }).forEachOrdered((_item) -> {
-            sb.append("\n");
-        });
+        for(Field field:this.getClass().getDeclaredFields()) {
+            if(ModLine.class.isAssignableFrom(field.getType())) {
+                try {
+                    sb.append(field.getName());
+                    sb.append(" = ");
+                    sb.append(field.get(this).toString());
+                    sb.append("\n");
+                } catch (IllegalArgumentException | IllegalAccessException ex) {
+                    Logger.getLogger(Mod.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
         return sb.toString();
     }
-    public void addValueTo(String key, String value) {
-        this.values.get(key).addValue(value);
+    public final void addNameValue(String value) {
+        name.addValue(value);
+    }
+    public final void addVersionValue(String value) {
+        supported_version.addValue(value);
+    }
+    public final void addPathValue(String value) {
+        path.addValue(value);
+    }
+    public final String getPathValue() throws IOException {
+        return DirectoryLookup.getModDir()+"/"+filename;
+    }
+    public final void addDepedencyValue(String value) {
+        dependencies.addValue(value);
+    }
+    public final void addTagValue(String value) {
+        tags.addValue(value);
     }
 }

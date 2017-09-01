@@ -16,7 +16,6 @@
  */
 package de.idrinth.stellaris.modtools.step;
 
-import de.idrinth.stellaris.modtools.access.DirectoryLookup;
 import de.idrinth.stellaris.modtools.entity.PatchedFile;
 import de.idrinth.stellaris.modtools.step.abstracts.TaskList;
 import de.idrinth.stellaris.modtools.ziphelpers.Mod;
@@ -26,59 +25,78 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.compress.archivers.zip.ParallelScatterZipCreator;
+import org.apache.commons.compress.archivers.zip.ScatterZipOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.io.FileUtils;
 
 public class CreateMod extends TaskList{
-    private final String prefix;
-    private final Mod mod = new Mod();
-    ParallelScatterZipCreator scatterZipCreator = new ParallelScatterZipCreator();
+    private final Mod mod;
+    private final String id;
     public CreateMod() {
         super(null);
-        String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("EYYYYMMddHHmmss"));
-        prefix = "!!!_idrinths-auto-patch_"+time;
-        mod.addValueTo("name", "!!!Automatic Patch "+LocalDateTime.now().format(DateTimeFormatter.RFC_1123_DATE_TIME));
-        mod.addValueTo("path", "mod/"+prefix+".zip");
+        id = convertBase10To62(LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYYMMddHHmmss")));
+        mod = new Mod("idrinths-auto-patch_"+id,"!!!Automatic Patch "+id);
     }
-
+    private String convertBase10To62(String input) {
+        Long b10 = Long.parseLong(input, 10);
+        StringBuilder ret = new StringBuilder();
+        String characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        while (b10 > 0) {
+            ret.append(characters.charAt((int) (b10 % 62)));
+            b10 /= 62;
+        }
+        return ret.reverse().toString();
+    }
+    private ZipArchiveEntry makeEntry(String lpath) {        
+        ZipArchiveEntry entry = new ZipArchiveEntry(lpath);
+        entry.setMethod(ZipArchiveEntry.STORED);
+        return entry;
+    }
     @Override
     protected void fill() throws IOException {
-        getEntityManager()
+        ParallelScatterZipCreator scatterZipCreator = new ParallelScatterZipCreator();
+        if(!getEntityManager().getTransaction().isActive()) {
+            getEntityManager().getTransaction().begin();
+        }
+        List<PatchedFile> patches = getEntityManager()
                 .createNamedQuery("patched.able", PatchedFile.class)
-                .getResultList().stream().map((file) -> {
-                    scatterZipCreator.addArchiveEntry(
-                            new ZipArchiveEntry(file.getOriginal().getRelativePath()),
-                            new StreamFromText(file.getContent().toString())
-                    );
+                .getResultList();
+        if(patches.isEmpty()) {
+            return;
+        }
+        patches.stream().map((file) -> {
+            scatterZipCreator.addArchiveEntry(
+                makeEntry(file.getOriginal().getRelativePath()),
+                new StreamFromText(file.getContent().toString())
+            );
             return file;
         }).forEachOrdered((file) -> {
             file.getModifications().forEach((m) -> {
-                mod.addValueTo("dependencies", m.getName());
+                mod.addDepedencyValue(m.getName());
             });
         });
-        scatterZipCreator.addArchiveEntry(
-            new ZipArchiveEntry("descriptor.mod"),
-            new StreamFromText(mod.toString())
-        );
-        String target = DirectoryLookup.getModDir()+prefix;
         try {
-            scatterZipCreator.writeTo(new ZipArchiveOutputStream(new File(target+".zip")));
+            try (ZipArchiveOutputStream out = new ZipArchiveOutputStream(new File(mod.getPathValue()+".zip"))) {
+                scatterZipCreator.writeTo(out);
+            }
             FileUtils.write(
-                    new File(target+".mod"),
-                    mod.toString(),
-                    Charset.forName("utf-8")
+                new File(mod.getPathValue()+".mod"),
+                mod.toString(),
+                Charset.forName("utf-8")
             );
         } catch (InterruptedException | ExecutionException ex) {
             Logger.getLogger(CreateMod.class.getName()).log(Level.SEVERE, null, ex);
         }
+        getEntityManager().getTransaction().commit();
     }
     @Override
     protected String getIdentifier() {
-        return "";
+        return String.valueOf(id);
     }
 }

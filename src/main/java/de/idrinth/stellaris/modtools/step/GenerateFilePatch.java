@@ -18,6 +18,7 @@ package de.idrinth.stellaris.modtools.step;
 
 import com.sksamuel.diffpatch.DiffMatchPatch;
 import de.idrinth.stellaris.modtools.entity.Patch;
+import de.idrinth.stellaris.modtools.service.FileExtensions;
 import de.idrinth.stellaris.modtools.step.abstracts.TaskList;
 import javax.persistence.EntityManager;
 
@@ -34,7 +35,7 @@ public class GenerateFilePatch extends TaskList {
             manager.getTransaction().begin();
         }
         Patch patch = (Patch) manager.find(Patch.class, id);
-        if(patch.getFile().getRelativePath().endsWith(".txt") || patch.getFile().getRelativePath().endsWith(".yml")) {
+        if(FileExtensions.isPatchable(patch.getFile().getRelativePath())) {
             DiffMatchPatch dmp = new DiffMatchPatch();
             String result = patch.getDiff().toString();
             String original = patch.getFile().getContent().toString();

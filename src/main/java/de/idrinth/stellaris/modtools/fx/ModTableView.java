@@ -22,7 +22,7 @@ import de.idrinth.stellaris.modtools.entity.Modification;
 public class ModTableView extends ClickableTableView<ModDataRow, ModDataRow> {
 
     public ModTableView() {
-        super("Id,Name,Version,Collisions".split(","));
+        super("Id,Name,Version,Missing,Collisions".split(","));
     }
 
     @Override

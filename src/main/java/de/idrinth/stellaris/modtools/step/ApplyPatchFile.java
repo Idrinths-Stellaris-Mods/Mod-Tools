@@ -38,7 +38,6 @@ public class ApplyPatchFile extends TaskList {
 
     @Override
     protected void fill() {
-        try {
         EntityManager manager = getEntityManager();
         if(!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
@@ -53,9 +52,6 @@ public class ApplyPatchFile extends TaskList {
         manager.getTransaction().commit();
         if(!next.isEmpty()) {
             tasks.add(new ApplyPatchFile(next,target, queue));
-        }
-        } catch(Throwable any) {
-            System.err.print(any);
         }
     }
     protected void patch(PatchedFile pf, Patch patch) {

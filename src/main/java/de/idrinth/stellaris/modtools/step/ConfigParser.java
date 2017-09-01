@@ -88,6 +88,8 @@ public class ConfigParser extends TaskList {
             case "picture":
                 // maybe interesting later?
                 break;
+            case "replace_path":
+                // something like a dependency?
             default:
             //TODO: tags, dependencies?
         }
