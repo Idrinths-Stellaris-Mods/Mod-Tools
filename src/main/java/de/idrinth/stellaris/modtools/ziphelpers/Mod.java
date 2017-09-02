@@ -31,10 +31,13 @@ public class Mod {
     private final ModLine tags = new MultiValue();
 
     public Mod(String filename, String modname) {
-        //defaults
-        addVersionValue("*");
+        addVersionValue("1.0.*");
         addTagValue("Merge");
-        path.addValue("mod/"+filename+".zip");
+        try {
+            path.addValue(DirectoryLookup.getModDir()+"/"+filename+".zip");
+        } catch (IOException ex) {
+            Logger.getLogger(Mod.class.getName()).log(Level.SEVERE, null, ex);
+        }
         name.addValue(modname);
         this.filename = filename;
     }

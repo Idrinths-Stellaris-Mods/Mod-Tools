@@ -25,7 +25,7 @@ public class MultiValue implements ModLine{
         StringBuilder sb = new StringBuilder();
         sb.append("{");
         values.stream().forEach((value) -> {
-            sb.append("\n\"");
+            sb.append("\n\t\"");
             sb.append(value);
             sb.append("\"");
         });

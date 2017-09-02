@@ -20,6 +20,7 @@ import de.idrinth.stellaris.modtools.entity.PatchedFile;
 import de.idrinth.stellaris.modtools.step.abstracts.TaskList;
 import de.idrinth.stellaris.modtools.ziphelpers.Mod;
 import de.idrinth.stellaris.modtools.ziphelpers.StreamFromText;
+import de.idrinth.stellaris.modtools.ziphelpers.Version;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -69,6 +70,7 @@ public class CreateMod extends TaskList{
         if(patches.isEmpty()) {
             return;
         }
+        Version version = new Version();
         patches.stream().map((file) -> {
             scatterZipCreator.addArchiveEntry(
                 makeEntry(file.getOriginal().getRelativePath()),
@@ -78,9 +80,15 @@ public class CreateMod extends TaskList{
         }).forEachOrdered((file) -> {
             file.getModifications().forEach((m) -> {
                 mod.addDepedencyValue(m.getName());
+                version.addIfBigger(m.getVersion());
             });
         });
         try {
+            mod.addVersionValue(version.toString());
+            scatterZipCreator.addArchiveEntry(
+                makeEntry("descriptor.mod"),
+                new StreamFromText(mod.toString())
+            );
             try (ZipArchiveOutputStream out = new ZipArchiveOutputStream(new File(mod.getPathValue()+".zip"))) {
                 scatterZipCreator.writeTo(out);
             }
