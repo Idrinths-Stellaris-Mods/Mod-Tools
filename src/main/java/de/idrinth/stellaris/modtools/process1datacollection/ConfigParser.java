@@ -21,7 +21,7 @@ import de.idrinth.stellaris.modtools.service.DirectoryLookup;
 import de.idrinth.stellaris.modtools.entity.Modification;
 import java.io.File;
 import java.io.IOException;
-import de.idrinth.stellaris.modtools.process.AbstractQueue;
+import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.process.Task;
 import javax.persistence.EntityManager;
 import org.apache.commons.io.FileUtils;
@@ -30,7 +30,7 @@ class ConfigParser extends Task {
 
     private final File configuration;
 
-    public ConfigParser(File configuration, AbstractQueue queue) {
+    public ConfigParser(File configuration, ProcessHandlingQueue queue) {
         super(queue);
         this.configuration = configuration;
     }

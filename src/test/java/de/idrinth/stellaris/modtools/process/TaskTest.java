@@ -16,9 +16,7 @@
  */
 package de.idrinth.stellaris.modtools.process;
 
-import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
 import java.io.IOException;
-import java.util.ArrayList;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -35,7 +33,7 @@ public class TaskTest {
         System.out.println("run");
         Assert.assertTrue(
                 "Is not a runnable",
-                Runnable.class.isInstance(new FillerThread(new ArrayList<>(), new TestProgressElementGroup()))
+                Runnable.class.isInstance(new TaskImpl().getClass())
         );
     }
 
@@ -66,18 +64,5 @@ public class TaskTest {
         public String getIdentifier() {
             return "abc";
         }
-    }
-    private class TestProgressElementGroup implements ProgressElementGroup {
-
-        @Override
-        public void addToStepLabels(String text) {
-            //done
-        }
-
-        @Override
-        public void update(int current, int maximum) {
-            //done
-        }
-        
     }
 }

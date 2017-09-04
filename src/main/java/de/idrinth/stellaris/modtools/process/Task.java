@@ -25,11 +25,11 @@ import javax.persistence.EntityManager;
 
 abstract public class Task implements Runnable {
 
-    protected final AbstractQueue queue;
+    protected final ProcessHandlingQueue queue;
     private EntityManager entityManager;
     protected final ArrayList<Task> tasks = new ArrayList<>();
 
-    public Task(AbstractQueue queue) {
+    public Task(ProcessHandlingQueue queue) {
         this.queue = queue;
     }
 

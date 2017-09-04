@@ -16,7 +16,7 @@
  */
 package de.idrinth.stellaris.modtools.process1datacollection;
 
-import de.idrinth.stellaris.modtools.process.AbstractQueue;
+import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.service.FileExtensions;
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +30,7 @@ class ZipContentParser extends Files implements Runnable {
 
     private final File file;
 
-    public ZipContentParser(String modConfigName, File file, AbstractQueue queue) {
+    public ZipContentParser(String modConfigName, File file, ProcessHandlingQueue queue) {
         super(queue, modConfigName);
         this.file = file;
     }

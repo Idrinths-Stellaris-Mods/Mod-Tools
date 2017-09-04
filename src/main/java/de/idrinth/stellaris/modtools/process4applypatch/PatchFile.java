@@ -16,7 +16,7 @@
  */
 package de.idrinth.stellaris.modtools.process4applypatch;
 
-import de.idrinth.stellaris.modtools.process.AbstractQueue;
+import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.entity.PatchedFile;
 import de.idrinth.stellaris.modtools.service.FileExtensions;
@@ -28,7 +28,7 @@ class PatchFile extends Task {
 
     private final long id;
 
-    public PatchFile(long id, AbstractQueue queue) {
+    public PatchFile(long id, ProcessHandlingQueue queue) {
         super(queue);
         this.id = id;
     }

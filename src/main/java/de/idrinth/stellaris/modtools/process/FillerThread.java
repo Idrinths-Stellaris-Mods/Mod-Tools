@@ -27,7 +27,7 @@ import javax.persistence.EntityManager;
 public class FillerThread implements Runnable, Callable {
 
     private final ArrayList<ClickableTableView> list;
-    private final LinkedList<AbstractQueue> tasks = new LinkedList<>();
+    private final LinkedList<ProcessHandlingQueue> tasks = new LinkedList<>();
 
     public FillerThread(ArrayList<ClickableTableView> list, ProgressElementGroup progress) {
         this.list = list;

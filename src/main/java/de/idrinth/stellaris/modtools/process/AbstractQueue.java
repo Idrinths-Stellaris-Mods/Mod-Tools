@@ -27,7 +27,7 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-abstract public class AbstractQueue implements Runnable {
+abstract public class AbstractQueue implements ProcessHandlingQueue {
 
     private final ExecutorService executor;
     private final List<Future<?>> futures = new ArrayList<>();
@@ -46,6 +46,7 @@ abstract public class AbstractQueue implements Runnable {
         this(callable, progress, label, Executors.newFixedThreadPool(20));
     }
 
+    @Override
     public synchronized void add(Task task) {
         if (!known.contains(task.getFullIdentifier())) {
             futures.add(executor.submit(task));

@@ -17,7 +17,7 @@
 package de.idrinth.stellaris.modtools.process4applypatch;
 
 import com.sksamuel.diffpatch.DiffMatchPatch;
-import de.idrinth.stellaris.modtools.process.AbstractQueue;
+import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.entity.Patch;
 import de.idrinth.stellaris.modtools.entity.PatchedFile;
 import de.idrinth.stellaris.modtools.process.Task;
@@ -30,7 +30,7 @@ class ApplyPatchFile extends Task {
     private final long target;
     private final LinkedList<Long> next;
 
-    public ApplyPatchFile(LinkedList<Long> patches, long target, AbstractQueue queue) {
+    public ApplyPatchFile(LinkedList<Long> patches, long target, ProcessHandlingQueue queue) {
         super(queue);
         if(!patches.isEmpty()) {
             throw new IllegalArgumentException("patch list must not be empty");

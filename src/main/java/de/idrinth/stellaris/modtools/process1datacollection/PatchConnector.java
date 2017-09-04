@@ -16,7 +16,7 @@
  */
 package de.idrinth.stellaris.modtools.process1datacollection;
 
-import de.idrinth.stellaris.modtools.process.AbstractQueue;
+import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.entity.Modification;
 import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.entity.Patch;
@@ -31,7 +31,7 @@ class PatchConnector extends Task {
     private final long modId;
     private final String path;
 
-    public PatchConnector(long patchId, long modId, String path, AbstractQueue queue) {
+    public PatchConnector(long patchId, long modId, String path, ProcessHandlingQueue queue) {
         super(queue);
         this.patchId = patchId;
         this.modId = modId;

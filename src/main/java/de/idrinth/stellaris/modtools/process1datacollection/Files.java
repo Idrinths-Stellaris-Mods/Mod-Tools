@@ -17,7 +17,7 @@
 package de.idrinth.stellaris.modtools.process1datacollection;
 
 import de.idrinth.stellaris.modtools.process.Task;
-import de.idrinth.stellaris.modtools.process.AbstractQueue;
+import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.entity.Modification;
 import de.idrinth.stellaris.modtools.entity.Patch;
 import javax.persistence.EntityManager;
@@ -26,7 +26,7 @@ abstract public class Files extends Task {
 
     protected final String modConfigName;
 
-    public Files(AbstractQueue queue, String modConfigName) {
+    public Files(ProcessHandlingQueue queue, String modConfigName) {
         super(queue);
         this.modConfigName = modConfigName;
     }

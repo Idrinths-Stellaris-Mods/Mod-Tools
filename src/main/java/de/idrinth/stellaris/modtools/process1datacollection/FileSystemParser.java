@@ -16,7 +16,7 @@
  */
 package de.idrinth.stellaris.modtools.process1datacollection;
 
-import de.idrinth.stellaris.modtools.process.AbstractQueue;
+import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.service.FileExtensions;
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +29,7 @@ class FileSystemParser extends Files implements Runnable {
 
     private final File folder;
 
-    public FileSystemParser(String modConfigName, File folder, AbstractQueue queue) {
+    public FileSystemParser(String modConfigName, File folder, ProcessHandlingQueue queue) {
         super(queue, modConfigName);
         this.folder = folder;
     }
