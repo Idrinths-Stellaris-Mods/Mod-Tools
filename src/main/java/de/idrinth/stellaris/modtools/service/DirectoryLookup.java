@@ -21,29 +21,50 @@ import com.github.sarxos.winreg.RegistryException;
 import com.github.sarxos.winreg.WindowsRegistry;
 import java.io.File;
 import java.io.IOException;
+import org.apache.commons.lang3.SystemUtils;
 
-public class DirectoryLookup {// assuming windows atm
+public class DirectoryLookup {
 
     protected static File modDir;
     protected static File steamDir;
 
     public static File getModDir() throws IOException {
         if (null == modDir) {
-            modDir = test(new File(System.getProperty("user.home") + "\\Documents\\Paradox Interactive\\Stellaris\\mod"));
+            if(SystemUtils.IS_OS_WINDOWS) {
+                modDir = test(new File(System.getProperty("user.home") + "\\Documents\\Paradox Interactive\\Stellaris\\mod"));
+            } else if(SystemUtils.IS_OS_MAC) {
+                modDir = test(new File("~/Documents/Paradox Interactive/Stellaris/mod"));
+            } else if(SystemUtils.IS_OS_LINUX) {
+                modDir = test(new File("~/.local/share/Paradox Interactive/Stellaris/mod"));
+            }
         }
         return modDir;
     }
 
     public static File getSteamDir() throws RegistryException, IOException {
         if (null == steamDir) {
-            steamDir = test(new File(WindowsRegistry.getInstance().readString(HKey.HKCU, "Software\\Valve\\Steam", "SteamPath")));
+            if(SystemUtils.IS_OS_WINDOWS) {
+                steamDir = test(new File(WindowsRegistry.getInstance().readString(HKey.HKCU, "Software\\Valve\\Steam", "SteamPath")));
+            } else if(SystemUtils.IS_OS_MAC) {
+                steamDir = test(new File("~/Library/Application Support/Steam"));
+            } else if(SystemUtils.IS_OS_LINUX) {
+                try {
+                    steamDir = test(new File("~/.steam/steam"));
+                } catch(IOException exio1) {
+                    try {
+                        steamDir = test(new File("~/.local/share/Steam"));
+                    } catch(IOException exio2) {
+                        throw new IOException(exio1.getMessage()+exio2.getMessage());
+                    }
+                }
+            }
         }
         return steamDir;
     }
 
     private static File test(File file) throws IOException {
         if (!file.exists() && file.isDirectory()) {
-            throw new IOException(file.getAbsolutePath() + " is expected but can't be found");
+            throw new IOException(file.getAbsolutePath() + " is expected but can't be found.");
         }
         return file;
     }
