@@ -16,7 +16,10 @@
  */
 package de.idrinth.stellaris.modtools.process;
 
+import javax.persistence.EntityManager;
+
 public interface ProcessHandlingQueue extends Runnable {
 
     void add(Task task);
+    EntityManager getEntityManager();
 }

@@ -17,7 +17,9 @@
 package de.idrinth.stellaris.modtools.process;
 
 import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
+import de.idrinth.stellaris.modtools.service.PersistenceProvider;
 import java.util.concurrent.Callable;
+import javax.persistence.EntityManager;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -49,6 +51,14 @@ public class AbstractQueueTest {
         Assert.assertEquals(1, queue.increment);
     }
 
+    /**
+     * Test of getEntityManager method, of class AbstractQueue.
+     */
+    @Test
+    public void testGetEntityManager() {
+        System.out.println("getEntityManager");
+        Assert.assertTrue("getEntityManager does not return an EntityManager", EntityManager.class.isAssignableFrom(new AbstractQueueImpl().getEntityManager().getClass()));
+    }
     private class AbstractQueueImpl extends AbstractQueue {
         public volatile int increment=0;
         public AbstractQueueImpl() {

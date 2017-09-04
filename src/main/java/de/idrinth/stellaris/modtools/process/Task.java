@@ -17,7 +17,6 @@
 package de.idrinth.stellaris.modtools.process;
 
 import de.idrinth.stellaris.modtools.entity.TaskCompletion;
-import de.idrinth.stellaris.modtools.service.PersistenceProvider;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -77,7 +76,7 @@ abstract public class Task implements Runnable {
 
     protected EntityManager getEntityManager() {
         if (null == entityManager) {
-            entityManager = PersistenceProvider.get();
+            entityManager = queue.getEntityManager();
         }
         return entityManager;
     }

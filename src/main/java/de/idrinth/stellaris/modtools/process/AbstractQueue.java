@@ -17,6 +17,7 @@
 package de.idrinth.stellaris.modtools.process;
 
 import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
+import de.idrinth.stellaris.modtools.service.PersistenceProvider;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.EntityManager;
 
 abstract public class AbstractQueue implements ProcessHandlingQueue {
 
@@ -98,4 +100,8 @@ abstract public class AbstractQueue implements ProcessHandlingQueue {
     }
 
     protected abstract void addList();
+
+    public EntityManager getEntityManager() {
+        return PersistenceProvider.get();
+    }
 }

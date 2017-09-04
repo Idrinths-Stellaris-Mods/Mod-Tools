@@ -19,7 +19,6 @@ package de.idrinth.stellaris.modtools.process4applypatch;
 import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
 import de.idrinth.stellaris.modtools.process.AbstractQueue;
-import de.idrinth.stellaris.modtools.service.PersistenceProvider;
 import java.util.concurrent.Callable;
 
 public class Queue extends AbstractQueue {
@@ -30,7 +29,7 @@ public class Queue extends AbstractQueue {
 
     @Override
     protected void addList() {
-        PersistenceProvider.get().createNamedQuery("originals", Original.class).getResultList().forEach((o) -> {
+        getEntityManager().createNamedQuery("originals", Original.class).getResultList().forEach((o) -> {
             add(new PatchFile(o.getAid(), this));
         });
     }
