@@ -4,7 +4,7 @@ jdk: oraclejdk8
 branches:
   only:
   - master
-before_script: 
+before_install: 
   - mkdir -p ~/.steam/steam/steamapps/workshop/content/281990
   - mkdir -p ~/.steam/steam/steamapps/common/Stellaris
   - mkdir -p ~/.local/share/Paradox Interactive/Stellaris/mod
