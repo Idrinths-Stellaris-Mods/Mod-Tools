@@ -18,7 +18,7 @@ package de.idrinth.stellaris.modtools.process3filepatch;
 
 import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
 import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
-import de.idrinth.stellaris.modtools.abstractTestCases.TestAnyQueue;
+import de.idrinth.stellaris.modtools.abstract_cases.TestAnyQueue;
 import java.util.concurrent.Callable;
 
 public class QueueTest extends TestAnyQueue {

@@ -16,7 +16,7 @@
  */
 package de.idrinth.stellaris.modtools.process;
 
-import de.idrinth.stellaris.modtools.abstractTestCases.TestAnyTask;
+import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
 import java.io.IOException;
 
 public class TaskTest extends TestAnyTask {

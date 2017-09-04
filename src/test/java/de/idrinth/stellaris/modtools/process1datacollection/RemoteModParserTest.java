@@ -16,7 +16,7 @@
  */
 package de.idrinth.stellaris.modtools.process1datacollection;
 
-import de.idrinth.stellaris.modtools.abstractTestCases.TestAnyTask;
+import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
 import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 

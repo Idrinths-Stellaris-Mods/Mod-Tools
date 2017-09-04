@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.abstractTestCases;
+package de.idrinth.stellaris.modtools.abstract_cases;
 
 import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
 import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
@@ -35,7 +35,7 @@ abstract public class TestAnyQueue {
     @Test
     public void testInterface() {
         System.out.println("interface");
-        org.junit.Assert.assertTrue(
+        Assert.assertTrue(
             "This queue does not implement the required interface.",
             ProcessHandlingQueue.class.isInstance(getWrapped().queue)
         );

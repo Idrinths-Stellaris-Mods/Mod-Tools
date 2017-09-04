@@ -16,7 +16,7 @@
  */
 package de.idrinth.stellaris.modtools.process;
 
-import de.idrinth.stellaris.modtools.abstractTestCases.TestAnyQueue;
+import de.idrinth.stellaris.modtools.abstract_cases.TestAnyQueue;
 import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
 import java.util.concurrent.Callable;
 
@@ -33,6 +33,7 @@ public class AbstractQueueTest extends TestAnyQueue {
 
         @Override
         public void addList() {
+            // shouldn't do anything, will be tested for children
         }
     }
 }
