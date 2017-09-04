@@ -17,23 +17,30 @@
 package de.idrinth.stellaris.modtools.service;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import junit.framework.Assert;
+import org.junit.Test;
 
-public class PersistenceProvider {
-
-    private static EntityManagerFactory entityManager;
-
-    public static EntityManager get() {
-        init();
-        return entityManager.createEntityManager();
+public class PersistenceProviderTest {
+    
+    public PersistenceProviderTest() {
     }
 
-    public static synchronized boolean init() {
-        if (null != entityManager) {
-            return true;
-        }
-        entityManager = Persistence.createEntityManagerFactory("de.idrinth_Stellaris.ModTools");
-        return null!=entityManager;
+    /**
+     * Test of get method, of class PersistenceProvider.
+     */
+    @Test
+    public void testGet() {
+        System.out.println("get");
+        Assert.assertTrue("get does not return an EntityManager", EntityManager.class.isAssignableFrom(PersistenceProvider.get().getClass()));
     }
+
+    /**
+     * Test of init method, of class PersistenceProvider.
+     */
+    @Test
+    public void testInit() {
+        System.out.println("init");
+        Assert.assertTrue("init was unable to create the required object", PersistenceProvider.init());
+    }
+    
 }

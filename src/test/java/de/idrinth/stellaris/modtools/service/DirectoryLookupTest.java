@@ -16,24 +16,30 @@
  */
 package de.idrinth.stellaris.modtools.service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class PersistenceProvider {
-
-    private static EntityManagerFactory entityManager;
-
-    public static EntityManager get() {
-        init();
-        return entityManager.createEntityManager();
+public class DirectoryLookupTest {
+    
+    public DirectoryLookupTest() {
     }
 
-    public static synchronized boolean init() {
-        if (null != entityManager) {
-            return true;
-        }
-        entityManager = Persistence.createEntityManagerFactory("de.idrinth_Stellaris.ModTools");
-        return null!=entityManager;
+    /**
+     * Test of getModDir method, of class DirectoryLookup.
+     */
+    @Test
+    public void testGetModDir() throws Exception {
+        System.out.println("getModDir");
+        Assert.assertTrue("Mod Directory was not found to exists.", DirectoryLookup.getModDir().exists());
     }
+
+    /**
+     * Test of getSteamDir method, of class DirectoryLookup.
+     */
+    @Test
+    public void testGetSteamDir() throws Exception {
+        System.out.println("getSteamDir");
+        Assert.assertTrue("Steam Directory was not found to exists.", DirectoryLookup.getSteamDir().exists());
+    }
+    
 }
