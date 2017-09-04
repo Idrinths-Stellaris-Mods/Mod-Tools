@@ -16,43 +16,37 @@
  */
 package de.idrinth.stellaris.modtools.entity;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import org.hibernate.annotations.NaturalId;
 
 @NamedQueries({
     @NamedQuery(
             name = "originals",
             query = "select f from Original f"
-    ),
+    )
+    ,
     @NamedQuery(
             name = "original.path",
             query = "select f from Original f where f.relativePath=:path"
     )
 })
 @Entity
-public class Original implements Serializable {
-    @Id
-    @GeneratedValue
-    private long id;
+public class Original extends AbstractEntity {
+
     //original
     @OneToOne(fetch = FetchType.LAZY)
     private LazyText content;
-    @NaturalId
     protected String relativePath;
     //connection
     @OneToMany(fetch = FetchType.LAZY)
-    protected Set<Patch> patches= new HashSet<>();
+    protected Set<Patch> patches = new HashSet<>();
 
     public Original() {
     }
@@ -61,26 +55,11 @@ public class Original implements Serializable {
         this.relativePath = relativePath;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public LazyText getContent() {
-        return content;
-    }
-
-    public void setContent(LazyText content) {
-        this.content = content;
+    public String getContent() {
+        return content.getText();
     }
 
     public void setContent(String content) {
-        if(null == this.content) {
-            throw new IllegalStateException("No LazyText initialized yet");
-        }
         this.content.setText(content);
     }
 

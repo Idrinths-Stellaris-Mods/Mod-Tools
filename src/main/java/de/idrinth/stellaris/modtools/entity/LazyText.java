@@ -16,33 +16,21 @@
  */
 package de.idrinth.stellaris.modtools.entity;
 
-import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+
 @Entity
-public class LazyText implements Serializable {
-    @Id
-    @GeneratedValue
-    private long id;
-    @Column(columnDefinition="LONGTEXT")
-    private String text="";
+class LazyText extends AbstractEntity {
+
+    @Column(columnDefinition = "LONGTEXT")
+    private String text = "";
 
     public LazyText() {
     }
 
     public LazyText(String text) {
         this.text = text;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getText() {
@@ -55,7 +43,7 @@ public class LazyText implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31 * 7 + (int) (this.id ^ (this.id >>> 32));
+        return 31 * 7 + (int) (this.getAid() ^ (this.getAid() >>> 32));
     }
 
     @Override
@@ -74,5 +62,5 @@ public class LazyText implements Serializable {
     public String toString() {
         return text;
     }
-    
+
 }

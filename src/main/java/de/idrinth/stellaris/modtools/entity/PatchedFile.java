@@ -16,35 +16,30 @@
  */
 package de.idrinth.stellaris.modtools.entity;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
-import org.hibernate.annotations.NaturalId;
+
 @NamedQueries({
     @NamedQuery(
             name = "patched",
             query = "select f from PatchedFile f"
-    ),
+    )
+    ,
     @NamedQuery(
             name = "patched.able",
             query = "select f from PatchedFile f where f.patchable=true"
     )
 })
 @Entity
-public class PatchedFile implements Serializable {
-    @Id
-    @GeneratedValue
-    private long id;
-    @NaturalId
+public class PatchedFile extends AbstractEntity {
+
     @OneToOne(fetch = FetchType.LAZY)
     private Original original;
     @OneToOne(fetch = FetchType.LAZY)
@@ -78,14 +73,6 @@ public class PatchedFile implements Serializable {
         this.original = original;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public Original getOriginal() {
         return original;
     }
@@ -94,18 +81,11 @@ public class PatchedFile implements Serializable {
         this.original = original;
     }
 
-    public LazyText getContent() {
-        return content;
-    }
-
-    public void setContent(LazyText content) {
-        this.content = content;
+    public String getContent() {
+        return content.getText();
     }
 
     public void setContent(String content) {
-        if(null == this.content) {
-            throw new IllegalStateException("No LazyText initialized yet");
-        }
         this.content.setText(content);
     }
 
@@ -141,5 +121,5 @@ public class PatchedFile implements Serializable {
         final PatchedFile other = (PatchedFile) obj;
         return Objects.equals(this.original, other.original);
     }
-    
+
 }

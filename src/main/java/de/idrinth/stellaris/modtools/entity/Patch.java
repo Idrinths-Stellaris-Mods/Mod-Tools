@@ -16,18 +16,16 @@
  */
 package de.idrinth.stellaris.modtools.entity;
 
-import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+
 @NamedQueries({
     @NamedQuery(
             name = "patch.any",
@@ -35,11 +33,8 @@ import org.hibernate.annotations.CascadeType;
     )
 })
 @Entity
-public class Patch implements Serializable {
+public class Patch extends AbstractEntity {
 
-    @Id
-    @GeneratedValue
-    protected long id;
     @ManyToOne(fetch = FetchType.LAZY)
     protected Modification mod;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -49,14 +44,6 @@ public class Patch implements Serializable {
     private LazyText diff;
 
     public Patch() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public Patch(Modification mod, Original file) {
@@ -80,18 +67,11 @@ public class Patch implements Serializable {
         this.file = file;
     }
 
-    public LazyText getDiff() {
-        return diff;
-    }
-
-    public void setDiff(LazyText diff) {
-        this.diff = diff;
+    public String getDiff() {
+        return diff.getText();
     }
 
     public void setDiff(String diff) {
-        if(null == this.diff) {
-            throw new IllegalStateException("No LazyText initialized yet");
-        }
         this.diff.setText(diff);
     }
 
@@ -109,7 +89,7 @@ public class Patch implements Serializable {
             return false;
         }
         final Patch other = (Patch) obj;
-        return this.id == other.id || (Objects.equals(this.mod, other.mod) && Objects.equals(this.file, other.file));
+        return this.getAid() == other.getAid() || (Objects.equals(this.mod, other.mod) && Objects.equals(this.file, other.file));
     }
 
 }

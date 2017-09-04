@@ -22,18 +22,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import de.idrinth.stellaris.modtools.fx.Progress?>
-<?import de.idrinth.stellaris.modtools.fx.ModTableView?>
-<?import de.idrinth.stellaris.modtools.fx.CollisionTableView?>
+<?import de.idrinth.stellaris.modtools.gui.Progress?>
+<?import de.idrinth.stellaris.modtools.gui.ModTableView?>
+<?import de.idrinth.stellaris.modtools.gui.CollisionTableView?>
 
-<TabPane id="TabPane" tabClosingPolicy="UNAVAILABLE" prefHeight="400" prefWidth="640" xmlns:fx="http://javafx.com/fxml" fx:controller="de.idrinth.stellaris.modtools.FXMLController">
+<TabPane id="TabPane" tabClosingPolicy="UNAVAILABLE" prefHeight="400" prefWidth="640" xmlns:fx="http://javafx.com/fxml" fx:controller="de.idrinth.stellaris.modtools.gui.FXMLController">
     <stylesheets>
         <URL value="@/styles/Styles.css"/>
     </stylesheets>
     <tabs>
         <Tab fx:id="StartTabPage" text="Start">
             <AnchorPane>
-                <Button layoutX="16" layoutY="50" text="Process Mods" onAction="#handleButtonAction" fx:id="button" />               
+                <Button layoutX="16" layoutY="50" text="Process Mods" onAction="#handleButtonAction" fx:id="button" />
                 <Progress layoutX="200" layoutY="50" fx:id="test"/>
             </AnchorPane>
         </Tab>

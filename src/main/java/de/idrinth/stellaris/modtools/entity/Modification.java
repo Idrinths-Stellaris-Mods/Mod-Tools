@@ -16,14 +16,11 @@
  */
 package de.idrinth.stellaris.modtools.entity;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.NamedQueries;
@@ -31,31 +28,28 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.NaturalId;
 
 @NamedQueries({
     @NamedQuery(
-        name = "modifications",
-        query = "select m from Modification m"
-    ),
+            name = "modifications",
+            query = "select m from Modification m"
+    )
+    ,
     @NamedQuery(
-        name = "modifications.id",
-        query = "select m from Modification m where m.id=:id"
-    ),
+            name = "modifications.id",
+            query = "select m from Modification m where m.id=:id"
+    )
+    ,
     @NamedQuery(
-        name = "modifications.config",
-        query = "select m from Modification m where m.configPath=:configPath"
+            name = "modifications.config",
+            query = "select m from Modification m where m.configPath=:configPath"
     )
 })
 @Entity
-public class Modification implements Serializable {
-    @Id
-    @GeneratedValue
-    private long aid;
+public class Modification extends AbstractEntity {
+
     //basics
-    @NaturalId
     protected String configPath;
-    @NaturalId
     protected int id;
     protected String name;
     protected String version;
@@ -98,14 +92,6 @@ public class Modification implements Serializable {
         return name;
     }
 
-    public long getAid() {
-        return aid;
-    }
-
-    public void setAid(long aid) {
-        this.aid = aid;
-    }
-
     public String getConfigPath() {
         return configPath;
     }
@@ -142,18 +128,11 @@ public class Modification implements Serializable {
         this.overwrite = overwrite;
     }
 
-    public LazyText getDescription() {
-        return description;
-    }
-
-    public void setDescription(LazyText description) {
-        this.description = description;
+    public String getDescription() {
+        return description.getText();
     }
 
     public void setDescription(String description) {
-        if(null == this.description) {
-            throw new IllegalStateException("No LazyText initialized yet");
-        }
         this.description.setText(description);
     }
 

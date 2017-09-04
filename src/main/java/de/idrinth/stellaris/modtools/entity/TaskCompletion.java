@@ -16,15 +16,13 @@
  */
 package de.idrinth.stellaris.modtools.entity;
 
-import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 @NamedQueries({
     @NamedQuery(
             name = "tasks.get",
@@ -32,12 +30,10 @@ import javax.persistence.TemporalType;
     )
 })
 @Entity
-public class TaskCompletion implements Serializable {
+public class TaskCompletion extends AbstractEntity {
+
     private String name;
     private String identifier;
-    @Id
-    @GeneratedValue
-    private int id;
     @Temporal(TemporalType.TIME)
     private Date startTime;
     @Temporal(TemporalType.TIME)
@@ -68,14 +64,6 @@ public class TaskCompletion implements Serializable {
         this.name = name;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public Date getStartTime() {
         return startTime;
     }
@@ -91,5 +79,5 @@ public class TaskCompletion implements Serializable {
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
-    
+
 }

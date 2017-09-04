@@ -17,21 +17,27 @@
 package de.idrinth.stellaris.modtools.service;
 
 public class FileExtensions {
+
     private static final String[] PATCH = ".txt,.yml,.asset,.csv,.gfx,.shader,.fxh,.gui".split(",");
     private static final String[] REPLACE = ".wav,.ogg,.ods,.dds,.bmp,.png,.psd,.jpg,.ani,.cur,.ttf,.fnt,.tga,.otf,.anim,.mesh".split(",");
+
     public static boolean isPatchable(String filename) {
-        return isInList(PATCH,filename);
+        return isInList(PATCH, filename);
     }
+
     public static boolean isReplaceable(String filename) {
-        return isInList(REPLACE,filename);
+        return isInList(REPLACE, filename);
     }
+
     public static String[] getPatchable() {
         return PATCH;
     }
+
     public static String[] getReplaceable() {
         return REPLACE;
     }
-    private static boolean isInList(String[] list, String filename) {        
+
+    private static boolean isInList(String[] list, String filename) {
         for (String ext : list) {
             if (filename.endsWith(ext)) {
                 return true;
