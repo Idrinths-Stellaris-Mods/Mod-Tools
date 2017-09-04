@@ -20,9 +20,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class FileExtensionsTest {
-    
-    public FileExtensionsTest() {
-    }
 
     /**
      * Test of isPatchable method, of class FileExtensions.

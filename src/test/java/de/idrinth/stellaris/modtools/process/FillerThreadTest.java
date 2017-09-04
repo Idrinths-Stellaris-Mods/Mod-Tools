@@ -23,9 +23,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class FillerThreadTest {
-    
-    public FillerThreadTest() {
-    }
 
     /**
      * Test of run method, of class FillerThread.

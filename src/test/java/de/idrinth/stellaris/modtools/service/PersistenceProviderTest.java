@@ -21,9 +21,6 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 public class PersistenceProviderTest {
-    
-    public PersistenceProviderTest() {
-    }
 
     /**
      * Test of get method, of class PersistenceProvider.

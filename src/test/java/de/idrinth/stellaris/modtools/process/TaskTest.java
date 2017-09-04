@@ -21,9 +21,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class TaskTest {
-    
-    public TaskTest() {
-    }
 
     /**
      * Test of run method, of class Task.
@@ -58,6 +55,7 @@ public class TaskTest {
 
         @Override
         public void fill() throws IOException {
+            //the point is not to do anything here - that is up to testing children of Task
         }
 
         @Override

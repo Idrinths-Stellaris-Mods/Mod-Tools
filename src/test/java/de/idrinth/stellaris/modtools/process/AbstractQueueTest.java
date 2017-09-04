@@ -22,9 +22,6 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 public class AbstractQueueTest {
-    
-    public AbstractQueueTest() {
-    }
 
     /**
      * Test of add method, of class AbstractQueue.
@@ -79,7 +76,7 @@ public class AbstractQueueTest {
     private class TestCallable implements Callable {
         @Override
         public Object call() {
-            return null;//nothing to do;
+            return null;//nothing to do
         }
     }
     private class TestRunnable extends Task {

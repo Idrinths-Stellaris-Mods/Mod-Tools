@@ -20,9 +20,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class DirectoryLookupTest {
-    
-    public DirectoryLookupTest() {
-    }
 
     /**
      * Test of getModDir method, of class DirectoryLookup.
