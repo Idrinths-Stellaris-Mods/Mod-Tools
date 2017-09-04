@@ -23,7 +23,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 
-public class Progress extends AnchorPane {
+public class Progress extends AnchorPane implements ProgressElementGroup {
 
     private final ArrayList<ProgressSet> sets = new ArrayList<>();
     private int setNum = 0;
@@ -39,10 +39,12 @@ public class Progress extends AnchorPane {
         this.setVisible(true);
     }
 
+    @Override
     public void addToStepLabels(String text) {
         stepLabels.add(text);
     }
 
+    @Override
     public void update(int current, int maximum) {
         Platform.runLater(() -> {
             if (sets.size() <= setNum || null == sets.get(setNum)) {

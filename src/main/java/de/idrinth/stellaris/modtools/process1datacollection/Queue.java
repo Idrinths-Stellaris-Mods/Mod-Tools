@@ -18,7 +18,7 @@ package de.idrinth.stellaris.modtools.process1datacollection;
 
 import de.idrinth.stellaris.modtools.process.FillerThread;
 import de.idrinth.stellaris.modtools.service.DirectoryLookup;
-import de.idrinth.stellaris.modtools.gui.Progress;
+import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
 import de.idrinth.stellaris.modtools.process.AbstractQueue;
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 
 public class Queue extends AbstractQueue {
 
-    public Queue(FillerThread c, Progress progress) {
+    public Queue(FillerThread c, ProgressElementGroup progress) {
         super(c, progress, "Collecting data", Executors.newFixedThreadPool(20));
     }
 

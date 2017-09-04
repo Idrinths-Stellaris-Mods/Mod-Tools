@@ -17,14 +17,14 @@
 package de.idrinth.stellaris.modtools.process2prepatchcleaning;
 
 import de.idrinth.stellaris.modtools.entity.Original;
-import de.idrinth.stellaris.modtools.gui.Progress;
+import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
 import de.idrinth.stellaris.modtools.process.AbstractQueue;
 import de.idrinth.stellaris.modtools.process.FillerThread;
 import de.idrinth.stellaris.modtools.service.PersistenceProvider;
 
 public class Queue extends AbstractQueue {
 
-    public Queue(FillerThread c, Progress progress) {
+    public Queue(FillerThread c, ProgressElementGroup progress) {
         super(c, progress, "Removing manually patched");
     }
 

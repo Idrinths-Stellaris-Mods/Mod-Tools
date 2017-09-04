@@ -16,7 +16,7 @@
  */
 package de.idrinth.stellaris.modtools.process;
 
-import de.idrinth.stellaris.modtools.gui.Progress;
+import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
@@ -33,16 +33,16 @@ abstract public class AbstractQueue implements Runnable {
     private final List<Future<?>> futures = new ArrayList<>();
     private final List<String> known = new ArrayList<>();
     private final Callable callable;
-    private final Progress progress;
+    private final ProgressElementGroup progress;
 
-    public AbstractQueue(Callable callable, Progress progress, String label, ExecutorService executor) {
+    public AbstractQueue(Callable callable, ProgressElementGroup progress, String label, ExecutorService executor) {
         this.callable = callable;
         this.progress = progress;
         this.progress.addToStepLabels(label);
         this.executor = executor;
     }
 
-    public AbstractQueue(Callable callable, Progress progress, String label) {
+    public AbstractQueue(Callable callable, ProgressElementGroup progress, String label) {
         this(callable, progress, label, Executors.newFixedThreadPool(20));
     }
 

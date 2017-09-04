@@ -17,12 +17,6 @@
 package de.idrinth.stellaris.modtools.gui;
 
 import de.idrinth.stellaris.modtools.process.FillerThread;
-import de.idrinth.stellaris.modtools.gui.ClickableTableView;
-import de.idrinth.stellaris.modtools.gui.CollisionTableView;
-import de.idrinth.stellaris.modtools.gui.FileDataRow;
-import de.idrinth.stellaris.modtools.gui.ModDataRow;
-import de.idrinth.stellaris.modtools.gui.ModTableView;
-import de.idrinth.stellaris.modtools.gui.Progress;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
@@ -62,7 +56,7 @@ public class FXMLController implements Initializable {
     private Button button;
 
     @FXML
-    private Progress test;
+    private ProgressElementGroup test;
 
     private Stage popup;
 

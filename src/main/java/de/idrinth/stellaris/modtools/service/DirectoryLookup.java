@@ -21,6 +21,7 @@ import com.github.sarxos.winreg.RegistryException;
 import com.github.sarxos.winreg.WindowsRegistry;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import org.apache.commons.lang3.SystemUtils;
 
 public class DirectoryLookup {
@@ -48,15 +49,12 @@ public class DirectoryLookup {
             } else if(SystemUtils.IS_OS_MAC) {
                 steamDir = test(new File("~/Library/Application Support/Steam"));
             } else if(SystemUtils.IS_OS_LINUX) {
-                try {
-                    steamDir = test(new File("~/.steam/steam"));
-                } catch(IOException exio1) {
-                    try {
-                        steamDir = test(new File("~/.local/share/Steam"));
-                    } catch(IOException exio2) {
-                        throw new IOException(exio1.getMessage()+exio2.getMessage());
-                    }
-                }
+                ArrayList<File> fl = new ArrayList<>();
+                fl.add(new File("~/.steam/steam"));
+                fl.add(new File("~/.steam/Steam"));
+                fl.add(new File("~/.local/share/steam"));
+                fl.add(new File("~/.local/share/Steam"));
+                steamDir = test(fl);
             }
         }
         return steamDir;
@@ -67,5 +65,17 @@ public class DirectoryLookup {
             throw new IOException(file.getAbsolutePath() + " is expected but can't be found.");
         }
         return file;
+    }
+
+    private static File test(ArrayList<File> files) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        for(File file:files) {
+            try {
+                return test(file);
+            } catch(IOException e) {
+                sb.append(e.getMessage());
+            }
+        }
+        throw new IOException(sb.toString());
     }
 }

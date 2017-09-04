@@ -17,7 +17,7 @@
 package de.idrinth.stellaris.modtools.process;
 
 import de.idrinth.stellaris.modtools.gui.ClickableTableView;
-import de.idrinth.stellaris.modtools.gui.Progress;
+import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
 import de.idrinth.stellaris.modtools.service.PersistenceProvider;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -29,7 +29,7 @@ public class FillerThread implements Runnable, Callable {
     private final ArrayList<ClickableTableView> list;
     private final LinkedList<AbstractQueue> tasks = new LinkedList<>();
 
-    public FillerThread(ArrayList<ClickableTableView> list, Progress progress) {
+    public FillerThread(ArrayList<ClickableTableView> list, ProgressElementGroup progress) {
         this.list = list;
         tasks.add(new de.idrinth.stellaris.modtools.process1datacollection.Queue(this, progress));
         tasks.add(new de.idrinth.stellaris.modtools.process2prepatchcleaning.Queue(this, progress));

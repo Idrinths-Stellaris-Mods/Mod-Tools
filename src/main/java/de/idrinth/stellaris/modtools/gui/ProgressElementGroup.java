@@ -14,22 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.process5modcreation;
+package de.idrinth.stellaris.modtools.gui;
 
-import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
-import de.idrinth.stellaris.modtools.process.AbstractQueue;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
+public interface ProgressElementGroup {
 
-public class Queue extends AbstractQueue {
+    void addToStepLabels(String text);
 
-    public Queue(Callable callable, ProgressElementGroup progress) {
-        super(callable, progress, "Building Mod", Executors.newSingleThreadExecutor());
-    }
-
-    @Override
-    protected void addList() {
-        add(new CreateMod());
-    }
-
+    void update(int current, int maximum);
+    
 }
