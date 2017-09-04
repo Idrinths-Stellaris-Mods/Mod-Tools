@@ -16,30 +16,14 @@
  */
 package de.idrinth.stellaris.modtools.process1datacollection;
 
-import de.idrinth.stellaris.modtools.service.DirectoryLookup;
+import de.idrinth.stellaris.modtools.abstractTestCases.TestAnyQueue;
 import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
-import de.idrinth.stellaris.modtools.process.AbstractQueue;
 import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
-import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.Callable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-public class Queue extends AbstractQueue implements ProcessHandlingQueue {
-
-    public Queue(Callable callable, ProgressElementGroup progress) {
-        super(callable, progress, "Collecting data");
-    }
-
+public class QueueTest extends TestAnyQueue {
     @Override
-    protected void addList() {
-        try {
-            for (File mod : DirectoryLookup.getModDir().listFiles(new FileExtFilter("mod"))) {
-                add(new ConfigParser(mod, this));
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    protected ProcessHandlingQueue get(ProgressElementGroup progress, Callable callable) {
+        return new Queue(callable,progress);
     }
 }

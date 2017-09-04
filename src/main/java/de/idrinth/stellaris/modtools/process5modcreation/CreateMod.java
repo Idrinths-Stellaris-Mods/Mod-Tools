@@ -17,6 +17,7 @@
 package de.idrinth.stellaris.modtools.process5modcreation;
 
 import de.idrinth.stellaris.modtools.entity.PatchedFile;
+import de.idrinth.stellaris.modtools.process.ProcessTask;
 import de.idrinth.stellaris.modtools.process.Task;
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +33,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.io.FileUtils;
 
-class CreateMod extends Task {
+class CreateMod extends Task implements ProcessTask {
 
     private final Mod mod;
     private final String id;

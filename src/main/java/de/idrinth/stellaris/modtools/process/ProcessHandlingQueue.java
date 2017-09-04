@@ -20,6 +20,6 @@ import javax.persistence.EntityManager;
 
 public interface ProcessHandlingQueue extends Runnable {
 
-    void add(Task task);
+    void add(ProcessTask task);
     EntityManager getEntityManager();
 }

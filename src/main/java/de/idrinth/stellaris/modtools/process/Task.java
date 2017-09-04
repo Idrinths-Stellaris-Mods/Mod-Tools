@@ -22,11 +22,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import javax.persistence.EntityManager;
 
-abstract public class Task implements Runnable {
+abstract public class Task implements ProcessTask {
 
     protected final ProcessHandlingQueue queue;
     private EntityManager entityManager;
-    protected final ArrayList<Task> tasks = new ArrayList<>();
+    protected final ArrayList<ProcessTask> tasks = new ArrayList<>();
 
     public Task(ProcessHandlingQueue queue) {
         this.queue = queue;
@@ -70,6 +70,7 @@ abstract public class Task implements Runnable {
         }
     }
 
+    @Override
     public String getFullIdentifier() {
         return this.getClass().getName() + "@" + getIdentifier();
     }

@@ -22,11 +22,12 @@ import de.idrinth.stellaris.modtools.entity.Modification;
 import java.io.File;
 import java.io.IOException;
 import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
+import de.idrinth.stellaris.modtools.process.ProcessTask;
 import de.idrinth.stellaris.modtools.process.Task;
 import javax.persistence.EntityManager;
 import org.apache.commons.io.FileUtils;
 
-class ConfigParser extends Task {
+class ConfigParser extends Task implements ProcessTask {
 
     private final File configuration;
 
@@ -49,7 +50,7 @@ class ConfigParser extends Task {
         throw new IOException("No valid path to mod found: " + file.getAbsolutePath());
     }
 
-    private Task handlePath(String path) throws IOException, RegistryException {
+    private ProcessTask handlePath(String path) throws IOException, RegistryException {
         File file = getWithPrefix(path);
         if (path.endsWith(".zip")) {
             return new ZipContentParser(configuration.getName(), file, queue);

@@ -20,11 +20,12 @@ import com.sksamuel.diffpatch.DiffMatchPatch;
 import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.entity.Patch;
 import de.idrinth.stellaris.modtools.entity.PatchedFile;
+import de.idrinth.stellaris.modtools.process.ProcessTask;
 import de.idrinth.stellaris.modtools.process.Task;
 import java.util.LinkedList;
 import javax.persistence.EntityManager;
 
-class ApplyPatchFile extends Task {
+class ApplyPatchFile extends Task implements ProcessTask {
 
     private final long patchId;
     private final long target;

@@ -19,12 +19,13 @@ package de.idrinth.stellaris.modtools.process2prepatchcleaning;
 import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
 import de.idrinth.stellaris.modtools.process.AbstractQueue;
-import de.idrinth.stellaris.modtools.process.FillerThread;
+import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
+import java.util.concurrent.Callable;
 
-public class Queue extends AbstractQueue {
+public class Queue extends AbstractQueue implements ProcessHandlingQueue {
 
-    public Queue(FillerThread c, ProgressElementGroup progress) {
-        super(c, progress, "Removing manually patched");
+    public Queue(Callable callable, ProgressElementGroup progress) {
+        super(callable, progress, "Removing manually patched");
     }
 
     @Override

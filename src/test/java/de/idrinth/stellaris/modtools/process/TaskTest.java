@@ -16,41 +16,20 @@
  */
 package de.idrinth.stellaris.modtools.process;
 
+import de.idrinth.stellaris.modtools.abstractTestCases.TestAnyTask;
 import java.io.IOException;
-import org.junit.Assert;
-import org.junit.Test;
 
-public class TaskTest {
+public class TaskTest extends TestAnyTask {
 
-    /**
-     * Test of run method, of class Task.
-     */
-    @Test
-    public void testRun() {
-        System.out.println("run");
-        Assert.assertTrue(
-                "Is not a runnable",
-                Runnable.class.isInstance(new TaskImpl().getClass())
-        );
-    }
-
-    /**
-     * Test of getFullIdentifier method, of class Task.
-     */
-    @Test
-    public void testGetFullIdentifier() {
-        System.out.println("getFullIdentifier");
-        Assert.assertEquals(
-                "Full Identifier is not correct",
-                TaskImpl.class.getName()+"@abc",
-                new TaskImpl().getFullIdentifier()
-        );
+    @Override
+    protected ProcessTask get(ProcessHandlingQueue queue) {
+        return new TaskImpl(queue);
     }
 
     public class TaskImpl extends Task {
 
-        public TaskImpl() {
-            super(null);
+        public TaskImpl(ProcessHandlingQueue queue) {
+            super(queue);
         }
 
         @Override

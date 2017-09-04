@@ -18,11 +18,12 @@ package de.idrinth.stellaris.modtools.process3filepatch;
 
 import com.sksamuel.diffpatch.DiffMatchPatch;
 import de.idrinth.stellaris.modtools.entity.Patch;
+import de.idrinth.stellaris.modtools.process.ProcessTask;
 import de.idrinth.stellaris.modtools.service.FileExtensions;
 import de.idrinth.stellaris.modtools.process.Task;
 import javax.persistence.EntityManager;
 
-class GenerateFilePatch extends Task {
+class GenerateFilePatch extends Task implements ProcessTask {
 
     private final long id;
 

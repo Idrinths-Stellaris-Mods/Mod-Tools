@@ -18,11 +18,12 @@ package de.idrinth.stellaris.modtools.process2prepatchcleaning;
 
 import de.idrinth.stellaris.modtools.entity.Colliding;
 import de.idrinth.stellaris.modtools.entity.Original;
+import de.idrinth.stellaris.modtools.process.ProcessTask;
 import de.idrinth.stellaris.modtools.process.Task;
 import java.util.ArrayList;
 import javax.persistence.EntityManager;
 
-class RemoveOverwrittenFilePatch extends Task {
+class RemoveOverwrittenFilePatch extends Task implements ProcessTask {
 
     private final long id;
 

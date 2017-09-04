@@ -49,7 +49,7 @@ abstract public class AbstractQueue implements ProcessHandlingQueue {
     }
 
     @Override
-    public synchronized void add(Task task) {
+    public synchronized void add(ProcessTask task) {
         if (!known.contains(task.getFullIdentifier())) {
             futures.add(executor.submit(task));
             known.add(task.getFullIdentifier());

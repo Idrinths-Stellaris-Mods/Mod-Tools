@@ -16,100 +16,23 @@
  */
 package de.idrinth.stellaris.modtools.process;
 
+import de.idrinth.stellaris.modtools.abstractTestCases.TestAnyQueue;
 import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
-import de.idrinth.stellaris.modtools.service.PersistenceProvider;
 import java.util.concurrent.Callable;
-import javax.persistence.EntityManager;
-import junit.framework.Assert;
-import org.junit.Test;
 
-public class AbstractQueueTest {
+public class AbstractQueueTest extends TestAnyQueue {
 
-    /**
-     * Test of add method, of class AbstractQueue.
-     */
-    @Test
-    public void testAdd() {
-        System.out.println("add");
-        AbstractQueueImpl queue = new AbstractQueueImpl();
-        queue.addList();
-        queue.add(new TestRunnable(queue));
-        queue.add(new TestRunnable(queue,"ääää"));
-        queue.run();
-        Assert.assertEquals(2, queue.increment);
-    }
-
-    /**
-     * Test of run method, of class AbstractQueue.
-     */
-    @Test
-    public void testRun() {
-        System.out.println("run");
-        AbstractQueueImpl queue = new AbstractQueueImpl();
-        queue.addList();
-        queue.run();
-        Assert.assertEquals(1, queue.increment);
-    }
-
-    /**
-     * Test of getEntityManager method, of class AbstractQueue.
-     */
-    @Test
-    public void testGetEntityManager() {
-        System.out.println("getEntityManager");
-        Assert.assertTrue("getEntityManager does not return an EntityManager", EntityManager.class.isAssignableFrom(new AbstractQueueImpl().getEntityManager().getClass()));
+    @Override
+    protected ProcessHandlingQueue get(ProgressElementGroup progress, Callable callable) {
+        return new AbstractQueueImpl(callable, progress);
     }
     private class AbstractQueueImpl extends AbstractQueue {
-        public volatile int increment=0;
-        public AbstractQueueImpl() {
-            super(new TestCallable(), new TestProgressElementGroup(), "");
+        public AbstractQueueImpl(Callable callable, ProgressElementGroup progress) {
+            super(callable, progress, "");
         }
 
         @Override
         public void addList() {
-            add(new TestRunnable(this));
-        }
-    }
-    private class TestProgressElementGroup implements ProgressElementGroup {
-
-        @Override
-        public void addToStepLabels(String text) {
-            //done
-        }
-
-        @Override
-        public void update(int current, int maximum) {
-            //done
-        }
-        
-    }
-    private class TestCallable implements Callable {
-        @Override
-        public Object call() {
-            return null;//nothing to do
-        }
-    }
-    private class TestRunnable extends Task {
-        private final String identifier;
-        public TestRunnable(AbstractQueueImpl queue, String identifier) {
-            super(queue);
-            this.identifier = identifier;
-        }
-        public TestRunnable(AbstractQueueImpl queue) {
-            this(queue, "-");
-        }
-        @Override
-        public void run() {
-            fill();
-        }
-        @Override
-        protected void fill() {
-            ((AbstractQueueImpl) queue).increment++;
-        }
-
-        @Override
-        protected String getIdentifier() {
-            return identifier;
         }
     }
 }

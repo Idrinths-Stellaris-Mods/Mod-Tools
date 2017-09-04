@@ -20,12 +20,13 @@ import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.entity.Modification;
 import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.entity.Patch;
+import de.idrinth.stellaris.modtools.process.ProcessTask;
 import de.idrinth.stellaris.modtools.process.Task;
 import java.io.IOException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
-class PatchConnector extends Task {
+class PatchConnector extends Task implements ProcessTask {
 
     private final long patchId;
     private final long modId;

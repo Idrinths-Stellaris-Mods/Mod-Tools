@@ -19,9 +19,10 @@ package de.idrinth.stellaris.modtools.process3filepatch;
 import de.idrinth.stellaris.modtools.entity.Patch;
 import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
 import de.idrinth.stellaris.modtools.process.AbstractQueue;
+import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import java.util.concurrent.Callable;
 
-public class Queue extends AbstractQueue {
+public class Queue extends AbstractQueue implements ProcessHandlingQueue {
 
     public Queue(Callable callable, ProgressElementGroup progress) {
         super(callable, progress, "Creating patches");

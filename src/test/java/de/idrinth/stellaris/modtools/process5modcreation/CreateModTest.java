@@ -16,21 +16,15 @@
  */
 package de.idrinth.stellaris.modtools.process5modcreation;
 
-import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
-import de.idrinth.stellaris.modtools.process.AbstractQueue;
+import de.idrinth.stellaris.modtools.abstractTestCases.TestAnyTask;
 import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
+import de.idrinth.stellaris.modtools.process.ProcessTask;
 
-public class Queue extends AbstractQueue implements ProcessHandlingQueue {
-
-    public Queue(Callable callable, ProgressElementGroup progress) {
-        super(callable, progress, "Building Mod", Executors.newSingleThreadExecutor());
-    }
+public class CreateModTest extends TestAnyTask {
 
     @Override
-    protected void addList() {
-        add(new CreateMod());
+    protected ProcessTask get(ProcessHandlingQueue queue) {
+        return new CreateMod();
     }
 
 }

@@ -14,23 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.process5modcreation;
+package de.idrinth.stellaris.modtools.process1datacollection;
 
-import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
-import de.idrinth.stellaris.modtools.process.AbstractQueue;
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
+import java.io.File;
+import junit.framework.Assert;
+import org.junit.Test;
 
-public class Queue extends AbstractQueue implements ProcessHandlingQueue {
-
-    public Queue(Callable callable, ProgressElementGroup progress) {
-        super(callable, progress, "Building Mod", Executors.newSingleThreadExecutor());
+public class FileExtFilterTest {
+    /**
+     * Test of accept method, of class FileExtFilter.
+     */
+    @Test
+    public void testAccept() {
+        System.out.println("accept");
+        FileExtFilter ff = new FileExtFilter("txt");
+        Assert.assertTrue("demo.txt is not ending with.txt?", ff.accept(new File("./"), "abc.txt"));
+        Assert.assertFalse("demo.täxt is ending with.txt?", ff.accept(new File("./"), "abc.txt"));
+        Assert.assertFalse("demo.txt.aa is ending with.txt?", ff.accept(new File("./"), "abc.txt"));
     }
-
-    @Override
-    protected void addList() {
-        add(new CreateMod());
-    }
-
+    
 }

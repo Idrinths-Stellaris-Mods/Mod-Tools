@@ -19,6 +19,7 @@ package de.idrinth.stellaris.modtools.process1datacollection;
 import de.idrinth.stellaris.modtools.MainApp;
 import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.entity.Modification;
+import de.idrinth.stellaris.modtools.process.ProcessTask;
 import de.idrinth.stellaris.modtools.process.Task;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -30,7 +31,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-class RemoteModParser extends Task {
+class RemoteModParser extends Task implements ProcessTask {
 
     protected final int id;
 

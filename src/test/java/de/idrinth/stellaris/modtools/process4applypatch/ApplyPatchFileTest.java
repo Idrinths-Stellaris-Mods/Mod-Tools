@@ -14,23 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.process5modcreation;
+package de.idrinth.stellaris.modtools.process4applypatch;
 
-import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
-import de.idrinth.stellaris.modtools.process.AbstractQueue;
+import de.idrinth.stellaris.modtools.abstractTestCases.TestAnyTask;
 import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
+import de.idrinth.stellaris.modtools.process.ProcessTask;
+import java.util.LinkedList;
 
-public class Queue extends AbstractQueue implements ProcessHandlingQueue {
-
-    public Queue(Callable callable, ProgressElementGroup progress) {
-        super(callable, progress, "Building Mod", Executors.newSingleThreadExecutor());
-    }
+public class ApplyPatchFileTest extends TestAnyTask {
 
     @Override
-    protected void addList() {
-        add(new CreateMod());
+    protected ProcessTask get(ProcessHandlingQueue queue) {
+        LinkedList<Long> ll = new LinkedList<>();
+        ll.add((long) 1);
+        return new ApplyPatchFile(ll, 1, queue);
     }
-
 }

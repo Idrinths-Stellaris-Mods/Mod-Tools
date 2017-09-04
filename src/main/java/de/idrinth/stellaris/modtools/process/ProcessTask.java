@@ -14,23 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.process5modcreation;
+package de.idrinth.stellaris.modtools.process;
 
-import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
-import de.idrinth.stellaris.modtools.process.AbstractQueue;
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
+public interface ProcessTask extends Runnable {
 
-public class Queue extends AbstractQueue implements ProcessHandlingQueue {
-
-    public Queue(Callable callable, ProgressElementGroup progress) {
-        super(callable, progress, "Building Mod", Executors.newSingleThreadExecutor());
-    }
-
-    @Override
-    protected void addList() {
-        add(new CreateMod());
-    }
-
+    String getFullIdentifier();
 }

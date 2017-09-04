@@ -19,6 +19,7 @@ package de.idrinth.stellaris.modtools.process1datacollection;
 import com.github.sarxos.winreg.RegistryException;
 import de.idrinth.stellaris.modtools.service.DirectoryLookup;
 import de.idrinth.stellaris.modtools.entity.Original;
+import de.idrinth.stellaris.modtools.process.ProcessTask;
 import de.idrinth.stellaris.modtools.service.FileExtensions;
 import de.idrinth.stellaris.modtools.process.Task;
 import java.io.File;
@@ -26,7 +27,7 @@ import java.io.IOException;
 import javax.persistence.EntityManager;
 import org.apache.commons.io.FileUtils;
 
-class OriginalFileFiller extends Task {
+class OriginalFileFiller extends Task implements ProcessTask {
 
     private final String path;
     protected final String[] extsPatch = ".txt,.yml".split(",");

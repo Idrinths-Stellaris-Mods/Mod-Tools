@@ -20,9 +20,10 @@ import de.idrinth.stellaris.modtools.process.Task;
 import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.entity.Modification;
 import de.idrinth.stellaris.modtools.entity.Patch;
+import de.idrinth.stellaris.modtools.process.ProcessTask;
 import javax.persistence.EntityManager;
 
-abstract public class Files extends Task {
+abstract class Files extends Task implements ProcessTask {
 
     protected final String modConfigName;
 
