@@ -21,6 +21,8 @@ import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.NamedQueries;
@@ -46,8 +48,19 @@ import org.hibernate.annotations.CascadeType;
     )
 })
 @Entity
-public class Modification extends AbstractEntity {
+public class Modification {
 
+    @Id
+    @GeneratedValue
+    private long aid;
+
+    public long getAid() {
+        return aid;
+    }
+
+    public void setAid(long aid) {
+        this.aid = aid;
+    }
     //basics
     protected String configPath;
     protected int id;

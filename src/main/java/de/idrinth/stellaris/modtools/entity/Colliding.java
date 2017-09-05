@@ -16,17 +16,31 @@
  */
 package de.idrinth.stellaris.modtools.entity;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
-public class Colliding extends AbstractEntity {
+public class Colliding implements Serializable {
 
+    @Id
+    @GeneratedValue
+    private long aid;
+
+    public void setAid(long aid) {
+        this.aid = aid;
+    }
+
+    public long getAid() {
+        return aid;
+    }
     @OneToOne(fetch = FetchType.LAZY)
     private Modification modification;
     @OneToMany(fetch = FetchType.LAZY)

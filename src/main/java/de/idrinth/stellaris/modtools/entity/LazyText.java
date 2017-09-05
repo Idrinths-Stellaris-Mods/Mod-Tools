@@ -16,13 +16,27 @@
  */
 package de.idrinth.stellaris.modtools.entity;
 
+import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Entity
-class LazyText extends AbstractEntity {
+class LazyText implements Serializable {
 
+    @Id
+    @GeneratedValue
+    private long aid;
+
+    public void setAid(long aid) {
+        this.aid = aid;
+    }
+
+    public long getAid() {
+        return aid;
+    }
     @Column(columnDefinition = "LONGTEXT")
     private String text = "";
 

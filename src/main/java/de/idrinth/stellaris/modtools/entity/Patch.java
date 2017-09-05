@@ -16,9 +16,12 @@
  */
 package de.idrinth.stellaris.modtools.entity;
 
+import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -33,8 +36,19 @@ import org.hibernate.annotations.CascadeType;
     )
 })
 @Entity
-public class Patch extends AbstractEntity {
+public class Patch implements Serializable {
 
+    @Id
+    @GeneratedValue
+    private long aid;
+
+    public long getAid() {
+        return aid;
+    }
+
+    public void setAid(long aid) {
+        this.aid = aid;
+    }
     @ManyToOne(fetch = FetchType.LAZY)
     protected Modification mod;
     @ManyToOne(fetch = FetchType.LAZY)

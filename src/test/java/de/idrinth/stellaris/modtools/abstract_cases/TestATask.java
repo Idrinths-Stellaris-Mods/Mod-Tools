@@ -16,27 +16,27 @@
  */
 package de.idrinth.stellaris.modtools.abstract_cases;
 
-import de.idrinth.stellaris.modtools.service.PersistenceProvider;
-import java.util.List;
+import de.idrinth.stellaris.modtools.process.ProcessTask;
 import org.junit.Assert;
 import org.junit.Test;
 
-abstract public class TestAnyTask extends TestATask {
+public abstract class TestATask {
     
+    protected abstract ProcessTask get();
+
+    @Test
+    public void testInterface() {
+        System.out.println("interface");
+        Assert.assertTrue("This task does not implement the required interface.", ProcessTask.class.isAssignableFrom(get().getClass()));
+    }
 
     /**
-     * Test of handle method, of class Task.
+     * Test of getFullIdentifier method, of class Task.
      */
     @Test
-    public void testHandle() {
-        System.out.println("run - basics");
-        try {
-            Assert.assertTrue(
-                "Full Identifier is not correct",
-                get().handle(new PersistenceProvider().get()) instanceof List<?>
-            );
-        } catch(Exception e) {
-            Assert.assertTrue(true);//@todo implement the requirements for all tasks
-        }
+    public void testGetFullIdentifier() {
+        System.out.println("getIdentifier");
+        Assert.assertTrue("Full Identifier is not correct", get().getIdentifier().length() > 0);
     }
+    
 }
