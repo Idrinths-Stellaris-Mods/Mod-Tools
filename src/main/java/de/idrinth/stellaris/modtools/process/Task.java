@@ -30,13 +30,9 @@ class Task implements Runnable {
     public void run() {
         try {
             System.out.println("   Running " + getFullIdentifier());
-            try {
-                task.handle( queue.getEntityManager()).forEach((newTask) -> {
-                    queue.add(newTask);
-                });
-            } catch (Throwable ex) {
-                System.out.println(ex.getLocalizedMessage());
-            }
+            task.handle( queue.getEntityManager()).forEach((newTask) -> {
+                queue.add(newTask);
+            });
             System.out.println("   Finished " + getFullIdentifier());
         } catch (Exception e) {
             System.out.println("   Errored " + getFullIdentifier() + ": " + e.getCause().getLocalizedMessage());
@@ -47,6 +43,6 @@ class Task implements Runnable {
     }
 
     public String getFullIdentifier() {
-        return this.task.getClass().getName() + "@" + task.getIdentifier();
+        return task.getClass().getName() + "@" + task.getIdentifier();
     }
 }

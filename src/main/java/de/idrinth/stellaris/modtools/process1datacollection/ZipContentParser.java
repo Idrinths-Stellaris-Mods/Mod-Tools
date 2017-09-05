@@ -60,7 +60,7 @@ class ZipContentParser extends Files {
                 try {
                     handleSingleZipEntry(zip, entry, manager);
                 } catch (IOException ex) {
-                    System.out.println(ex.getCause().getLocalizedMessage());
+                    System.out.println(ex.getLocalizedMessage());
                 }
             }
         } catch (Exception e) {

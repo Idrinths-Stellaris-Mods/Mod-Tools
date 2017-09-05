@@ -140,13 +140,13 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.6.2</version>
                 <configuration>
-                    <annotationProcessorPaths>
+                    <!--<annotationProcessorPaths>
                         <path>
                             <groupId>com.google.dagger</groupId>
                             <artifactId>dagger-compiler</artifactId>
                             <version>2.11</version>
                         </path>
-                    </annotationProcessorPaths>
+                    </annotationProcessorPaths>-->
                     <source>1.8</source>
                     <target>1.8</target>
                     <compilerArguments>
@@ -240,15 +240,20 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
+                        <configuration>
+                            <includes>
+                                <include>de.idrinth.stellaris.modtools.*</include>
+                            </includes>
+                        </configuration>
                     </execution>
-                    <execution>
+                    <!--<execution>
                         <id>default-check</id>
                         <goals>
                             <goal>check</goal>
                         </goals>
                         <configuration>
                             <rules>
-                                  <rule>
+                                <rule>
                                 <element>CLASS</element>
                                 <includes>
                                   <include>de.idrinth.stellaris.modtools*</include>
@@ -258,7 +263,7 @@
                                   <exclude>de.idrinth.stellaris.modtools.entity.*</exclude>
                                 </excludes>
                               </rule>
-                                <!--<rule implementation="org.jacoco.maven.RuleConfiguration">
+                                <rule implementation="org.jacoco.maven.RuleConfiguration">
                                     <element>BUNDLE</element>
                                     <limits>
                                         <limit implementation="org.jacoco.report.check.Limit">
@@ -267,10 +272,10 @@
                                             <minimum>0.95</minimum>
                                         </limit>
                                     </limits>
-                                </rule>-->
+                                </rule>
                             </rules>
                         </configuration>
-                    </execution>
+                    </execution>-->
                 </executions>
             </plugin>
         </plugins>
@@ -291,5 +296,40 @@
             </plugin>
         </plugins>
     </reporting>
-
+    <profiles>
+        <profile>
+            <id>codecoverage</id>
+            <activation>
+                <property>
+                    <name>env.TRAVIS</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.gavinmogan</groupId>
+                        <artifactId>codacy-maven-plugin</artifactId>
+                        <version>1.0.3</version>
+                        <configuration>
+                            <apiToken>${env.CODACY_API_TOKEN}</apiToken>
+                            <projectToken>${env.CODACY_PROJECT_TOKEN}</projectToken>
+                            <coverageReportFile>${project.reporting.outputDirectory}/jacoco.xml</coverageReportFile>
+                            <commit>${env.TRAVIS_COMMIT}</commit>
+                            <codacyApiBaseUrl>https://api.codacy.com</codacyApiBaseUrl>
+                            <failOnMissingReportFile>false</failOnMissingReportFile>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>post-test</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>coverage</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

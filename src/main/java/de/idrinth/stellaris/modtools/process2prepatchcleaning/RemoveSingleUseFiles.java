@@ -17,7 +17,6 @@
 package de.idrinth.stellaris.modtools.process2prepatchcleaning;
 
 import de.idrinth.stellaris.modtools.entity.Original;
-import de.idrinth.stellaris.modtools.entity.Patch;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import java.util.ArrayList;
 import java.util.List;
