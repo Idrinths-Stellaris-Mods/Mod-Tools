@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Björn Büttner
+ * Copyright (C) 2017 Idrinth
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,10 +16,10 @@
  */
 package de.idrinth.stellaris.modtools.process2prepatchcleaning;
 
-import de.idrinth.stellaris.modtools.entity.Patch;
 import de.idrinth.stellaris.modtools.abstract_cases.TestATask;
 import de.idrinth.stellaris.modtools.entity.Modification;
 import de.idrinth.stellaris.modtools.entity.Original;
+import de.idrinth.stellaris.modtools.entity.Patch;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import de.idrinth.stellaris.modtools.service.PersistenceProvider;
 import java.util.List;
@@ -27,11 +27,11 @@ import javax.persistence.EntityManager;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class RemoveOverwrittenFilePatchTest extends TestATask {
+public class RemoveSingleUseFilesTest extends TestATask {
 
     @Override
     protected ProcessTask get() {
-        return new RemoveOverwrittenFilePatch(1);
+        return new RemoveSingleUseFiles(1);
     }
 
     /**
@@ -45,46 +45,30 @@ public class RemoveOverwrittenFilePatchTest extends TestATask {
             manager.getTransaction().begin();
             // creating data
             Modification mod1 = new Modification("",1);
-            Modification mod2 = new Modification("",2);
-            Modification mod3 = new Modification("",2);
             mod1.setName("Test 1");
-            mod2.setName("Test 2");
-            mod3.setName("Test 3");
             manager.persist(mod1);
-            manager.persist(mod2);
-            manager.persist(mod3);
-            mod2.getOverwrite().add(mod1);
             Original original = new Original("commons/test");
             manager.persist(original);
             Patch patch1 = new Patch(mod1, original);
             mod1.getPatches().add(patch1);
             original.getPatches().add(patch1);
             manager.persist(patch1);
-            Patch patch2 = new Patch(mod2, original);
-            mod2.getPatches().add(patch2);
-            original.getPatches().add(patch2);
-            manager.persist(patch2);
-            Patch patch3 = new Patch(mod3, original);
-            mod3.getPatches().add(patch3);
-            original.getPatches().add(patch3);
-            manager.persist(patch3);
             // storing data
             manager.getTransaction().commit();
             //testing
-            List<?> result = new RemoveOverwrittenFilePatch(original.getAid()).handle(manager);
+            List<?> result = new RemoveSingleUseFiles(original.getAid()).handle(manager);
             Assert.assertTrue(
                 "handle didn't run properly",
                 result instanceof List<?>
             );
             Assert.assertEquals(
                 "handle didn't run properly",
-                1,
+                0,
                 result.size()
             );
-            Assert.assertEquals(
+            Assert.assertNull(
                 "Patch wasn't removed correctly",
-                1,
-                manager.find(Original.class, original.getAid()).getPatches().size()
+                manager.find(Original.class, original.getAid())
             );
         } catch(Exception e) {
             manager.getTransaction().rollback();

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Björn Büttner
+ * Copyright (C) 2017 Idrinth
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,19 +16,18 @@
  */
 package de.idrinth.stellaris.modtools.process2prepatchcleaning;
 
-import de.idrinth.stellaris.modtools.entity.Colliding;
 import de.idrinth.stellaris.modtools.entity.Original;
+import de.idrinth.stellaris.modtools.entity.Patch;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 
-class RemoveOverwrittenFilePatch implements ProcessTask {
+public class RemoveSingleUseFiles implements ProcessTask {
 
     private final long id;
-    private boolean modified = false;
 
-    public RemoveOverwrittenFilePatch(long id) {
+    public RemoveSingleUseFiles(long id) {
         this.id = id;
     }
 
@@ -37,37 +36,24 @@ class RemoveOverwrittenFilePatch implements ProcessTask {
         if (!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }
+        ArrayList<ProcessTask> ll = new ArrayList<>();
         Original original = (Original) manager.find(Original.class, id);
-        ArrayList<Long> ignores = new ArrayList<>();
-        original.getPatches().forEach((patch) -> {
-            patch.getMod().getOverwrite().forEach((mod) -> {
-                ignores.add(mod.getAid());
-            });
-        });
-        original.getPatches().forEach((patch) -> {
-            if (ignores.contains(patch.getMod().getAid())) {
+        if(original.getPatches().size()>1) {
+            ll.add(new RemoveOverwrittenFilePatch(id));
+        } else {
+            original.getPatches().stream().map((patch) -> {
                 patch.getMod().getPatches().remove(patch);
+                return patch;
+            }).map((patch) -> {
                 original.getPatches().remove(patch);
+                return patch;
+            }).forEachOrdered((patch) -> {
                 manager.remove(patch);
-                modified = true;
-            }
-        });
-        original.getPatches().forEach((patch1) -> {
-            original.getPatches().forEach((patch2) -> {
-                if (!patch1.equals(patch2)) {
-                    if (null == patch1.getMod().getCollides()) {
-                        patch1.getMod().setCollides(new Colliding(patch1.getMod()));
-                    }
-                    patch1.getMod().getCollides().getModifications().add(patch2.getMod());
-                }
             });
-        });
-        manager.getTransaction().commit();
-        ArrayList<ProcessTask> list = new ArrayList<>();
-        if(modified) {
-            list.add(new RemoveSingleUseFiles(id));
+            manager.remove(original);
         }
-        return list;
+        manager.getTransaction().commit();
+        return ll;
     }
 
     @Override

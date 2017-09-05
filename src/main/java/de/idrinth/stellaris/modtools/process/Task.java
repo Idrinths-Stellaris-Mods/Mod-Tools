@@ -29,7 +29,7 @@ class Task implements Runnable {
     @Override
     public void run() {
         try {
-            System.out.println("   Running " + this.getClass().getName());
+            System.out.println("   Running " + getFullIdentifier());
             try {
                 task.handle( queue.getEntityManager()).forEach((newTask) -> {
                     queue.add(newTask);
@@ -37,9 +37,9 @@ class Task implements Runnable {
             } catch (Throwable ex) {
                 System.out.println(ex.getLocalizedMessage());
             }
-            System.out.println("   Finished " + this.task.getClass().getName());
+            System.out.println("   Finished " + getFullIdentifier());
         } catch (Exception e) {
-            System.out.println("   Errored " + this.task.getClass().getName() + ": " + e.getCause().getLocalizedMessage());
+            System.out.println("   Errored " + getFullIdentifier() + ": " + e.getCause().getLocalizedMessage());
         } catch (Throwable t) {
             System.err.println("failed  " + getFullIdentifier() + " with a " + t.getClass().getName());
             System.exit(1);

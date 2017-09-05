@@ -31,7 +31,7 @@ public class Process2Initializer extends AbstractQueueInitializer implements Dat
     @Override
     protected void init() {
         persistence.get().createNamedQuery("originals", Original.class).getResultList().forEach((o) -> {
-            tasks.add(new RemoveOverwrittenFilePatch(o.getAid()));
+            tasks.add(new RemoveSingleUseFiles(o.getAid()));
         });
     }
 
