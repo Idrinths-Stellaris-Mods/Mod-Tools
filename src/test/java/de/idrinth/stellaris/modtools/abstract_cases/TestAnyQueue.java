@@ -53,7 +53,7 @@ abstract public class TestAnyQueue {
         wrapper.queue.add(new TestRunnable("ääää"));
         wrapper.queue.add(new TestRunnable());
         wrapper.queue.run();
-        Assert.assertEquals(2*prev+2, wrapper.max);
+        Assert.assertEquals(prev+2, wrapper.max);
     }
 
     /**
@@ -67,7 +67,7 @@ abstract public class TestAnyQueue {
         int prev = wrapper.max;
         wrapper.queue.add(new TestRunnable());
         wrapper.queue.run();
-        Assert.assertEquals(2*prev+1, wrapper.max);
+        Assert.assertEquals(prev+1, wrapper.max);
     }
 
     /**
