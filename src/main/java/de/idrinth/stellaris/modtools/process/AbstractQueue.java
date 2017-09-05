@@ -37,7 +37,6 @@ abstract public class AbstractQueue implements ProcessHandlingQueue {
     private final Callable callable;
     private final ProgressElementGroup progress;
     private final PersistenceProvider persistence;
-    private boolean initialized = false;
 
     public AbstractQueue(Callable callable, ProgressElementGroup progress, String label, PersistenceProvider persistence, ExecutorService executor) {
         this.callable = callable;
