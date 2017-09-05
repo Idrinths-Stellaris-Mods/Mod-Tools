@@ -18,7 +18,6 @@ package de.idrinth.stellaris.modtools.process5modcreation;
 
 import junit.framework.Assert;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class VersionTest {
 
@@ -49,7 +48,7 @@ public class VersionTest {
     @Test
     public void testToString() {
         System.out.println("toString");
-        assertEquals("1.0.0", new Version().toString());
+        Assert.assertEquals("1.0.0", new Version().toString());
     }
     
 }
