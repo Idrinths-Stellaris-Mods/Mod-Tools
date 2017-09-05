@@ -44,7 +44,7 @@ class OriginalFileFiller extends Task implements ProcessTask {
         try {
             File file = new File(
                     DirectoryLookup.getSteamDir().getAbsolutePath()
-                    + "SteamApps/common/Stellaris/"
+                    + "steamapps/common/Stellaris/"//at least ubutu's steam uses lower case
                     + path
             );
             return file.exists() && file.canRead() ? FileUtils.readFileToString(file, "utf-8") : "";
