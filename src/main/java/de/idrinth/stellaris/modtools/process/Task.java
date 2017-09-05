@@ -16,69 +16,37 @@
  */
 package de.idrinth.stellaris.modtools.process;
 
-import de.idrinth.stellaris.modtools.entity.TaskCompletion;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import javax.persistence.EntityManager;
-
-abstract public class Task implements ProcessTask {
+class Task implements Runnable {
 
     protected final ProcessHandlingQueue queue;
-    private EntityManager entityManager;
-    protected final ArrayList<ProcessTask> tasks = new ArrayList<>();
+    private final ProcessTask task;
 
-    public Task(ProcessHandlingQueue queue) {
+    public Task(ProcessHandlingQueue queue, ProcessTask task) {
         this.queue = queue;
+        this.task = task;
     }
-
-    abstract protected void fill() throws IOException;
-
-    abstract protected String getIdentifier();
 
     @Override
     public void run() {
         try {
-            TaskCompletion tk = new TaskCompletion(this.getClass().getSimpleName(), getIdentifier());
-            EntityManager manager = getEntityManager();
             System.out.println("   Running " + this.getClass().getName());
-            if (!manager.getTransaction().isActive()) {
-                manager.getTransaction().begin();
-            }
-            manager.persist(tk);
-            manager.getTransaction().commit();
             try {
-                fill();
+                task.handle( queue.getEntityManager()).forEach((newTask) -> {
+                    queue.add(newTask);
+                });
             } catch (Throwable ex) {
                 System.out.println(ex.getLocalizedMessage());
             }
-            tasks.forEach((task) -> {
-                queue.add(task);
-            });
-            tk.setEndTime(new Date());
-            if (!manager.getTransaction().isActive()) {
-                manager.getTransaction().begin();
-            }
-            manager.persist(tk);
-            manager.getTransaction().commit();
-            System.out.println("   Finished " + this.getClass().getName());
+            System.out.println("   Finished " + this.task.getClass().getName());
         } catch (Exception e) {
-            System.out.println("   Errored " + this.getClass().getName() + ": " + e.getCause().getLocalizedMessage());
+            System.out.println("   Errored " + this.task.getClass().getName() + ": " + e.getCause().getLocalizedMessage());
         } catch (Throwable t) {
             System.err.println("failed  " + getFullIdentifier() + " with a " + t.getClass().getName());
             System.exit(1);
         }
     }
 
-    @Override
     public String getFullIdentifier() {
-        return this.getClass().getName() + "@" + getIdentifier();
-    }
-
-    protected EntityManager getEntityManager() {
-        if (null == entityManager) {
-            entityManager = queue.getEntityManager();
-        }
-        return entityManager;
+        return this.task.getClass().getName() + "@" + task.getIdentifier();
     }
 }

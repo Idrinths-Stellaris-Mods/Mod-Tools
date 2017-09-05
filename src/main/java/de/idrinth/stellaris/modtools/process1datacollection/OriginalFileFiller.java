@@ -21,19 +21,18 @@ import de.idrinth.stellaris.modtools.service.DirectoryLookup;
 import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import de.idrinth.stellaris.modtools.service.FileExtensions;
-import de.idrinth.stellaris.modtools.process.Task;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
 import org.apache.commons.io.FileUtils;
 
-class OriginalFileFiller extends Task implements ProcessTask {
+class OriginalFileFiller implements ProcessTask {
 
     private final String path;
-    protected final String[] extsPatch = ".txt,.yml".split(",");
 
     public OriginalFileFiller(String path) {
-        super(null);
         this.path = path;
     }
 
@@ -55,8 +54,7 @@ class OriginalFileFiller extends Task implements ProcessTask {
     }
 
     @Override
-    public void fill() {
-        EntityManager manager = getEntityManager();
+    public List<ProcessTask> handle(EntityManager manager) {
         if (!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }
@@ -67,10 +65,11 @@ class OriginalFileFiller extends Task implements ProcessTask {
             file.setContent(getContent());
         }
         manager.getTransaction().commit();
+        return new ArrayList<>();
     }
 
     @Override
-    protected String getIdentifier() {
+    public String getIdentifier() {
         return path;
     }
 

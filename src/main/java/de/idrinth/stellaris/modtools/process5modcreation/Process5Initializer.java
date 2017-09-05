@@ -16,22 +16,17 @@
  */
 package de.idrinth.stellaris.modtools.process5modcreation;
 
-import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
-import de.idrinth.stellaris.modtools.process.AbstractQueue;
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
-import de.idrinth.stellaris.modtools.service.PersistenceProvider;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
+import de.idrinth.stellaris.modtools.process.AbstractQueueInitializer;
+import de.idrinth.stellaris.modtools.process.DataInitializer;
 
-public class Queue extends AbstractQueue implements ProcessHandlingQueue {
-
-    public Queue(Callable callable, ProgressElementGroup progress, PersistenceProvider persistence) {
-        super(callable, progress, "Building Mod", persistence,Executors.newSingleThreadExecutor());
-    }
-
+public class Process5Initializer extends AbstractQueueInitializer implements DataInitializer {
     @Override
-    protected void addList() {
-        add(new CreateMod());
+    protected void init() {
+        tasks.add(new CreateMod());
+    }
+    @Override
+    public int getQueueSize() {
+        return 1;
     }
 
 }

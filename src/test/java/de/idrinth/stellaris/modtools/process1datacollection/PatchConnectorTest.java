@@ -17,14 +17,13 @@
 package de.idrinth.stellaris.modtools.process1datacollection;
 
 import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 
 public class PatchConnectorTest extends TestAnyTask {
 
     @Override
-    protected ProcessTask get(ProcessHandlingQueue queue) {
-        return new PatchConnector(1, 1, "mm", queue);
+    protected ProcessTask get() {
+        return new PatchConnector(1, 1, "mm");
     }
 
 }

@@ -16,37 +16,22 @@
  */
 package de.idrinth.stellaris.modtools.abstract_cases;
 
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import de.idrinth.stellaris.modtools.service.PersistenceProvider;
-import javax.persistence.EntityManager;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
 abstract public class TestAnyTask {
     
-    abstract protected ProcessTask get(ProcessHandlingQueue queue);
-    protected ProcessTask getWrapped() {
-        return get(new UselessQueue());
-    }
+    abstract protected ProcessTask get();
 
     @Test
     public void testInterface() {
         System.out.println("interface");
         Assert.assertTrue(
             "This task does not implement the required interface.",
-            ProcessTask.class.isAssignableFrom(getWrapped().getClass())
-        );
-    }
-    /**
-     * Test of run method, of class Task.
-     */
-    @Test
-    public void testRun() {
-        System.out.println("run");
-        Assert.assertTrue(
-            "Is not a runnable",
-            Runnable.class.isAssignableFrom(getWrapped().getClass())
+            ProcessTask.class.isAssignableFrom(get().getClass())
         );
     }
 
@@ -55,31 +40,26 @@ abstract public class TestAnyTask {
      */
     @Test
     public void testGetFullIdentifier() {
-        System.out.println("getFullIdentifier");
-        ProcessTask task = getWrapped();
-        System.out.println(task.getClass().getName()+"@");
-        System.out.println(task.getFullIdentifier());
+        System.out.println("getIdentifier");
         Assert.assertTrue(
             "Full Identifier is not correct",
-            task.getFullIdentifier().startsWith(task.getClass().getName()+"@") &&
-            task.getFullIdentifier().length() > task.getClass().getName().length()+1
+            get().getIdentifier().length() > 0
         );
     }
-    private class UselessQueue implements ProcessHandlingQueue {
-        private final PersistenceProvider persistence = new PersistenceProvider();
-        @Override
-        public void add(ProcessTask task) {
-            // not meant to be tested here
-        }
 
-        @Override
-        public EntityManager getEntityManager() {
-            return persistence.get();
-        }
-
-        @Override
-        public void run() {
-            // not meant to be tested here
+    /**
+     * Test of handle method, of class Task.
+     */
+    @Test
+    public void testHandleBasics() {
+        System.out.println("run - basics");
+        try {
+            Assert.assertTrue(
+                "Full Identifier is not correct",
+                get().handle(new PersistenceProvider().get()) instanceof List<?>
+            );
+        } catch(Exception e) {
+            Assert.assertTrue(true);//@todo implement the requirements for all tasks
         }
     }
 }

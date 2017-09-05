@@ -14,17 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.process1datacollection;
+package de.idrinth.stellaris.modtools.process;
 
-import de.idrinth.stellaris.modtools.abstract_cases.TestAnyQueue;
-import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
-import de.idrinth.stellaris.modtools.service.PersistenceProvider;
-import java.util.concurrent.Callable;
-
-public class QueueTest extends TestAnyQueue {
-    @Override
-    protected ProcessHandlingQueue get(ProgressElementGroup progress, Callable callable) {
-        return new Queue(callable,progress, new PersistenceProvider());
-    }
+public interface DataInitializer {
+    ProcessTask poll();
+    boolean hasNext();
+    int getQueueSize();
 }

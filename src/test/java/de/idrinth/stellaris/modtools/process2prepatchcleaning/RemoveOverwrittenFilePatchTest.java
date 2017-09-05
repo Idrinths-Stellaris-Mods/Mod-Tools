@@ -17,13 +17,12 @@
 package de.idrinth.stellaris.modtools.process2prepatchcleaning;
 
 import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 
 public class RemoveOverwrittenFilePatchTest extends TestAnyTask {
 
     @Override
-    protected ProcessTask get(ProcessHandlingQueue queue) {
+    protected ProcessTask get() {
         return new RemoveOverwrittenFilePatch(1);
     }
 }

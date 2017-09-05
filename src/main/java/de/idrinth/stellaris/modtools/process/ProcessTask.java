@@ -16,7 +16,11 @@
  */
 package de.idrinth.stellaris.modtools.process;
 
-public interface ProcessTask extends Runnable {
+import java.util.List;
+import javax.persistence.EntityManager;
 
-    String getFullIdentifier();
+public interface ProcessTask {
+
+    List<ProcessTask> handle(EntityManager manager);
+    String getIdentifier();
 }

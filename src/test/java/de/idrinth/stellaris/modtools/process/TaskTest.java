@@ -16,30 +16,74 @@
  */
 package de.idrinth.stellaris.modtools.process;
 
-import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.EntityManager;
+import junit.framework.Assert;
+import org.junit.Test;
 
-public class TaskTest extends TestAnyTask {
-
-    @Override
-    protected ProcessTask get(ProcessHandlingQueue queue) {
-        return new TaskImpl(queue);
+public class TaskTest {
+    /**
+     * Test of run method, of class Task.
+     */
+    @Test
+    public void testRun() {
+        System.out.println("run");
+        CounterQueue queue = new CounterQueue();
+        Task instance = new Task(queue,new CounterProcessTask(0));
+        instance.run();
+        Assert.assertEquals("Not all results reached Queue", 3, queue.count);
     }
 
-    public class TaskImpl extends Task {
+    /**
+     * Test of getFullIdentifier method, of class Task.
+     */
+    @Test
+    public void testGetFullIdentifier() {
+        System.out.println("getFullIdentifier");
+        Assert.assertEquals(
+            CounterProcessTask.class.getName()+"@7",
+            new Task(null, new CounterProcessTask(7)).getFullIdentifier()
+        );
+    }
+    private class CounterProcessTask implements ProcessTask {
+        private final int id;
 
-        public TaskImpl(ProcessHandlingQueue queue) {
-            super(queue);
+        public CounterProcessTask(int id) {
+            this.id = id;
         }
-
+        
         @Override
-        public void fill() throws IOException {
-            //the point is not to do anything here - that is up to testing children of Task
+        public List<ProcessTask> handle(EntityManager manager) {
+            ArrayList<ProcessTask> list = new ArrayList<>();
+            list.add(new CounterProcessTask(1));
+            list.add(new CounterProcessTask(2));
+            list.add(new CounterProcessTask(3));
+            return list;
         }
 
         @Override
         public String getIdentifier() {
-            return "abc";
+            return String.valueOf(id);
         }
+        
+    }
+    private class CounterQueue implements ProcessHandlingQueue {
+        public volatile int count=0;
+        @Override
+        public void add(ProcessTask task) {
+            count++;
+        }
+
+        @Override
+        public EntityManager getEntityManager() {
+            return null;
+        }
+
+        @Override
+        public void run() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+        
     }
 }

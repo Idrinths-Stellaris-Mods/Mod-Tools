@@ -16,30 +16,28 @@
  */
 package de.idrinth.stellaris.modtools.process1datacollection;
 
-import de.idrinth.stellaris.modtools.process.Task;
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.entity.Modification;
 import de.idrinth.stellaris.modtools.entity.Patch;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
+import java.util.ArrayList;
 import javax.persistence.EntityManager;
 
-abstract class Files extends Task implements ProcessTask {
+abstract class Files implements ProcessTask {
 
     protected final String modConfigName;
+    protected final ArrayList<ProcessTask> todo = new ArrayList<>();
 
-    public Files(ProcessHandlingQueue queue, String modConfigName) {
-        super(queue);
+    public Files(String modConfigName) {
         this.modConfigName = modConfigName;
     }
 
     @Override
-    protected String getIdentifier() {
+    public String getIdentifier() {
         return modConfigName;
     }
 
-    protected void addToFiles(String fPath, String content) {
+    protected void addToFiles(String fPath, String content, EntityManager manager) {
         System.out.println(fPath + " being added");
-        EntityManager manager = getEntityManager();
         if (!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }
@@ -49,7 +47,7 @@ abstract class Files extends Task implements ProcessTask {
         Patch patch = new Patch();
         patch.setDiff(content);
         manager.persist(patch);
-        tasks.add(new PatchConnector(patch.getAid(), mod.getAid(), fPath.replace("\\", "/"), queue));
+        todo.add(new PatchConnector(patch.getAid(), mod.getAid(), fPath.replace("\\", "/")));
         manager.getTransaction().commit();
         System.out.println(fPath + " was added");
     }

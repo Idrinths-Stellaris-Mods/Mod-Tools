@@ -21,18 +21,20 @@ import de.idrinth.stellaris.modtools.service.DirectoryLookup;
 import de.idrinth.stellaris.modtools.entity.Modification;
 import java.io.File;
 import java.io.IOException;
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
-import de.idrinth.stellaris.modtools.process.Task;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import org.apache.commons.io.FileUtils;
 
-class ConfigParser extends Task implements ProcessTask {
+class ConfigParser implements ProcessTask {
 
     private final File configuration;
+    private final ArrayList<ProcessTask> todo = new ArrayList<>();
 
-    public ConfigParser(File configuration, ProcessHandlingQueue queue) {
-        super(queue);
+    public ConfigParser(File configuration) {
         this.configuration = configuration;
     }
 
@@ -53,17 +55,16 @@ class ConfigParser extends Task implements ProcessTask {
     private ProcessTask handlePath(String path) throws IOException, RegistryException {
         File file = getWithPrefix(path);
         if (path.endsWith(".zip")) {
-            return new ZipContentParser(configuration.getName(), file, queue);
+            return new ZipContentParser(configuration.getName(), file);
         }
-        return new FileSystemParser(configuration.getName(), file, queue);
+        return new FileSystemParser(configuration.getName(), file);
     }
 
-    private void persist(Modification mod) {
+    private void persist(Modification mod, EntityManager manager) {
         mod.setConfigPath(configuration.getName());
         if (null == mod.getCollides().getModification()) {
             mod.getCollides().setModification(mod);
         }
-        EntityManager manager = getEntityManager();
         if (!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }
@@ -75,17 +76,17 @@ class ConfigParser extends Task implements ProcessTask {
         System.out.println(key + " is " + value);
         switch (key) {
             case "archive":
-                tasks.add(handlePath(value));
+                todo.add(handlePath(value));
                 break;
             case "remote_file_id":
                 mod.setId(Integer.parseInt(value, 10));
-                tasks.add(new RemoteModParser(mod.getId(), queue));
+                todo.add(new RemoteModParser(mod.getId()));
                 break;
             case "name":
                 mod.setName(value);
                 break;
             case "path":
-                tasks.add(handlePath(value));
+                todo.add(handlePath(value));
                 break;
             case "supported_version":
                 mod.setVersion(value);
@@ -101,7 +102,12 @@ class ConfigParser extends Task implements ProcessTask {
     }
 
     @Override
-    protected void fill() throws IOException {
+    public String getIdentifier() {
+        return configuration.getName();
+    }
+
+    @Override
+    public List<ProcessTask> handle(EntityManager manager) {
         try {
             if (configuration.exists()) {
                 Modification mod = new Modification();
@@ -111,15 +117,11 @@ class ConfigParser extends Task implements ProcessTask {
                         handleLine(mod, parts[0].trim(), parts[1].trim().replaceAll("^\"|\"$", ""));
                     }
                 }
-                persist(mod);
+                persist(mod, manager);
             }
-        } catch (RegistryException | NumberFormatException ex) {
-            System.out.println(ex.getLocalizedMessage());
+        } catch (RegistryException | NumberFormatException | IOException ex) {
+            Logger.getLogger(ConfigParser.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    @Override
-    protected String getIdentifier() {
-        return configuration.getName();
+        return todo;
     }
 }

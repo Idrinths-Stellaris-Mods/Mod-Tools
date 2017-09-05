@@ -14,16 +14,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.process1datacollection;
+package de.idrinth.stellaris.modtools.process;
 
-import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
-import de.idrinth.stellaris.modtools.process.ProcessTask;
-import java.io.File;
+import java.util.LinkedList;
 
-public class ZipContentParserTest extends TestAnyTask {
+abstract public class AbstractQueueInitializer implements DataInitializer {
+    private boolean isInitialized = false;
+    protected final LinkedList<ProcessTask> tasks = new LinkedList<>();
+
+    abstract protected void init();
+    
+    private void initOnce() {
+        if(isInitialized) {
+            return;
+        }
+        isInitialized = true;
+        init();
+    }
 
     @Override
-    protected ProcessTask get() {
-        return new ZipContentParser("a.zip", new File("./"));
+    public final ProcessTask poll() {
+        initOnce();
+        return tasks.poll();
+    }
+
+    @Override
+    public final boolean hasNext() {
+        initOnce();
+        return !tasks.isEmpty();
+    }
+
+    @Override
+    public int getQueueSize() {
+        return 20;
     }
 }

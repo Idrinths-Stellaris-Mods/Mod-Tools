@@ -17,12 +17,11 @@
 package de.idrinth.stellaris.modtools.process4applypatch;
 
 import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 
 public class PatchFileTest extends TestAnyTask{
     @Override
-    protected ProcessTask get(ProcessHandlingQueue queue) {
-        return new PatchFile(1, queue);
+    protected ProcessTask get() {
+        return new PatchFile(1);
     }
 }

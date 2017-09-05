@@ -16,15 +16,6 @@
  */
 package de.idrinth.stellaris.modtools.process4applypatch;
 
-import de.idrinth.stellaris.modtools.abstract_cases.TestAnyQueue;
-import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
-import de.idrinth.stellaris.modtools.service.PersistenceProvider;
-import java.util.concurrent.Callable;
+public class Process4InitializerTest {
 
-public class QueueTest extends TestAnyQueue {
-    @Override
-    protected ProcessHandlingQueue get(ProgressElementGroup progress, Callable callable) {
-        return new Queue(callable,progress, new PersistenceProvider());
-    }
 }

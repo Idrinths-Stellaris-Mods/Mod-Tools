@@ -17,26 +17,27 @@
 package de.idrinth.stellaris.modtools.process1datacollection;
 
 import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.EntityManager;
 
 public class FilesTest extends TestAnyTask {
 
     @Override
-    protected ProcessTask get(ProcessHandlingQueue queue) {
-        return new FilesImpl(queue, "n");
+    protected ProcessTask get() {
+        return new FilesImpl("n");
     }
 
     private class FilesImpl extends Files {
 
-        public FilesImpl(ProcessHandlingQueue queue, String modConfigName) {
-            super(queue, modConfigName);
+        public FilesImpl(String modConfigName) {
+            super(modConfigName);
         }
 
         @Override
-        protected void fill() throws IOException {
-            // not to be tested here
+        public List<ProcessTask> handle(EntityManager manager) {
+            return new ArrayList<>();
         }
     }
 }

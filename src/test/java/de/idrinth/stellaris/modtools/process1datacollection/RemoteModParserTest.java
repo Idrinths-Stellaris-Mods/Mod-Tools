@@ -17,13 +17,12 @@
 package de.idrinth.stellaris.modtools.process1datacollection;
 
 import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 
 public class RemoteModParserTest extends TestAnyTask {
 
     @Override
-    protected ProcessTask get(ProcessHandlingQueue queue) {
-        return new RemoteModParser(1, queue);
+    protected ProcessTask get() {
+        return new RemoteModParser(1);
     }
 }

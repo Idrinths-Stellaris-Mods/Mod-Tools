@@ -20,21 +20,20 @@ import com.sksamuel.diffpatch.DiffMatchPatch;
 import de.idrinth.stellaris.modtools.entity.Patch;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import de.idrinth.stellaris.modtools.service.FileExtensions;
-import de.idrinth.stellaris.modtools.process.Task;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
 
-class GenerateFilePatch extends Task implements ProcessTask {
+class GenerateFilePatch implements ProcessTask {
 
     private final long id;
 
     public GenerateFilePatch(long id) {
-        super(null);
         this.id = id;
     }
 
     @Override
-    protected void fill() {
-        EntityManager manager = getEntityManager();
+    public List<ProcessTask> handle(EntityManager manager) {
         if (!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }
@@ -46,10 +45,11 @@ class GenerateFilePatch extends Task implements ProcessTask {
             patch.setDiff(dmp.patch_toText(dmp.patch_make(original, result)));
         }
         manager.getTransaction().commit();
+        return new ArrayList<>();
     }
 
     @Override
-    protected String getIdentifier() {
+    public String getIdentifier() {
         return String.valueOf(id);
     }
 }

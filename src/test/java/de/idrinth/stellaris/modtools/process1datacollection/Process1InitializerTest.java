@@ -16,14 +16,5 @@
  */
 package de.idrinth.stellaris.modtools.process1datacollection;
 
-import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
-import de.idrinth.stellaris.modtools.process.ProcessTask;
-import java.io.File;
-
-public class ZipContentParserTest extends TestAnyTask {
-
-    @Override
-    protected ProcessTask get() {
-        return new ZipContentParser("a.zip", new File("./"));
-    }
+public class Process1InitializerTest {
 }

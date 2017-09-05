@@ -17,22 +17,21 @@
 package de.idrinth.stellaris.modtools.process4applypatch;
 
 import de.idrinth.stellaris.modtools.entity.Original;
-import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
-import de.idrinth.stellaris.modtools.process.AbstractQueue;
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
+import de.idrinth.stellaris.modtools.process.AbstractQueueInitializer;
+import de.idrinth.stellaris.modtools.process.DataInitializer;
 import de.idrinth.stellaris.modtools.service.PersistenceProvider;
-import java.util.concurrent.Callable;
 
-public class Queue extends AbstractQueue implements ProcessHandlingQueue {
+public class Process4Initializer extends AbstractQueueInitializer implements DataInitializer {
+    private final PersistenceProvider persistence;
 
-    public Queue(Callable callable, ProgressElementGroup progress, PersistenceProvider persistence) {
-        super(callable, progress, "Merging patches", persistence);
+    public Process4Initializer(PersistenceProvider persistence) {
+        this.persistence = persistence;
     }
 
     @Override
-    protected void addList() {
-        getEntityManager().createNamedQuery("originals", Original.class).getResultList().forEach((o) -> {
-            add(new PatchFile(o.getAid(), this));
+    protected void init() {
+        persistence.get().createNamedQuery("originals", Original.class).getResultList().forEach((o) -> {
+            tasks.add(new PatchFile(o.getAid()));
         });
     }
 

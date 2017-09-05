@@ -18,6 +18,11 @@ package de.idrinth.stellaris.modtools.process;
 
 import de.idrinth.stellaris.modtools.gui.ClickableTableView;
 import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
+import de.idrinth.stellaris.modtools.process1datacollection.Process1Initializer;
+import de.idrinth.stellaris.modtools.process2prepatchcleaning.Process2Initializer;
+import de.idrinth.stellaris.modtools.process3filepatch.Process3Initializer;
+import de.idrinth.stellaris.modtools.process4applypatch.Process4Initializer;
+import de.idrinth.stellaris.modtools.process5modcreation.Process5Initializer;
 import de.idrinth.stellaris.modtools.service.PersistenceProvider;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -32,11 +37,11 @@ public class FillerThread implements Runnable, Callable {
 
     public FillerThread(ArrayList<ClickableTableView> list, ProgressElementGroup progress) {
         this.list = list;
-        tasks.add(new de.idrinth.stellaris.modtools.process1datacollection.Queue(this, progress, persistence));
-        tasks.add(new de.idrinth.stellaris.modtools.process2prepatchcleaning.Queue(this, progress, persistence));
-        tasks.add(new de.idrinth.stellaris.modtools.process3filepatch.Queue(this, progress, persistence));
-        tasks.add(new de.idrinth.stellaris.modtools.process4applypatch.Queue(this, progress, persistence));
-        tasks.add(new de.idrinth.stellaris.modtools.process5modcreation.Queue(this, progress, persistence));
+        tasks.add(new Queue(new Process1Initializer(), this, progress, "Collecting data", persistence));
+        tasks.add(new Queue(new Process2Initializer(persistence), this, progress, "Removing manually patched", persistence));
+        tasks.add(new Queue(new Process3Initializer(persistence),this, progress, "Creating patches", persistence));
+        tasks.add(new Queue(new Process4Initializer(persistence), this, progress, "Merging patches", persistence));
+        tasks.add(new Queue(new Process5Initializer(), this, progress, "Building Mod", persistence));
     }
 
     @Override

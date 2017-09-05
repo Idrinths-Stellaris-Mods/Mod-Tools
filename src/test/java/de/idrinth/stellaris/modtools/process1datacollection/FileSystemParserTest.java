@@ -17,15 +17,14 @@
 package de.idrinth.stellaris.modtools.process1datacollection;
 
 import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import java.io.File;
 
 public class FileSystemParserTest extends TestAnyTask {
 
     @Override
-    protected ProcessTask get(ProcessHandlingQueue queue) {
-        return new FileSystemParser("m", new File("./"), queue);
+    protected ProcessTask get() {
+        return new FileSystemParser("m", new File("./"));
     }
 
 }

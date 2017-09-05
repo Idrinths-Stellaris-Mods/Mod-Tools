@@ -18,28 +18,28 @@ package de.idrinth.stellaris.modtools.process5modcreation;
 
 import de.idrinth.stellaris.modtools.entity.PatchedFile;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
-import de.idrinth.stellaris.modtools.process.Task;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.EntityManager;
 import org.apache.commons.compress.archivers.zip.ParallelScatterZipCreator;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.io.FileUtils;
 
-class CreateMod extends Task implements ProcessTask {
+class CreateMod implements ProcessTask {
 
     private final Mod mod;
     private final String id;
 
     public CreateMod() {
-        super(null);
         id = convertBase10To62(LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYYMMddHHmmss")));
         mod = new Mod("idrinths-auto-patch_" + id, "!!!Automatic Patch " + id);
     }
@@ -61,13 +61,12 @@ class CreateMod extends Task implements ProcessTask {
         return entry;
     }
 
-    @Override
-    protected void fill() throws IOException {
+    protected void fill(EntityManager manager) throws IOException {
         ParallelScatterZipCreator scatterZipCreator = new ParallelScatterZipCreator();
-        if (!getEntityManager().getTransaction().isActive()) {
-            getEntityManager().getTransaction().begin();
+        if (!manager.getTransaction().isActive()) {
+            manager.getTransaction().begin();
         }
-        List<PatchedFile> patches = getEntityManager()
+        List<PatchedFile> patches = manager
                 .createNamedQuery("patched.able", PatchedFile.class)
                 .getResultList();
         if (patches.isEmpty()) {
@@ -77,7 +76,7 @@ class CreateMod extends Task implements ProcessTask {
         patches.stream().map((file) -> {
             scatterZipCreator.addArchiveEntry(
                     makeEntry(file.getOriginal().getRelativePath()),
-                    new StreamFromText(file.getContent().toString())
+                    new StreamFromText(file.getContent())
             );
             return file;
         }).forEachOrdered((file) -> {
@@ -103,11 +102,21 @@ class CreateMod extends Task implements ProcessTask {
         } catch (InterruptedException | ExecutionException ex) {
             Logger.getLogger(CreateMod.class.getName()).log(Level.SEVERE, null, ex);
         }
-        getEntityManager().getTransaction().commit();
+        manager.getTransaction().commit();
     }
 
     @Override
-    protected String getIdentifier() {
+    public String getIdentifier() {
         return String.valueOf(id);
+    }
+
+    @Override
+    public List<ProcessTask> handle(EntityManager manager) {
+        try {
+            fill(manager);
+        } catch (IOException ex) {
+            Logger.getLogger(CreateMod.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new ArrayList<>();
     }
 }

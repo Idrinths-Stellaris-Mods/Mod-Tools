@@ -14,25 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.process3filepatch;
+package de.idrinth.stellaris.modtools.process2prepatchcleaning;
 
-import de.idrinth.stellaris.modtools.entity.Patch;
-import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
-import de.idrinth.stellaris.modtools.process.AbstractQueue;
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
+import de.idrinth.stellaris.modtools.entity.Original;
+import de.idrinth.stellaris.modtools.process.AbstractQueueInitializer;
+import de.idrinth.stellaris.modtools.process.DataInitializer;
 import de.idrinth.stellaris.modtools.service.PersistenceProvider;
-import java.util.concurrent.Callable;
 
-public class Queue extends AbstractQueue implements ProcessHandlingQueue {
+public class Process2Initializer extends AbstractQueueInitializer implements DataInitializer {
+    private final PersistenceProvider persistence;
 
-    public Queue(Callable callable, ProgressElementGroup progress, PersistenceProvider persistence) {
-        super(callable, progress, "Creating patches", persistence);
+    public Process2Initializer(PersistenceProvider persistence) {
+        this.persistence = persistence;
     }
-
+    
     @Override
-    protected void addList() {
-        getEntityManager().createNamedQuery("patch.any", Patch.class).getResultList().forEach((o) -> {
-            add(new GenerateFilePatch(o.getAid()));
+    protected void init() {
+        persistence.get().createNamedQuery("originals", Original.class).getResultList().forEach((o) -> {
+            tasks.add(new RemoveOverwrittenFilePatch(o.getAid()));
         });
     }
 

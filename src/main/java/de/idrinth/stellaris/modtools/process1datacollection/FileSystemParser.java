@@ -16,48 +16,49 @@
  */
 package de.idrinth.stellaris.modtools.process1datacollection;
 
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
+import de.idrinth.stellaris.modtools.process.ProcessTask;
 import de.idrinth.stellaris.modtools.service.FileExtensions;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import org.apache.commons.io.FileUtils;
 
-class FileSystemParser extends Files implements Runnable {
+class FileSystemParser extends Files {
 
     private final File folder;
 
-    public FileSystemParser(String modConfigName, File folder, ProcessHandlingQueue queue) {
-        super(queue, modConfigName);
+    public FileSystemParser(String modConfigName, File folder) {
+        super(modConfigName);
         this.folder = folder;
     }
 
     @Override
-    protected void fill() throws IOException {
-        EntityManager manager = getEntityManager();
+    protected void addToFiles(String fPath, String content, EntityManager manager) {
+        if (!(fPath.contains("/") || fPath.contains("\\"))) {
+            return;
+        }
+        super.addToFiles(fPath, content, manager);
+    }
+
+    @Override
+    public List<ProcessTask> handle(EntityManager manager) {
         if (!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }
         int pathLength = folder.getAbsolutePath().length();
         FileUtils.listFiles(folder, FileExtensions.getPatchable(), true).forEach((file) -> {
             try {
-                addToFiles(file.getAbsolutePath().substring(pathLength), FileUtils.readFileToString(file, "utf-8"));//relative relativePath
+                addToFiles(file.getAbsolutePath().substring(pathLength), FileUtils.readFileToString(file, "utf-8"), manager);//relative relativePath
             } catch (IOException ex) {
                 Logger.getLogger(FileSystemParser.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         FileUtils.listFiles(folder, FileExtensions.getReplaceable(), true).forEach((file) -> {
-            addToFiles(file.getAbsolutePath().substring(pathLength), "");//relative relativePath
+            addToFiles(file.getAbsolutePath().substring(pathLength), "", manager);//relative relativePath
         });
-    }
-
-    @Override
-    protected void addToFiles(String fPath, String content) {
-        if (!(fPath.contains("/") || fPath.contains("\\"))) {
-            return;
-        }
-        super.addToFiles(fPath, content);
+        return todo;
     }
 }

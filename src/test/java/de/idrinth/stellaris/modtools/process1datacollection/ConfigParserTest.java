@@ -17,15 +17,14 @@
 package de.idrinth.stellaris.modtools.process1datacollection;
 
 import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import java.io.File;
 
 public class ConfigParserTest extends TestAnyTask {
 
     @Override
-    protected ProcessTask get(ProcessHandlingQueue queue) {
-        return new ConfigParser(new File("./cf.mod"), queue);
+    protected ProcessTask get() {
+        return new ConfigParser(new File("./cf.mod"));
     }
 
 }

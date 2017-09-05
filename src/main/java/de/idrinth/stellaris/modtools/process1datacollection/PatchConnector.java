@@ -16,32 +16,30 @@
  */
 package de.idrinth.stellaris.modtools.process1datacollection;
 
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.entity.Modification;
 import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.entity.Patch;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
-import de.idrinth.stellaris.modtools.process.Task;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
-class PatchConnector extends Task implements ProcessTask {
+class PatchConnector implements ProcessTask {
 
     private final long patchId;
     private final long modId;
     private final String path;
+    private final ArrayList<ProcessTask> todo = new ArrayList<>();
 
-    public PatchConnector(long patchId, long modId, String path, ProcessHandlingQueue queue) {
-        super(queue);
+    public PatchConnector(long patchId, long modId, String path) {
         this.patchId = patchId;
         this.modId = modId;
         this.path = path;
     }
 
     @Override
-    protected void fill() throws IOException {
-        EntityManager manager = getEntityManager();
+    public List<ProcessTask> handle(EntityManager manager) {
         if (!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }
@@ -53,7 +51,7 @@ class PatchConnector extends Task implements ProcessTask {
                     .getSingleResult();
         } catch (NoResultException ex) {
             file = new Original(path);
-            tasks.add(new OriginalFileFiller(path));
+            todo.add(new OriginalFileFiller(path));
             manager.persist(file);
         }
         Patch patch = (Patch) manager.find(Patch.class, patchId);
@@ -62,10 +60,11 @@ class PatchConnector extends Task implements ProcessTask {
         mod.getPatches().add(patch);
         file.getPatches().add(patch);
         manager.getTransaction().commit();
+        return todo;
     }
 
     @Override
-    protected String getIdentifier() {
+    public String getIdentifier() {
         return modId + "|" + patchId + "|" + path;
     }
 

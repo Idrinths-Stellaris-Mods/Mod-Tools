@@ -17,17 +17,16 @@
 package de.idrinth.stellaris.modtools.process4applypatch;
 
 import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import java.util.LinkedList;
 
 public class ApplyPatchFileTest extends TestAnyTask {
 
     @Override
-    protected ProcessTask get(ProcessHandlingQueue queue) {
+    protected ProcessTask get() {
         LinkedList<Long> ll = new LinkedList<>();
         ll.add((long) 1);
         ll.add((long) 2);
-        return new ApplyPatchFile(ll, 1, queue);
+        return new ApplyPatchFile(ll, 1);
     }
 }

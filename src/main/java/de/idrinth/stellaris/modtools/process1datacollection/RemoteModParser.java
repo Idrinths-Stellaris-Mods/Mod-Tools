@@ -17,11 +17,11 @@
 package de.idrinth.stellaris.modtools.process1datacollection;
 
 import de.idrinth.stellaris.modtools.MainApp;
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.entity.Modification;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
-import de.idrinth.stellaris.modtools.process.Task;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -31,34 +31,13 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-class RemoteModParser extends Task implements ProcessTask {
+class RemoteModParser implements ProcessTask {
 
     protected final int id;
+    protected final ArrayList<ProcessTask> todo = new ArrayList<>();
 
-    public RemoteModParser(int id, ProcessHandlingQueue queue) {
-        super(queue);
+    public RemoteModParser(int id) {
         this.id = id;
-    }
-
-    @Override
-    public void fill() {
-        EntityManager manager = getEntityManager();
-        if (!manager.getTransaction().isActive()) {
-            manager.getTransaction().begin();
-        }
-        Modification mod = (Modification) manager.createNamedQuery("modifications.id", Modification.class)
-                .setParameter("id", id)
-                .getSingleResult();
-        if (null == mod) {
-            System.out.println("Creating new mod for remote id " + id);
-            mod = new Modification("", id);
-            mod.getCollides().setModification(mod);
-            manager.persist(mod);
-        }
-        if (null == mod.getDescription() || "".equals(mod.getDescription())) {//not already processed
-            filli(mod);
-        }
-        manager.getTransaction().commit();
     }
 
     protected String clean(Element element) {
@@ -100,7 +79,7 @@ class RemoteModParser extends Task implements ProcessTask {
                 .get();
     }
 
-    protected void filli(Modification mod) {
+    protected void fill(Modification mod, EntityManager manager) {
         try {
             Document doc = getDocument();
             if (null != doc.getElementById("highlightContent")) {
@@ -117,13 +96,11 @@ class RemoteModParser extends Task implements ProcessTask {
                     if (link.hasAttr("href")) {
                         int lId = match(reg.matcher(link.attr("href")));
                         if (lId > 0) {
-                            Modification lMod = (Modification) getEntityManager().createNamedQuery("modifications.id", Modification.class)
+                            Modification lMod = (Modification) manager.createNamedQuery("modifications.id", Modification.class)
                                     .setParameter("id", lId)
                                     .getSingleResult();
                             if (null == lMod) {
-                                lMod = new Modification("", lId);
-                                tasks.add(new RemoteModParser(lMod.getId(), queue));
-                                getEntityManager().persist(lMod);
+                                todo.add(new RemoteModParser(lId));
                             }
                             mod.getOverwrite().add(lMod);
                         }
@@ -149,7 +126,28 @@ class RemoteModParser extends Task implements ProcessTask {
     }
 
     @Override
-    protected String getIdentifier() {
+    public String getIdentifier() {
         return String.valueOf(id);
+    }
+
+    @Override
+    public List<ProcessTask> handle(EntityManager manager) {
+        if (!manager.getTransaction().isActive()) {
+            manager.getTransaction().begin();
+        }
+        Modification mod = (Modification) manager.createNamedQuery("modifications.id", Modification.class)
+                .setParameter("id", id)
+                .getSingleResult();
+        if (null == mod) {
+            System.out.println("Creating new mod for remote id " + id);
+            mod = new Modification("", id);
+            mod.getCollides().setModification(mod);
+            manager.persist(mod);
+        }
+        if (null == mod.getDescription() || "".equals(mod.getDescription())) {//not already processed
+            fill(mod, manager);
+        }
+        manager.getTransaction().commit();
+        return todo;
     }
 }

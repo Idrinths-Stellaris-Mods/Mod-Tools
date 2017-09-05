@@ -16,31 +16,23 @@
  */
 package de.idrinth.stellaris.modtools.process1datacollection;
 
+import de.idrinth.stellaris.modtools.process.AbstractQueueInitializer;
 import de.idrinth.stellaris.modtools.service.DirectoryLookup;
-import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
-import de.idrinth.stellaris.modtools.process.AbstractQueue;
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
-import de.idrinth.stellaris.modtools.service.PersistenceProvider;
+import de.idrinth.stellaris.modtools.process.DataInitializer;
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Queue extends AbstractQueue implements ProcessHandlingQueue {
-
-    public Queue(Callable callable, ProgressElementGroup progress,PersistenceProvider persistence) {
-        super(callable, progress, "Collecting data", persistence);
-    }
-
+public class Process1Initializer extends AbstractQueueInitializer implements DataInitializer {
     @Override
-    protected void addList() {
+    protected void init() {
         try {
             for (File mod : DirectoryLookup.getModDir().listFiles(new FileExtFilter("mod"))) {
-                add(new ConfigParser(mod, this));
+                tasks.add(new ConfigParser(mod));
             }
         } catch (IOException ex) {
-            Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Process1Initializer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

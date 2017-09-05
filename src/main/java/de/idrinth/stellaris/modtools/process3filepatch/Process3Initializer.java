@@ -14,17 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.process2prepatchcleaning;
+package de.idrinth.stellaris.modtools.process3filepatch;
 
-import de.idrinth.stellaris.modtools.abstract_cases.TestAnyQueue;
-import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
+import de.idrinth.stellaris.modtools.entity.Patch;
+import de.idrinth.stellaris.modtools.process.AbstractQueueInitializer;
+import de.idrinth.stellaris.modtools.process.DataInitializer;
 import de.idrinth.stellaris.modtools.service.PersistenceProvider;
-import java.util.concurrent.Callable;
 
-public class QueueTest extends TestAnyQueue {
+public class Process3Initializer extends AbstractQueueInitializer implements DataInitializer {
+    private final PersistenceProvider persistence;
+
+    public Process3Initializer(PersistenceProvider persistence) {
+        this.persistence = persistence;
+    }
+
     @Override
-    protected ProcessHandlingQueue get(ProgressElementGroup progress, Callable callable) {
-        return new Queue(callable,progress, new PersistenceProvider());
+    protected void init() {
+        persistence.get().createNamedQuery("patch.any", Patch.class).getResultList().forEach((o) -> {
+            tasks.add(new GenerateFilePatch(o.getAid()));
+        });
     }
 }

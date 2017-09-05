@@ -14,16 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.process1datacollection;
+package de.idrinth.stellaris.modtools.process5modcreation;
 
-import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
-import de.idrinth.stellaris.modtools.process.ProcessTask;
-import java.io.File;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class ZipContentParserTest extends TestAnyTask {
-
-    @Override
-    protected ProcessTask get() {
-        return new ZipContentParser("a.zip", new File("./"));
+public class Process5InitializerTest {
+    /**
+     * Test of getQueueSize method, of class Process5Initializer.
+     */
+    @Test
+    public void testGetQueueSize() {
+        System.out.println("getQueueSize");
+        Process5Initializer instance = new Process5Initializer();
+        Assert.assertEquals(1, instance.getQueueSize());
     }
 }

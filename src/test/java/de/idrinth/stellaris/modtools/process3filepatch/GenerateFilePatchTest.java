@@ -17,12 +17,11 @@
 package de.idrinth.stellaris.modtools.process3filepatch;
 
 import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 
 public class GenerateFilePatchTest extends TestAnyTask {
     @Override
-    protected ProcessTask get(ProcessHandlingQueue queue) {
+    protected ProcessTask get() {
         return new GenerateFilePatch(1);
     }
 }

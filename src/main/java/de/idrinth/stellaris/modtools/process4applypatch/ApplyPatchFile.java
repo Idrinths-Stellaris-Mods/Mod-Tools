@@ -17,47 +17,27 @@
 package de.idrinth.stellaris.modtools.process4applypatch;
 
 import com.sksamuel.diffpatch.DiffMatchPatch;
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.entity.Patch;
 import de.idrinth.stellaris.modtools.entity.PatchedFile;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
-import de.idrinth.stellaris.modtools.process.Task;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import javax.persistence.EntityManager;
 
-class ApplyPatchFile extends Task implements ProcessTask {
+class ApplyPatchFile implements ProcessTask {
 
     private final long patchId;
     private final long target;
     private final LinkedList<Long> next;
 
-    public ApplyPatchFile(LinkedList<Long> patches, long target, ProcessHandlingQueue queue) {
-        super(queue);
+    public ApplyPatchFile(LinkedList<Long> patches, long target) {
         if(patches.isEmpty()) {
             throw new IllegalArgumentException("patch list must not be empty");
         }
         this.patchId = patches.poll();
         this.target = target;
         this.next = patches;
-    }
-
-    @Override
-    protected void fill() {
-        EntityManager manager = getEntityManager();
-        if (!manager.getTransaction().isActive()) {
-            manager.getTransaction().begin();
-        }
-        Patch patch = (Patch) manager.find(Patch.class, patchId);
-        PatchedFile pf = (PatchedFile) manager.find(PatchedFile.class, target);
-
-        patch(pf, patch);
-
-        pf.getModifications().add(patch.getMod());
-
-        manager.getTransaction().commit();
-        if (!next.isEmpty()) {
-            tasks.add(new ApplyPatchFile(next, target, queue));
-        }
     }
 
     protected void patch(PatchedFile pf, Patch patch) {
@@ -73,7 +53,27 @@ class ApplyPatchFile extends Task implements ProcessTask {
     }
 
     @Override
-    protected String getIdentifier() {
+    public String getIdentifier() {
         return String.valueOf(patchId) + "->" + String.valueOf(target);
+    }
+
+    @Override
+    public List<ProcessTask> handle(EntityManager manager) {
+        ArrayList<ProcessTask> tasks = new ArrayList<>();
+        if (!manager.getTransaction().isActive()) {
+            manager.getTransaction().begin();
+        }
+        Patch patch = (Patch) manager.find(Patch.class, patchId);
+        PatchedFile pf = (PatchedFile) manager.find(PatchedFile.class, target);
+
+        patch(pf, patch);
+
+        pf.getModifications().add(patch.getMod());
+
+        manager.getTransaction().commit();
+        if (!next.isEmpty()) {
+            tasks.add(new ApplyPatchFile(next, target));
+        }
+        return tasks;
     }
 }

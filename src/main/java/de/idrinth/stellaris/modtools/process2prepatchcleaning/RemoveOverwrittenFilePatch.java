@@ -19,22 +19,20 @@ package de.idrinth.stellaris.modtools.process2prepatchcleaning;
 import de.idrinth.stellaris.modtools.entity.Colliding;
 import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
-import de.idrinth.stellaris.modtools.process.Task;
 import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
 
-class RemoveOverwrittenFilePatch extends Task implements ProcessTask {
+class RemoveOverwrittenFilePatch implements ProcessTask {
 
     private final long id;
 
     public RemoveOverwrittenFilePatch(long id) {
-        super(null);
         this.id = id;
     }
 
     @Override
-    protected void fill() {
-        EntityManager manager = getEntityManager();
+    public List<ProcessTask> handle(EntityManager manager) {
         if (!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }
@@ -63,10 +61,11 @@ class RemoveOverwrittenFilePatch extends Task implements ProcessTask {
             });
         });
         manager.getTransaction().commit();
+        return new ArrayList<>();
     }
 
     @Override
-    protected String getIdentifier() {
+    public String getIdentifier() {
         return String.valueOf(id);
     }
 }

@@ -18,8 +18,8 @@ package de.idrinth.stellaris.modtools.process;
 
 import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
 import de.idrinth.stellaris.modtools.service.PersistenceProvider;
-import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -29,35 +29,34 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 
-abstract public class AbstractQueue implements ProcessHandlingQueue {
+public class Queue implements ProcessHandlingQueue {
 
     private final ExecutorService executor;
-    private final List<Future<?>> futures = new ArrayList<>();
-    private final List<String> known = new ArrayList<>();
+    private final List<Future<?>> futures = new LinkedList<>();
+    private final List<String> known = new LinkedList<>();
     private final Callable callable;
     private final ProgressElementGroup progress;
     private final PersistenceProvider persistence;
+    private final DataInitializer initialDataProvider;
 
-    public AbstractQueue(Callable callable, ProgressElementGroup progress, String label, PersistenceProvider persistence, ExecutorService executor) {
+    public Queue(DataInitializer initialDataProvider, Callable callable, ProgressElementGroup progress, String label, PersistenceProvider persistence) {
         this.callable = callable;
         this.progress = progress;
         this.progress.addToStepLabels(label);
-        this.executor = executor;
+        this.executor = initialDataProvider.getQueueSize()>1?Executors.newFixedThreadPool(initialDataProvider.getQueueSize()):Executors.newSingleThreadExecutor();
         this.persistence = persistence;
-    }
-
-    public AbstractQueue(Callable callable, ProgressElementGroup progress, String label, PersistenceProvider persistence) {
-        this(callable, progress, label, persistence, Executors.newFixedThreadPool(20));
+        this.initialDataProvider = initialDataProvider;
     }
 
     @Override
     public synchronized void add(ProcessTask task) {
-        if (!known.contains(task.getFullIdentifier())) {
-            futures.add(executor.submit(task));
-            known.add(task.getFullIdentifier());
-            System.out.println("Added " + task.getFullIdentifier() + " to Queue");
+        Task lTask = new Task(this, task);
+        if (!known.contains(lTask.getFullIdentifier())) {
+            futures.add(executor.submit(lTask));
+            known.add(lTask.getFullIdentifier());
+            System.out.println("Added " + lTask.getFullIdentifier() + " to Queue");
         } else {
-            System.out.println("Ignoring " + task.getFullIdentifier() + ", it's in already.");
+            System.out.println("Ignoring " + lTask.getFullIdentifier() + ", it's in already.");
         }
     }
 
@@ -83,7 +82,7 @@ abstract public class AbstractQueue implements ProcessHandlingQueue {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException ex) {
-                Logger.getLogger(AbstractQueue.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);
             }
             progress.update(counter, futures.size());
         } while (!isDone());
@@ -92,19 +91,18 @@ abstract public class AbstractQueue implements ProcessHandlingQueue {
 
     @Override
     public final void run() {
-        if(futures.isEmpty()) {
-            addList();//only makes sense if done initially
+        while(initialDataProvider.hasNext()) {
+            add(initialDataProvider.poll());
         }
         check();
         try {
             callable.call();
         } catch (Exception ex) {
-            Logger.getLogger(AbstractQueue.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    protected abstract void addList();
-
+    @Override
     public EntityManager getEntityManager() {
         return persistence.get();
     }

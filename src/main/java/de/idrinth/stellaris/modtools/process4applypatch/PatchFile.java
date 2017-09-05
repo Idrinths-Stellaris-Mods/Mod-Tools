@@ -16,27 +16,31 @@
  */
 package de.idrinth.stellaris.modtools.process4applypatch;
 
-import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
 import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.entity.PatchedFile;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import de.idrinth.stellaris.modtools.service.FileExtensions;
-import de.idrinth.stellaris.modtools.process.Task;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import javax.persistence.EntityManager;
 
-class PatchFile extends Task implements ProcessTask {
+class PatchFile implements ProcessTask {
 
     private final long id;
+    private final ArrayList<ProcessTask> todo = new ArrayList();
 
-    public PatchFile(long id, ProcessHandlingQueue queue) {
-        super(queue);
+    public PatchFile(long id) {
         this.id = id;
     }
 
     @Override
-    protected void fill() {
-        EntityManager manager = getEntityManager();
+    public String getIdentifier() {
+        return String.valueOf(id);
+    }
+
+    @Override
+    public List<ProcessTask> handle(EntityManager manager) {
         if (!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }
@@ -44,7 +48,7 @@ class PatchFile extends Task implements ProcessTask {
         if (original.getPatches().size() < 2) {
             System.out.println(id + " is without conflicts");
             manager.getTransaction().commit();
-            return;//nothing relevant, no patching required
+            return todo;//nothing relevant, no patching required
         }
         PatchedFile pf = new PatchedFile();
         pf.setOriginal(original);
@@ -57,12 +61,8 @@ class PatchFile extends Task implements ProcessTask {
         original.getPatches().forEach((patch) -> {
             ll.add(patch.getAid());
         });
-        tasks.add(new ApplyPatchFile(ll, pf.getAid(), queue));
+        todo.add(new ApplyPatchFile(ll, pf.getAid()));
         manager.getTransaction().commit();
-    }
-
-    @Override
-    protected String getIdentifier() {
-        return String.valueOf(id);
+        return todo;
     }
 }
