@@ -19,10 +19,6 @@ package de.idrinth.stellaris.modtools.process;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author BJ
- */
 public class AbstractQueueInitializerTest {
     /**
      * Test of poll method, of class AbstractQueueInitializer.
@@ -54,10 +50,25 @@ public class AbstractQueueInitializerTest {
         assertEquals(20, instance.getQueueSize());
     }
 
-    public class AbstractQueueInitializerImpl extends AbstractQueueInitializer {
+    /**
+     * Test of initOnce method, of class AbstractQueueInitializer.
+     */
+    @Test
+    public void testInitOnce() {
+        System.out.println("getQueueSize");
+        AbstractQueueInitializerImpl instance = new AbstractQueueInitializerImpl();
+        assertEquals(0, instance.initCalledCount);
+        instance.hasNext();
+        assertEquals(1, instance.initCalledCount);
+        instance.hasNext();
+        assertEquals(1, instance.initCalledCount);
+    }
 
+    public class AbstractQueueInitializerImpl extends AbstractQueueInitializer {
+        public volatile int initCalledCount=0;
+        @Override
         public void init() {
-            //no data to add here
+            initCalledCount++;
         }
     }
     

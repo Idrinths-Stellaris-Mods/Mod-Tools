@@ -51,5 +51,14 @@ public class MainAppTest {
         System.out.println("main");
         Assert.assertNotNull("Can't find main method", MainApp.class.getMethod("main",String[].class));
     }
-    
+
+    /**
+     * Test of MainApp method, of class MainApp.
+     * @throws java.lang.NoSuchMethodException
+     */
+    @Test
+    public void testInstantiation() throws NoSuchMethodException {
+        System.out.println("MainApp");
+        Assert.assertNotNull("Can't construct MainApp", new MainApp());
+    }
 }

@@ -30,36 +30,47 @@ class Version {
     }
 
     public void addIfBigger(String compareVersion) {
-        if (isBigger(compareVersion.split("\\."))) {
+        ArrayList<String> cV = new ArrayList();
+        CollectionUtils.addAll(cV, compareVersion.split("\\."));
+        if (isBigger(cV)) {
             version.clear();
-            CollectionUtils.addAll(version, compareVersion.split("\\."));
+            version.addAll(cV);
             while (version.size() < 3) {
                 version.add("0");
             }
         }
     }
 
-    private boolean isBigger(String[] compareVersion) {
+    private boolean isBigger(ArrayList<String> compareVersion) {
         int counter = 0;
-        for (String part : compareVersion) {
-            if ("*".equals(part)) {
-                return true;
+        int maxCounter = version.size()>compareVersion.size()?version.size():compareVersion.size();
+        while(compareVersion.size()< maxCounter) {
+            compareVersion.add("0");
+        }
+        while (version.size() < maxCounter) {
+            version.add("0");
+        }
+        while (counter < maxCounter) {
+            if(compareVersion.size()<= counter) {
+                compareVersion.add("0");
             }
             if (version.size() <= counter) {
                 version.add("0");
             }
-            if ("*".equals(version.get(counter))) {
+            if("*".equals(version.get(counter)) && "*".equals(compareVersion.get(counter))) {
+                //this is effectively equal :/
+            } else if ("*".equals(compareVersion.get(counter))) {
+                return true;
+            } else if ("*".equals(version.get(counter))) {
                 return false;
-            }
-            if (Integer.parseInt(part) < Integer.parseInt(version.get(counter))) {
+            } else if (Integer.parseInt(compareVersion.get(counter)) < Integer.parseInt(version.get(counter))) {
                 return false;
-            }
-            if (Integer.parseInt(part) > Integer.parseInt(version.get(counter))) {
+            } else if (Integer.parseInt(compareVersion.get(counter)) > Integer.parseInt(version.get(counter))) {
                 return true;
             }
             counter++;
         }
-        return version.size() > compareVersion.length;
+        return false;
     }
 
     @Override

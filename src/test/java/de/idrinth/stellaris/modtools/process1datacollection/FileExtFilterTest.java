@@ -32,5 +32,14 @@ public class FileExtFilterTest {
         Assert.assertFalse("demo.täxt is ending with.txt?", ff.accept(new File("./"), "demo.täxt"));
         Assert.assertFalse("demo.txt.aa is ending with.txt?", ff.accept(new File("./"), "demo.txt.aa"));
     }
+    /**
+     * Test of FileExtFilter method, of class FileExtFilter.
+     */
+    @Test
+    public void testFileExtFilter() {
+        System.out.println("FileExtFilter");
+        FileExtFilter ff = new FileExtFilter("txt");
+        Assert.assertNotNull("FileExtFilter wasn't constructed.", ff);
+    }
     
 }

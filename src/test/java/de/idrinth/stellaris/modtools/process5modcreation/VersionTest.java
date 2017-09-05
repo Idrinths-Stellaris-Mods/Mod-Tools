@@ -31,6 +31,7 @@ public class VersionTest {
         String v2 = "1.0.2";
         String v3 = "1.0.*";
         String v4 = "1.1";
+        String v5 = "1.1.0.2";
         Version instance = new Version();
         instance.addIfBigger(v1);
         Assert.assertEquals("1.0.7 is not more than 1.0.0?",v1,instance.toString());
@@ -40,6 +41,8 @@ public class VersionTest {
         Assert.assertEquals("1.0.* is not more than 1.0.7?",v3,instance.toString());
         instance.addIfBigger(v4);
         Assert.assertEquals("1.1 is not more than 1.0.*?",v4+".0",instance.toString());
+        instance.addIfBigger(v5);
+        Assert.assertEquals("1.1.0.2 is not more than 1.1.0?",v5,instance.toString());
     }
 
     /**

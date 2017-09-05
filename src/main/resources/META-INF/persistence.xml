@@ -8,7 +8,6 @@
         <class>de.idrinth.stellaris.modtools.entity.Original</class>
         <class>de.idrinth.stellaris.modtools.entity.Patch</class>
         <class>de.idrinth.stellaris.modtools.entity.PatchedFile</class>
-        <class>de.idrinth.stellaris.modtools.entity.TaskCompletion</class>
         <properties>
             <!--  Basic Settings -->     
             <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
