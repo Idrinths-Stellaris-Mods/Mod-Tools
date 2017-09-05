@@ -45,14 +45,6 @@ public class Original {
     @Id
     @GeneratedValue
     private long aid;
-
-    public long getAid() {
-        return aid;
-    }
-
-    public void setAid(long aid) {
-        this.aid = aid;
-    }
     //original
     @OneToOne(fetch = FetchType.LAZY)
     private LazyText content;
@@ -66,6 +58,14 @@ public class Original {
 
     public Original(String relativePath) {
         this.relativePath = relativePath;
+    }
+
+    public long getAid() {
+        return aid;
+    }
+
+    public void setAid(long aid) {
+        this.aid = aid;
     }
 
     public String getContent() {

@@ -53,14 +53,6 @@ public class Modification {
     @Id
     @GeneratedValue
     private long aid;
-
-    public long getAid() {
-        return aid;
-    }
-
-    public void setAid(long aid) {
-        this.aid = aid;
-    }
     //basics
     protected String configPath;
     protected int id;
@@ -83,6 +75,14 @@ public class Modification {
     public Modification(String configPath, int id) {
         this.configPath = configPath;
         this.id = id;
+    }
+
+    public long getAid() {
+        return aid;
+    }
+
+    public void setAid(long aid) {
+        this.aid = aid;
     }
 
     public Set<Patch> getFiles() {

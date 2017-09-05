@@ -43,34 +43,50 @@ class Version {
 
     private boolean isBigger(ArrayList<String> compareVersion) {
         int counter = 0;
-        int maxCounter = version.size()>compareVersion.size()?version.size():compareVersion.size();
-        while(compareVersion.size()< maxCounter) {
-            compareVersion.add("0");
-        }
-        while (version.size() < maxCounter) {
-            version.add("0");
-        }
-        while (counter < maxCounter) {
-            if(compareVersion.size()<= counter) {
-                compareVersion.add("0");
+        adjustVersionToMaxSize(compareVersion, version.size());
+        adjustVersionToMaxSize(version, compareVersion.size());
+        while (counter < version.size()) {
+            switch(isSecondPartBiggerThanFirst(version.get(counter),compareVersion.get(counter))) {
+                case 1:
+                    return true;
+                case -1:
+                    return false;
+                case 0:
+                default:
+                    counter++;
             }
-            if (version.size() <= counter) {
-                version.add("0");
-            }
-            if("*".equals(version.get(counter)) && "*".equals(compareVersion.get(counter))) {
-                //this is effectively equal :/
-            } else if ("*".equals(compareVersion.get(counter))) {
-                return true;
-            } else if ("*".equals(version.get(counter))) {
-                return false;
-            } else if (Integer.parseInt(compareVersion.get(counter)) < Integer.parseInt(version.get(counter))) {
-                return false;
-            } else if (Integer.parseInt(compareVersion.get(counter)) > Integer.parseInt(version.get(counter))) {
-                return true;
-            }
-            counter++;
         }
         return false;
+    }
+
+    /**
+     * returns -1 if smaller, 1 if bigger and 0 if equal, the same as sorting
+     * @param part1
+     * @param part2
+     * @return 
+     */
+    private int isSecondPartBiggerThanFirst(String part1, String part2) {
+            if(part1.equals(part2)) {
+                return 0;
+            }
+            if ("*".equals(part2)) {
+                return 1;
+            }
+            if ("*".equals(part1)) {
+                return -1;
+            }
+            int int1 = Integer.parseInt(part1);
+            int int2 = Integer.parseInt(part2);
+            if (int1 > int2) {
+                return -1;
+            }
+            return int2 > int1?1:0;
+    }
+
+    private void adjustVersionToMaxSize(ArrayList<String> v, int size) {
+        while (v.size() < size) {
+            v.add("0");
+        }
     }
 
     @Override

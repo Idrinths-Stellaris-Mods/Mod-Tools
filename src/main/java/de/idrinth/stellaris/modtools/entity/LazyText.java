@@ -29,14 +29,6 @@ class LazyText implements Serializable {
     @Id
     @GeneratedValue
     private long aid;
-
-    public void setAid(long aid) {
-        this.aid = aid;
-    }
-
-    public long getAid() {
-        return aid;
-    }
     @Column(columnDefinition = "LONGTEXT")
     private String text = "";
 
@@ -45,6 +37,14 @@ class LazyText implements Serializable {
 
     public LazyText(String text) {
         this.text = text;
+    }
+
+    public void setAid(long aid) {
+        this.aid = aid;
+    }
+
+    public long getAid() {
+        return aid;
     }
 
     public String getText() {

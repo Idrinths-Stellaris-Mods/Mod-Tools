@@ -33,14 +33,6 @@ public class Colliding implements Serializable {
     @Id
     @GeneratedValue
     private long aid;
-
-    public void setAid(long aid) {
-        this.aid = aid;
-    }
-
-    public long getAid() {
-        return aid;
-    }
     @OneToOne(fetch = FetchType.LAZY)
     private Modification modification;
     @OneToMany(fetch = FetchType.LAZY)
@@ -51,6 +43,14 @@ public class Colliding implements Serializable {
 
     public Colliding(Modification modification) {
         this.modification = modification;
+    }
+
+    public void setAid(long aid) {
+        this.aid = aid;
+    }
+
+    public long getAid() {
+        return aid;
     }
 
     public Modification getModification() {

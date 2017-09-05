@@ -46,14 +46,6 @@ public class PatchedFile implements Serializable {
     @Id
     @GeneratedValue
     private long aid;
-
-    public long getAid() {
-        return aid;
-    }
-
-    public void setAid(long aid) {
-        this.aid = aid;
-    }
     @OneToOne(fetch = FetchType.LAZY)
     private Original original;
     @OneToOne(fetch = FetchType.LAZY)
@@ -63,6 +55,14 @@ public class PatchedFile implements Serializable {
     private Set<Modification> modifications = new HashSet<>();
     private boolean patchable;
     private boolean patchableExt;
+
+    public long getAid() {
+        return aid;
+    }
+
+    public void setAid(long aid) {
+        this.aid = aid;
+    }
 
     public boolean isPatchable() {
         return patchable;

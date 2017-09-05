@@ -41,14 +41,6 @@ public class Patch implements Serializable {
     @Id
     @GeneratedValue
     private long aid;
-
-    public long getAid() {
-        return aid;
-    }
-
-    public void setAid(long aid) {
-        this.aid = aid;
-    }
     @ManyToOne(fetch = FetchType.LAZY)
     protected Modification mod;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -63,6 +55,14 @@ public class Patch implements Serializable {
     public Patch(Modification mod, Original file) {
         this.mod = mod;
         this.file = file;
+    }
+
+    public long getAid() {
+        return aid;
+    }
+
+    public void setAid(long aid) {
+        this.aid = aid;
     }
 
     public Modification getMod() {
