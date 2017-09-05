@@ -57,6 +57,8 @@ abstract public class TestAnyTask {
     public void testGetFullIdentifier() {
         System.out.println("getFullIdentifier");
         ProcessTask task = getWrapped();
+        System.out.println(task.getClass().getName()+"@");
+        System.out.println(task.getFullIdentifier());
         Assert.assertTrue(
             "Full Identifier is not correct",
             task.getFullIdentifier().startsWith(task.getClass().getName()+"@") &&
@@ -64,7 +66,7 @@ abstract public class TestAnyTask {
         );
     }
     private class UselessQueue implements ProcessHandlingQueue {
-
+        private final PersistenceProvider persistence = new PersistenceProvider();
         @Override
         public void add(ProcessTask task) {
             // not meant to be tested here
@@ -72,7 +74,7 @@ abstract public class TestAnyTask {
 
         @Override
         public EntityManager getEntityManager() {
-            return PersistenceProvider.get();
+            return persistence.get();
         }
 
         @Override

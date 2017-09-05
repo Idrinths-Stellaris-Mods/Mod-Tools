@@ -20,6 +20,7 @@ import de.idrinth.stellaris.modtools.service.DirectoryLookup;
 import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
 import de.idrinth.stellaris.modtools.process.AbstractQueue;
 import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
+import de.idrinth.stellaris.modtools.service.PersistenceProvider;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Callable;
@@ -28,8 +29,8 @@ import java.util.logging.Logger;
 
 public class Queue extends AbstractQueue implements ProcessHandlingQueue {
 
-    public Queue(Callable callable, ProgressElementGroup progress) {
-        super(callable, progress, "Collecting data");
+    public Queue(Callable callable, ProgressElementGroup progress,PersistenceProvider persistence) {
+        super(callable, progress, "Collecting data", persistence);
     }
 
     @Override

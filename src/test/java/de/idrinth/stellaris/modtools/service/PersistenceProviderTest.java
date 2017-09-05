@@ -28,16 +28,6 @@ public class PersistenceProviderTest {
     @Test
     public void testGet() {
         System.out.println("get");
-        Assert.assertTrue("get does not return an EntityManager", EntityManager.class.isAssignableFrom(PersistenceProvider.get().getClass()));
+        Assert.assertTrue("get does not return an EntityManager", EntityManager.class.isAssignableFrom(new PersistenceProvider().get().getClass()));
     }
-
-    /**
-     * Test of init method, of class PersistenceProvider.
-     */
-    @Test
-    public void testInit() {
-        System.out.println("init");
-        Assert.assertTrue("init was unable to create the required object", PersistenceProvider.init());
-    }
-    
 }

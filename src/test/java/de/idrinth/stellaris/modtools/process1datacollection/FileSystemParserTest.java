@@ -25,7 +25,7 @@ public class FileSystemParserTest extends TestAnyTask {
 
     @Override
     protected ProcessTask get(ProcessHandlingQueue queue) {
-        return new FileSystemParser("", new File("./"), queue);
+        return new FileSystemParser("m", new File("./"), queue);
     }
 
 }

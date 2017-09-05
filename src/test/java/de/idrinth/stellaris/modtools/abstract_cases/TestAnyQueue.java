@@ -47,11 +47,13 @@ abstract public class TestAnyQueue {
     public void testAdd() {
         System.out.println("add");
         TestProgressElementGroup wrapper = getWrapped();
+        wrapper.queue.run();
+        int prev = wrapper.max;
         wrapper.queue.add(new TestRunnable());
         wrapper.queue.add(new TestRunnable("ääää"));
         wrapper.queue.add(new TestRunnable());
         wrapper.queue.run();
-        Assert.assertEquals(2, wrapper.max);
+        Assert.assertEquals(prev+2, wrapper.max);
     }
 
     /**
@@ -62,7 +64,10 @@ abstract public class TestAnyQueue {
         System.out.println("run");
         TestProgressElementGroup wrapper = getWrapped();
         wrapper.queue.run();
-        Assert.assertEquals(0, wrapper.max);
+        int prev = wrapper.max;
+        wrapper.queue.add(new TestRunnable());
+        wrapper.queue.run();
+        Assert.assertEquals(prev+1, wrapper.max);
     }
 
     /**

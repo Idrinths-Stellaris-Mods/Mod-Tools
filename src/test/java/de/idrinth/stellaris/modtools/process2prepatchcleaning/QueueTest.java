@@ -19,11 +19,12 @@ package de.idrinth.stellaris.modtools.process2prepatchcleaning;
 import de.idrinth.stellaris.modtools.abstract_cases.TestAnyQueue;
 import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
 import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
+import de.idrinth.stellaris.modtools.service.PersistenceProvider;
 import java.util.concurrent.Callable;
 
 public class QueueTest extends TestAnyQueue {
     @Override
     protected ProcessHandlingQueue get(ProgressElementGroup progress, Callable callable) {
-        return new Queue(callable,progress);
+        return new Queue(callable,progress, new PersistenceProvider());
     }
 }

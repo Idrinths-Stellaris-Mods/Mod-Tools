@@ -44,7 +44,6 @@ public class MainApp extends Application {
             stage.setOnCloseRequest((WindowEvent e) -> {
                 Platform.exit();
             });
-            PersistenceProvider.init();
         } catch (Exception e) {
             System.out.println(e.getLocalizedMessage());
             throw e;

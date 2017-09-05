@@ -28,14 +28,15 @@ public class FillerThread implements Runnable, Callable {
 
     private final ArrayList<ClickableTableView> list;
     private final LinkedList<ProcessHandlingQueue> tasks = new LinkedList<>();
+    private final PersistenceProvider persistence = new PersistenceProvider();
 
     public FillerThread(ArrayList<ClickableTableView> list, ProgressElementGroup progress) {
         this.list = list;
-        tasks.add(new de.idrinth.stellaris.modtools.process1datacollection.Queue(this, progress));
-        tasks.add(new de.idrinth.stellaris.modtools.process2prepatchcleaning.Queue(this, progress));
-        tasks.add(new de.idrinth.stellaris.modtools.process3filepatch.Queue(this, progress));
-        tasks.add(new de.idrinth.stellaris.modtools.process4applypatch.Queue(this, progress));
-        tasks.add(new de.idrinth.stellaris.modtools.process5modcreation.Queue(this, progress));
+        tasks.add(new de.idrinth.stellaris.modtools.process1datacollection.Queue(this, progress, persistence));
+        tasks.add(new de.idrinth.stellaris.modtools.process2prepatchcleaning.Queue(this, progress, persistence));
+        tasks.add(new de.idrinth.stellaris.modtools.process3filepatch.Queue(this, progress, persistence));
+        tasks.add(new de.idrinth.stellaris.modtools.process4applypatch.Queue(this, progress, persistence));
+        tasks.add(new de.idrinth.stellaris.modtools.process5modcreation.Queue(this, progress, persistence));
     }
 
     @Override
@@ -53,7 +54,7 @@ public class FillerThread implements Runnable, Callable {
             new Thread(tasks.poll()).start();
             return null;
         }
-        EntityManager manager = PersistenceProvider.get();
+        EntityManager manager = persistence.get();
         list.forEach((ctv) -> {
             ctv.setManager(manager);
             ctv.addItems();

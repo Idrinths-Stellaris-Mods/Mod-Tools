@@ -36,16 +36,18 @@ abstract public class AbstractQueue implements ProcessHandlingQueue {
     private final List<String> known = new ArrayList<>();
     private final Callable callable;
     private final ProgressElementGroup progress;
+    private final PersistenceProvider persistence;
 
-    public AbstractQueue(Callable callable, ProgressElementGroup progress, String label, ExecutorService executor) {
+    public AbstractQueue(Callable callable, ProgressElementGroup progress, String label, PersistenceProvider persistence, ExecutorService executor) {
         this.callable = callable;
         this.progress = progress;
         this.progress.addToStepLabels(label);
         this.executor = executor;
+        this.persistence = persistence;
     }
 
-    public AbstractQueue(Callable callable, ProgressElementGroup progress, String label) {
-        this(callable, progress, label, Executors.newFixedThreadPool(20));
+    public AbstractQueue(Callable callable, ProgressElementGroup progress, String label, PersistenceProvider persistence) {
+        this(callable, progress, label, persistence, Executors.newFixedThreadPool(20));
     }
 
     @Override
@@ -102,6 +104,6 @@ abstract public class AbstractQueue implements ProcessHandlingQueue {
     protected abstract void addList();
 
     public EntityManager getEntityManager() {
-        return PersistenceProvider.get();
+        return persistence.get();
     }
 }

@@ -69,10 +69,6 @@ class Mod {
         supported_version.addValue(value);
     }
 
-    public final void addPathValue(String value) {
-        path.addValue(value);
-    }
-
     public final String getPathValue() throws IOException {
         return DirectoryLookup.getModDir() + "/" + filename;
     }

@@ -27,6 +27,7 @@ public class ApplyPatchFileTest extends TestAnyTask {
     protected ProcessTask get(ProcessHandlingQueue queue) {
         LinkedList<Long> ll = new LinkedList<>();
         ll.add((long) 1);
+        ll.add((long) 2);
         return new ApplyPatchFile(ll, 1, queue);
     }
 }

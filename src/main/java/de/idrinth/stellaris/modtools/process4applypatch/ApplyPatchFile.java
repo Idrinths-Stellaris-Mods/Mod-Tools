@@ -33,7 +33,7 @@ class ApplyPatchFile extends Task implements ProcessTask {
 
     public ApplyPatchFile(LinkedList<Long> patches, long target, ProcessHandlingQueue queue) {
         super(queue);
-        if(!patches.isEmpty()) {
+        if(patches.isEmpty()) {
             throw new IllegalArgumentException("patch list must not be empty");
         }
         this.patchId = patches.poll();

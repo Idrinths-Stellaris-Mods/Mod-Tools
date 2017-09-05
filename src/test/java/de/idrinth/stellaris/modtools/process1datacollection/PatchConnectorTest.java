@@ -24,7 +24,7 @@ public class PatchConnectorTest extends TestAnyTask {
 
     @Override
     protected ProcessTask get(ProcessHandlingQueue queue) {
-        return new PatchConnector(1, 1, "", queue);
+        return new PatchConnector(1, 1, "mm", queue);
     }
 
 }

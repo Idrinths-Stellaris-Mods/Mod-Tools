@@ -28,9 +28,9 @@ public class FileExtFilterTest {
     public void testAccept() {
         System.out.println("accept");
         FileExtFilter ff = new FileExtFilter("txt");
-        Assert.assertTrue("demo.txt is not ending with.txt?", ff.accept(new File("./"), "abc.txt"));
-        Assert.assertFalse("demo.täxt is ending with.txt?", ff.accept(new File("./"), "abc.txt"));
-        Assert.assertFalse("demo.txt.aa is ending with.txt?", ff.accept(new File("./"), "abc.txt"));
+        Assert.assertTrue("demo.txt is not ending with.txt?", ff.accept(new File("./"), "demo.txt"));
+        Assert.assertFalse("demo.täxt is ending with.txt?", ff.accept(new File("./"), "demo.täxt"));
+        Assert.assertFalse("demo.txt.aa is ending with.txt?", ff.accept(new File("./"), "demo.txt.aa"));
     }
     
 }

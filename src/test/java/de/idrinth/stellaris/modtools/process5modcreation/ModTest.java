@@ -16,6 +16,7 @@
  */
 package de.idrinth.stellaris.modtools.process5modcreation;
 
+import de.idrinth.stellaris.modtools.service.DirectoryLookup;
 import java.io.IOException;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -23,75 +24,59 @@ import static org.junit.Assert.*;
 public class ModTest {
     /**
      * Test of toString method, of class Mod.
+     * @throws java.io.IOException
      */
     @Test
-    public void testToString() {
+    public void testToString() throws IOException {
         System.out.println("toString");
         String expResult = "name = \"Mod\"\n" +
-"path = \"C:\\Users\\BJ\\Documents\\Paradox Interactive\\Stellaris\\mod/file.zip\"\n" +
+"path = \""+DirectoryLookup.getModDir() + "/file.zip\"\n" +
 "dependencies = {\n" +
 "}\n" +
 "supported_version = \"1.0.*\"\n" +
 "tags = {\n" +
 "	\"Merge\"\n" +
-"}";
+"}\n";
         assertEquals("Mod differs from expected content",expResult, new Mod("file", "Mod").toString());
     }
 
     /**
      * Test of addNameValue method, of class Mod.
+     * @throws java.io.IOException
      */
     @Test
-    public void testAddNameValue() {
+    public void testAddNameValue() throws IOException {
         System.out.println("addNameValue");
         Mod instance = new Mod("file", "Mod");
         instance.addNameValue("MyMod");
         String expResult = "name = \"MyMod\"\n" +
-"path = \"C:\\Users\\BJ\\Documents\\Paradox Interactive\\Stellaris\\mod/file.zip\"\n" +
+"path = \""+DirectoryLookup.getModDir() + "/file.zip\"\n" +
 "dependencies = {\n" +
 "}\n" +
 "supported_version = \"1.0.*\"\n" +
 "tags = {\n" +
 "\t\"Merge\"\n" +
-"}";
+"}\n";
         assertEquals("Mod differs from expected content", expResult, instance.toString());
     }
 
     /**
      * Test of addVersionValue method, of class Mod.
+     * @throws java.io.IOException
      */
     @Test
-    public void testAddVersionValue() {
+    public void testAddVersionValue() throws IOException {
         System.out.println("addVersionValue");
         Mod instance = new Mod("file", "Mod");
         instance.addVersionValue("3.0.0");
         String expResult = "name = \"Mod\"\n" +
-"path = \"C:\\Users\\BJ\\Documents\\Paradox Interactive\\Stellaris\\mod/file.zip\"\n" +
+"path = \""+DirectoryLookup.getModDir() + "/file.zip\"\n" +
 "dependencies = {\n" +
 "}\n" +
 "supported_version = \"3.0.0\"\n" +
 "tags = {\n" +
 "\t\"Merge\"\n" +
-"}";
-        assertEquals("Mod differs from expected content",expResult, instance.toString());
-    }
-
-    /**
-     * Test of addPathValue method, of class Mod.
-     */
-    @Test
-    public void testAddPathValue() {
-        System.out.println("addPathValue");
-        Mod instance = new Mod("file", "Mod");
-        instance.addPathValue("not-file");
-        String expResult = "name = \"Mod\"\n" +
-"path = \"C:\\Users\\BJ\\Documents\\Paradox Interactive\\Stellaris\\mod/not-file.zip\"\n" +
-"dependencies = {\n" +
-"}\n" +
-"supported_version = \"1.0.*\"\n" +
-"tags = {\n" +
-"\t\"Merge\"\n" +
-"}";
+"}\n";
         assertEquals("Mod differs from expected content",expResult, instance.toString());
     }
 
@@ -102,46 +87,48 @@ public class ModTest {
     @Test
     public void testGetPathValue() throws IOException {
         System.out.println("getPathValue");
-        assertEquals("file", new Mod("file", "Mod").getPathValue());
+        assertEquals(DirectoryLookup.getModDir() +"/file", new Mod("file", "Mod").getPathValue());
     }
 
     /**
      * Test of addDepedencyValue method, of class Mod.
+     * @throws java.io.IOException
      */
     @Test
-    public void testAddDepedencyValue() {
+    public void testAddDepedencyValue() throws IOException {
         System.out.println("addDepedencyValue");
         Mod instance = new Mod("file", "Mod");
         instance.addDepedencyValue("MyOtherMod");
         String expResult = "name = \"Mod\"\n" +
-"path = \"C:\\Users\\BJ\\Documents\\Paradox Interactive\\Stellaris\\mod/file.zip\"\n" +
+"path = \""+DirectoryLookup.getModDir() + "/file.zip\"\n" +
 "dependencies = {\n" +
 "\t\"MyOtherMod\"\n" +
 "}\n" +
 "supported_version = \"1.0.*\"\n" +
 "tags = {\n" +
 "\t\"Merge\"\n" +
-"}";
+"}\n";
         assertEquals("Mod differs from expected content",expResult, instance.toString());
     }
 
     /**
      * Test of addTagValue method, of class Mod.
+     * @throws java.io.IOException
      */
     @Test
-    public void testAddTagValue() {
+    public void testAddTagValue() throws IOException {
         System.out.println("addTagValue");
         Mod instance = new Mod("file", "Mod");
         instance.addTagValue("MyOtherMod");
         String expResult = "name = \"Mod\"\n" +
-"path = \"C:\\Users\\BJ\\Documents\\Paradox Interactive\\Stellaris\\mod/file.zip\"\n" +
+"path = \""+DirectoryLookup.getModDir() + "/file.zip\"\n" +
 "dependencies = {\n" +
 "}\n" +
 "supported_version = \"1.0.*\"\n" +
 "tags = {\n" +
 "\t\"Merge\"\n" +
 "\t\"MyOtherMod\"\n" +
-"}";
+"}\n";
         assertEquals("Mod differs from expected content",expResult, instance.toString());
     }
     

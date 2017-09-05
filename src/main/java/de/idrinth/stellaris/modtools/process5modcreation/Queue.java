@@ -19,13 +19,14 @@ package de.idrinth.stellaris.modtools.process5modcreation;
 import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
 import de.idrinth.stellaris.modtools.process.AbstractQueue;
 import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
+import de.idrinth.stellaris.modtools.service.PersistenceProvider;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
 public class Queue extends AbstractQueue implements ProcessHandlingQueue {
 
-    public Queue(Callable callable, ProgressElementGroup progress) {
-        super(callable, progress, "Building Mod", Executors.newSingleThreadExecutor());
+    public Queue(Callable callable, ProgressElementGroup progress, PersistenceProvider persistence) {
+        super(callable, progress, "Building Mod", persistence,Executors.newSingleThreadExecutor());
     }
 
     @Override

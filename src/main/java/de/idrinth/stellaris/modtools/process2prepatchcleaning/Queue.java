@@ -20,12 +20,13 @@ import de.idrinth.stellaris.modtools.entity.Original;
 import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
 import de.idrinth.stellaris.modtools.process.AbstractQueue;
 import de.idrinth.stellaris.modtools.process.ProcessHandlingQueue;
+import de.idrinth.stellaris.modtools.service.PersistenceProvider;
 import java.util.concurrent.Callable;
 
 public class Queue extends AbstractQueue implements ProcessHandlingQueue {
 
-    public Queue(Callable callable, ProgressElementGroup progress) {
-        super(callable, progress, "Removing manually patched");
+    public Queue(Callable callable, ProgressElementGroup progress, PersistenceProvider persistence) {
+        super(callable, progress, "Removing manually patched", persistence);
     }
 
     @Override

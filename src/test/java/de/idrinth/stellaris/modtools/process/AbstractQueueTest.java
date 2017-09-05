@@ -18,6 +18,7 @@ package de.idrinth.stellaris.modtools.process;
 
 import de.idrinth.stellaris.modtools.abstract_cases.TestAnyQueue;
 import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
+import de.idrinth.stellaris.modtools.service.PersistenceProvider;
 import java.util.concurrent.Callable;
 
 public class AbstractQueueTest extends TestAnyQueue {
@@ -28,7 +29,7 @@ public class AbstractQueueTest extends TestAnyQueue {
     }
     private class AbstractQueueImpl extends AbstractQueue {
         public AbstractQueueImpl(Callable callable, ProgressElementGroup progress) {
-            super(callable, progress, "");
+            super(callable, progress, "", new PersistenceProvider());
         }
 
         @Override

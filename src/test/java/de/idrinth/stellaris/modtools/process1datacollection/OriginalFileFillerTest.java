@@ -24,7 +24,7 @@ public class OriginalFileFillerTest extends TestAnyTask {
 
     @Override
     protected ProcessTask get(ProcessHandlingQueue queue) {
-        return new OriginalFileFiller("");
+        return new OriginalFileFiller("mmm");
     }
 
 }

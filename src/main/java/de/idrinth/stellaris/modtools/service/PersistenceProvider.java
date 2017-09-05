@@ -22,18 +22,13 @@ import javax.persistence.Persistence;
 
 public class PersistenceProvider {
 
-    private static EntityManagerFactory entityManager;
+    private final EntityManagerFactory entityManager;
 
-    public static EntityManager get() {
-        init();
+    public EntityManager get() {
         return entityManager.createEntityManager();
     }
 
-    public static synchronized boolean init() {
-        if (null != entityManager) {
-            return true;
-        }
+    public PersistenceProvider() {
         entityManager = Persistence.createEntityManagerFactory("de.idrinth_Stellaris.ModTools");
-        return null!=entityManager;
     }
 }
