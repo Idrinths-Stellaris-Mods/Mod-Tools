@@ -35,9 +35,6 @@ class Version {
         if (isBigger(cV)) {
             version.clear();
             version.addAll(cV);
-            while (version.size() < 3) {
-                version.add("0");
-            }
         }
     }
 
@@ -51,8 +48,7 @@ class Version {
                     return true;
                 case -1:
                     return false;
-                case 0:
-                default:
+                default://i.e. 0
                     counter++;
             }
         }
