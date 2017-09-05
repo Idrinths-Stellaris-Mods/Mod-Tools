@@ -16,7 +16,6 @@
  */
 package de.idrinth.stellaris.modtools;
 
-import de.idrinth.stellaris.modtools.service.PersistenceProvider;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.application.Platform;

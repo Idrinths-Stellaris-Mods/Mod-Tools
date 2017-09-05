@@ -32,11 +32,11 @@ public class DirectoryLookup {
     public static File getModDir() throws IOException {
         if (null == modDir) {
             if(SystemUtils.IS_OS_WINDOWS) {
-                modDir = test(new File(System.getProperty("user.home") + "\\Documents\\Paradox Interactive\\Stellaris\\mod"));
+                modDir = test(new File(SystemUtils.getUserHome() + "\\Documents\\Paradox Interactive\\Stellaris\\mod"));
             } else if(SystemUtils.IS_OS_MAC) {
-                modDir = test(new File("~/Documents/Paradox Interactive/Stellaris/mod"));
+                modDir = test(new File(SystemUtils.getUserHome() + "/Documents/Paradox Interactive/Stellaris/mod"));
             } else if(SystemUtils.IS_OS_LINUX) {
-                modDir = test(new File("~/.local/share/Paradox Interactive/Stellaris/mod"));
+                modDir = test(new File(SystemUtils.getUserHome() + "/.local/share/Paradox Interactive/Stellaris/mod"));
             }
         }
         return modDir;
@@ -47,13 +47,13 @@ public class DirectoryLookup {
             if(SystemUtils.IS_OS_WINDOWS) {
                 steamDir = test(new File(WindowsRegistry.getInstance().readString(HKey.HKCU, "Software\\Valve\\Steam", "SteamPath")));
             } else if(SystemUtils.IS_OS_MAC) {
-                steamDir = test(new File("~/Library/Application Support/Steam"));
+                steamDir = test(new File(SystemUtils.getUserHome()+"/Library/Application Support/Steam"));
             } else if(SystemUtils.IS_OS_LINUX) {
                 ArrayList<File> fl = new ArrayList<>();
-                fl.add(new File("~/.steam/steam"));
-                fl.add(new File("~/.steam/Steam"));
-                fl.add(new File("~/.local/share/steam"));
-                fl.add(new File("~/.local/share/Steam"));
+                fl.add(new File(SystemUtils.getUserHome()+"/.steam/steam"));
+                fl.add(new File(SystemUtils.getUserHome()+"/.steam/Steam"));
+                fl.add(new File(SystemUtils.getUserHome()+"/.local/share/steam"));
+                fl.add(new File(SystemUtils.getUserHome()+"/.local/share/Steam"));
                 steamDir = test(fl);
             }
         }
