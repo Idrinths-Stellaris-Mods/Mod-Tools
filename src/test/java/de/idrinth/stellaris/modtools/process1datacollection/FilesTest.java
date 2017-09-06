@@ -16,23 +16,58 @@
  */
 package de.idrinth.stellaris.modtools.process1datacollection;
 
-import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
+import de.idrinth.stellaris.modtools.abstract_cases.TestATask;
+import de.idrinth.stellaris.modtools.persistence.PersistenceProvider;
+import de.idrinth.stellaris.modtools.persistence.entity.Modification;
+import de.idrinth.stellaris.modtools.persistence.entity.Patch;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class FilesTest extends TestAnyTask {
+public class FilesTest extends TestATask {
 
     @Override
     protected ProcessTask get() {
         return new FilesImpl("n");
     }
 
+    /**
+     * Test of addToFiles method, of class Files.
+     */
+    @Test
+    public void testAddToFiles() {
+        System.out.println("addToFiles");
+        EntityManager manager = new PersistenceProvider().get();
+        manager.getTransaction().begin();
+        manager.persist(new Modification("files.mod",1000));
+        manager.getTransaction().commit();
+        new FilesImpl("files.mod").addFile("testfile", "testcontent", manager);
+        Assert.assertFalse(
+            "No patch was written",
+            manager.createNamedQuery("patch.any", Patch.class).getResultList().isEmpty()
+        );
+        Assert.assertEquals(
+            "Wrong number of pathes avaible",
+            1,
+            manager.createNamedQuery("patch.any", Patch.class).getResultList().size()
+        );
+        Assert.assertEquals(
+            "Content was saved incorrectly",
+            "testcontent",
+            manager.createNamedQuery("patch.any", Patch.class).getSingleResult().getDiff()
+        );
+    }
+
     private class FilesImpl extends Files {
 
         public FilesImpl(String modConfigName) {
             super(modConfigName);
+        }
+        public void addFile(String name, String content, EntityManager manager) {
+            this.addToFiles(name, content, manager);
         }
 
         @Override

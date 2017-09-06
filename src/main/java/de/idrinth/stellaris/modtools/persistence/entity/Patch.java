@@ -46,7 +46,7 @@ public class Patch implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     protected Original file;
     @OneToOne(fetch = FetchType.LAZY)
-    @Cascade({CascadeType.DELETE})
+    @Cascade({CascadeType.DELETE,CascadeType.PERSIST})
     private LazyText diff;
 
     public Patch() {
@@ -86,6 +86,9 @@ public class Patch implements Serializable {
     }
 
     public void setDiff(String diff) {
+        if(null == this.diff) {
+            this.diff = new LazyText();
+        }
         this.diff.setText(diff);
     }
 

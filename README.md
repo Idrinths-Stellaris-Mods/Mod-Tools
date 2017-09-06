@@ -5,6 +5,7 @@
 [![Github All Releases](https://img.shields.io/github/downloads/Idrinths-Stellaris-Mods/Mod-Tools/total.svg)](https://github.com/Idrinths-Stellaris-Mods/Mod-Tools/releases/latest)
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/23bfdba23039450aa3c16f06f93362ee)](https://www.codacy.com/app/Idrinth/Mod-Tools?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Idrinths-Stellaris-Mods/Mod-Tools&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/23bfdba23039450aa3c16f06f93362ee)](https://www.codacy.com/app/Idrinth/Mod-Tools?utm_source=github.com&utm_medium=referral&utm_content=Idrinths-Stellaris-Mods/Mod-Tools&utm_campaign=Badge_Coverage)
 [![Travis Build](https://api.travis-ci.org/Idrinths-Stellaris-Mods/Mod-Tools.svg?branch=master)](https://travis-ci.org/Idrinths-Stellaris-Mods/Mod-Tools)
 [![BCH compliance](https://bettercodehub.com/edge/badge/Idrinths-Stellaris-Mods/Mod-Tools?branch=master)](https://bettercodehub.com/)
 [![GitHub license](https://img.shields.io/badge/license-AGPL-blue.svg)](https://raw.githubusercontent.com/Idrinths-Stellaris-Mods/Mod-Tools/master/LICENSE)

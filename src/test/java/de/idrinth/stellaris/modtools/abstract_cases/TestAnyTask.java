@@ -26,6 +26,7 @@ abstract public class TestAnyTask extends TestATask {
 
     /**
      * Test of handle method, of class Task.
+     * @deprecated has to be implemented on a case by case basis
      */
     @Test
     public void testHandle() {
