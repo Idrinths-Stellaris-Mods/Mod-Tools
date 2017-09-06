@@ -16,10 +16,14 @@
  */
 package de.idrinth.stellaris.modtools.process3filepatch;
 
+import de.idrinth.stellaris.modtools.filesystem.DirectoryNotFoundException;
+import de.idrinth.stellaris.modtools.filesystem.SteamLocation;
 import de.idrinth.stellaris.modtools.persistence.entity.Patch;
 import de.idrinth.stellaris.modtools.process.AbstractQueueInitializer;
 import de.idrinth.stellaris.modtools.process.DataInitializer;
 import de.idrinth.stellaris.modtools.persistence.PersistenceProvider;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Process3Initializer extends AbstractQueueInitializer implements DataInitializer {
     private final PersistenceProvider persistence;
@@ -30,8 +34,13 @@ public class Process3Initializer extends AbstractQueueInitializer implements Dat
 
     @Override
     protected void init() {
-        persistence.get().createNamedQuery("patch.any", Patch.class).getResultList().forEach((o) -> {
-            tasks.add(new GenerateFilePatch(o.getAid()));
-        });
+        try {
+            SteamLocation sloc = new SteamLocation();
+            persistence.get().createNamedQuery("patch.any", Patch.class).getResultList().forEach((o) -> {
+                tasks.add(new OriginalFileFiller(o.getAid(),sloc));
+            });
+        } catch (DirectoryNotFoundException ex) {
+            Logger.getLogger(Process3Initializer.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

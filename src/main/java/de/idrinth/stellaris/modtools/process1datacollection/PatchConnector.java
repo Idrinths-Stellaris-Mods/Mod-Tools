@@ -19,7 +19,6 @@ package de.idrinth.stellaris.modtools.process1datacollection;
 import de.idrinth.stellaris.modtools.persistence.entity.Modification;
 import de.idrinth.stellaris.modtools.persistence.entity.Original;
 import de.idrinth.stellaris.modtools.persistence.entity.Patch;
-import de.idrinth.stellaris.modtools.filesystem.FileSystemLocation;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,14 +30,12 @@ class PatchConnector implements ProcessTask {
     private final long patchId;
     private final long modId;
     private final String path;
-    private final FileSystemLocation steamDir;
     private final ArrayList<ProcessTask> todo = new ArrayList<>();
 
-    public PatchConnector(long patchId, long modId, String path, FileSystemLocation steamDir) {
+    public PatchConnector(long patchId, long modId, String path) {
         this.patchId = patchId;
         this.modId = modId;
         this.path = path;
-        this.steamDir = steamDir;
     }
 
     @Override
@@ -54,7 +51,6 @@ class PatchConnector implements ProcessTask {
                     .getSingleResult();
         } catch (NoResultException ex) {
             file = new Original(path);
-            todo.add(new OriginalFileFiller(path, steamDir));
             manager.persist(file);
         }
         Patch patch = (Patch) manager.find(Patch.class, patchId);

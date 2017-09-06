@@ -10,7 +10,6 @@ before_install:
   - mkdir -p ~/.local/share/Paradox\ Interactive/Stellaris/mod
 script: mvn clean install
 after_success:
-  - find ./ -name jacoco.xml
   - sudo apt-get install jq
   - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r .assets[0].browser_download_url)
-  - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r ${find ./ -name jacoco.xml}
+  - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r ./target/site/jacoco/jacoco.xml

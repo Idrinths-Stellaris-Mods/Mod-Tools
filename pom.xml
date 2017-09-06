@@ -241,7 +241,7 @@
                         </goals>
                         <configuration>
                             <includes>
-                                <include>de.idrinth.stellaris.modtools.*</include>
+                                <include>de.idrinth.stellaris.modtools*</include>
                             </includes>
                         </configuration>
                     </execution>

@@ -19,7 +19,6 @@ package de.idrinth.stellaris.modtools.process1datacollection;
 import de.idrinth.stellaris.modtools.filesystem.DirectoryNotFoundException;
 import de.idrinth.stellaris.modtools.process.AbstractQueueInitializer;
 import de.idrinth.stellaris.modtools.filesystem.ModLocation;
-import de.idrinth.stellaris.modtools.filesystem.SteamLocation;
 import de.idrinth.stellaris.modtools.process.DataInitializer;
 import java.io.File;
 import java.util.logging.Level;
@@ -30,9 +29,8 @@ public class Process1Initializer extends AbstractQueueInitializer implements Dat
     protected void init() {
         try {
             ModLocation mloc = new ModLocation();
-            SteamLocation sloc = new SteamLocation();
             for (File mod : mloc.get().listFiles(new FileExtFilter("mod"))) {
-                tasks.add(new ConfigParser(mod, mloc, sloc));
+                tasks.add(new ConfigParser(mod, mloc));
             }
         } catch (DirectoryNotFoundException ex) {
             Logger.getLogger(Process1Initializer.class.getName()).log(Level.SEVERE, null, ex);

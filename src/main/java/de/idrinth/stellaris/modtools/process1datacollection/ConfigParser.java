@@ -34,12 +34,10 @@ class ConfigParser implements ProcessTask {
     private final File configuration;
     private final ArrayList<ProcessTask> todo = new ArrayList<>();
     private final FileSystemLocation modDir;
-    private final FileSystemLocation steamDir;
 
-    public ConfigParser(File configuration, FileSystemLocation modDir, FileSystemLocation steamDir) {
+    public ConfigParser(File configuration, FileSystemLocation modDir) {
         this.configuration = configuration;
         this.modDir = modDir;
-        this.steamDir = steamDir;
     }
 
     protected File getWithPrefix(String path) throws IOException {
@@ -59,9 +57,9 @@ class ConfigParser implements ProcessTask {
     private ProcessTask handlePath(String path) throws IOException, RegistryException {
         File file = getWithPrefix(path);
         if (path.endsWith(".zip")) {
-            return new ZipContentParser(configuration.getName(), file, steamDir);
+            return new ZipContentParser(configuration.getName(), file);
         }
-        return new FileSystemParser(configuration.getName(), file, steamDir);
+        return new FileSystemParser(configuration.getName(), file);
     }
 
     private void persist(Modification mod, EntityManager manager) {

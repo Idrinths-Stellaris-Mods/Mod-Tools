@@ -24,6 +24,6 @@ public class ConfigParserTest extends TestAnyTask {
 
     @Override
     protected ProcessTask get() {
-        return new ConfigParser(new File("./cf.mod"), null, null);
+        return new ConfigParser(new File("./cf.mod"), null);
     }
 }

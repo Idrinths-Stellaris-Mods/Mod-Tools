@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.process1datacollection;
+package de.idrinth.stellaris.modtools.process3filepatch;
 
 import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
@@ -23,7 +23,7 @@ public class OriginalFileFillerTest extends TestAnyTask {
 
     @Override
     protected ProcessTask get() {
-        return new OriginalFileFiller("mmm", null);
+        return new OriginalFileFiller(1, null);
     }
 
 }

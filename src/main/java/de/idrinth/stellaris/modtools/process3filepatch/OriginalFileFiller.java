@@ -14,10 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.process1datacollection;
+package de.idrinth.stellaris.modtools.process3filepatch;
 
 import de.idrinth.stellaris.modtools.persistence.entity.Original;
-import de.idrinth.stellaris.modtools.filesystem.DirectoryNotFoundException;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import de.idrinth.stellaris.modtools.filesystem.FileExtensions;
 import de.idrinth.stellaris.modtools.filesystem.FileSystemLocation;
@@ -30,15 +29,15 @@ import org.apache.commons.io.FileUtils;
 
 class OriginalFileFiller implements ProcessTask {
 
-    private final String path;
+    private final long aid;
     private final FileSystemLocation steamDir;
 
-    public OriginalFileFiller(String path, FileSystemLocation steamDir) {
-        this.path = path;
+    public OriginalFileFiller(long aid, FileSystemLocation steamDir) {
+        this.aid = aid;
         this.steamDir = steamDir;
     }
 
-    protected String getContent() {
+    protected String getContent(String path) {
         if (!FileExtensions.isPatchable(path)) {
             return "-unpatchable-";//nothing to do
         }
@@ -60,19 +59,19 @@ class OriginalFileFiller implements ProcessTask {
         if (!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }
-        Original file = (Original) manager.createNamedQuery("original.path", Original.class)
-                .setParameter("path", path)
-                .getSingleResult();
+        Original file = (Original) manager.find(Original.class, aid);
         if (null == file.getContent() || "".equals(file.getContent())) {
-            file.setContent(getContent());
+            file.setContent(getContent(file.getRelativePath()));
         }
         manager.getTransaction().commit();
-        return new ArrayList<>();
+        ArrayList<ProcessTask> list = new ArrayList<>();
+        list.add(new GenerateFilePatch(aid));
+        return list;
     }
 
     @Override
     public String getIdentifier() {
-        return path;
+        return String.valueOf(aid);
     }
 
 }
