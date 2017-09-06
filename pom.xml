@@ -239,11 +239,6 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
-                        <configuration>
-                            <includes>
-                                <include>de.idrinth.stellaris.modtools*</include>
-                            </includes>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
