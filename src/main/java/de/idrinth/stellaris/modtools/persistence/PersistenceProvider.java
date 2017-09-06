@@ -14,16 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.process1datacollection;
+package de.idrinth.stellaris.modtools.persistence;
 
-import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
-import de.idrinth.stellaris.modtools.process.ProcessTask;
-import java.io.File;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
-public class ConfigParserTest extends TestAnyTask {
+public class PersistenceProvider {
 
-    @Override
-    protected ProcessTask get() {
-        return new ConfigParser(new File("./cf.mod"), null, null);
+    private final EntityManagerFactory entityManager;
+
+    public EntityManager get() {
+        return entityManager.createEntityManager();
+    }
+
+    public PersistenceProvider() {
+        entityManager = Persistence.createEntityManagerFactory("de.idrinth_Stellaris.ModTools");
     }
 }

@@ -16,8 +16,9 @@
  */
 package de.idrinth.stellaris.modtools.process1datacollection;
 
-import de.idrinth.stellaris.modtools.entity.Modification;
-import de.idrinth.stellaris.modtools.entity.Patch;
+import de.idrinth.stellaris.modtools.persistence.entity.Modification;
+import de.idrinth.stellaris.modtools.persistence.entity.Patch;
+import de.idrinth.stellaris.modtools.filesystem.FileSystemLocation;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import java.util.ArrayList;
 import javax.persistence.EntityManager;
@@ -26,9 +27,11 @@ abstract class Files implements ProcessTask {
 
     protected final String modConfigName;
     protected final ArrayList<ProcessTask> todo = new ArrayList<>();
+    private final FileSystemLocation steamDir;
 
-    public Files(String modConfigName) {
+    public Files(String modConfigName, FileSystemLocation steamDir) {
         this.modConfigName = modConfigName;
+        this.steamDir = steamDir;
     }
 
     @Override
@@ -47,7 +50,7 @@ abstract class Files implements ProcessTask {
         Patch patch = new Patch();
         patch.setDiff(content);
         manager.persist(patch);
-        todo.add(new PatchConnector(patch.getAid(), mod.getAid(), fPath.replace("\\", "/")));
+        todo.add(new PatchConnector(patch.getAid(), mod.getAid(), fPath.replace("\\", "/"),steamDir));
         manager.getTransaction().commit();
         System.out.println(fPath + " was added");
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Björn Büttner
+ * Copyright (C) 2017 Idrinth
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,28 +14,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.process1datacollection;
+package de.idrinth.stellaris.modtools.abstract_cases;
 
 import de.idrinth.stellaris.modtools.filesystem.DirectoryNotFoundException;
-import de.idrinth.stellaris.modtools.process.AbstractQueueInitializer;
-import de.idrinth.stellaris.modtools.filesystem.ModLocation;
-import de.idrinth.stellaris.modtools.filesystem.SteamLocation;
-import de.idrinth.stellaris.modtools.process.DataInitializer;
-import java.io.File;
+import de.idrinth.stellaris.modtools.filesystem.FileSystemLocation;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class Process1Initializer extends AbstractQueueInitializer implements DataInitializer {
-    @Override
-    protected void init() {
+abstract public class TestAnyFileSystemLocation {
+    abstract protected FileSystemLocation makeInstance() throws DirectoryNotFoundException;
+    /**
+     * Test of get method, of class ModLocation.
+     */
+    @Test
+    public void testGet() {
+        System.out.println("get");
         try {
-            ModLocation mloc = new ModLocation();
-            SteamLocation sloc = new SteamLocation();
-            for (File mod : mloc.get().listFiles(new FileExtFilter("mod"))) {
-                tasks.add(new ConfigParser(mod, mloc, sloc));
-            }
+            Assert.assertTrue("Mod Directory was not found", makeInstance().get().exists());
         } catch (DirectoryNotFoundException ex) {
-            Logger.getLogger(Process1Initializer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            Assert.fail(ex.getMessage());
         }
     }
 }

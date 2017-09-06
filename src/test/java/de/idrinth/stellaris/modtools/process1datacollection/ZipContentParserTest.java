@@ -24,6 +24,6 @@ public class ZipContentParserTest extends TestAnyTask {
 
     @Override
     protected ProcessTask get() {
-        return new ZipContentParser("a.zip", new File("./"));
+        return new ZipContentParser("a.zip", new File("./"), null);
     }
 }

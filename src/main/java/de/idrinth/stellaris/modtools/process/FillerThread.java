@@ -23,7 +23,7 @@ import de.idrinth.stellaris.modtools.process2prepatchcleaning.Process2Initialize
 import de.idrinth.stellaris.modtools.process3filepatch.Process3Initializer;
 import de.idrinth.stellaris.modtools.process4applypatch.Process4Initializer;
 import de.idrinth.stellaris.modtools.process5modcreation.Process5Initializer;
-import de.idrinth.stellaris.modtools.service.PersistenceProvider;
+import de.idrinth.stellaris.modtools.persistence.PersistenceProvider;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.Callable;

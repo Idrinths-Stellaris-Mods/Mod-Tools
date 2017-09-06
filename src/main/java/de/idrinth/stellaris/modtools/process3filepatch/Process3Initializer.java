@@ -16,10 +16,10 @@
  */
 package de.idrinth.stellaris.modtools.process3filepatch;
 
-import de.idrinth.stellaris.modtools.entity.Patch;
+import de.idrinth.stellaris.modtools.persistence.entity.Patch;
 import de.idrinth.stellaris.modtools.process.AbstractQueueInitializer;
 import de.idrinth.stellaris.modtools.process.DataInitializer;
-import de.idrinth.stellaris.modtools.service.PersistenceProvider;
+import de.idrinth.stellaris.modtools.persistence.PersistenceProvider;
 
 public class Process3Initializer extends AbstractQueueInitializer implements DataInitializer {
     private final PersistenceProvider persistence;

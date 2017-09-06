@@ -14,16 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.process1datacollection;
+package de.idrinth.stellaris.modtools.filesystem;
 
-import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
-import de.idrinth.stellaris.modtools.process.ProcessTask;
+import com.github.sarxos.winreg.RegistryException;
 import java.io.File;
+import java.io.IOException;
 
-public class ConfigParserTest extends TestAnyTask {
+public class SteamLocation implements FileSystemLocation {
+    private final File directory;
+
+    public SteamLocation() throws DirectoryNotFoundException {
+        try {
+            this.directory = DirectoryLookup.getSteamDir();
+        } catch (RegistryException | IOException ex) {
+            throw new DirectoryNotFoundException("Steam Directory not avaible",ex);
+        }
+    }
 
     @Override
-    protected ProcessTask get() {
-        return new ConfigParser(new File("./cf.mod"), null, null);
+    public File get() {
+        return directory;
     }
 }

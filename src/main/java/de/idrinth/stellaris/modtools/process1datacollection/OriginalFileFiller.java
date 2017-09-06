@@ -16,11 +16,11 @@
  */
 package de.idrinth.stellaris.modtools.process1datacollection;
 
-import com.github.sarxos.winreg.RegistryException;
-import de.idrinth.stellaris.modtools.service.DirectoryLookup;
-import de.idrinth.stellaris.modtools.entity.Original;
+import de.idrinth.stellaris.modtools.persistence.entity.Original;
+import de.idrinth.stellaris.modtools.filesystem.DirectoryNotFoundException;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
-import de.idrinth.stellaris.modtools.service.FileExtensions;
+import de.idrinth.stellaris.modtools.filesystem.FileExtensions;
+import de.idrinth.stellaris.modtools.filesystem.FileSystemLocation;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,9 +31,11 @@ import org.apache.commons.io.FileUtils;
 class OriginalFileFiller implements ProcessTask {
 
     private final String path;
+    private final FileSystemLocation steamDir;
 
-    public OriginalFileFiller(String path) {
+    public OriginalFileFiller(String path, FileSystemLocation steamDir) {
         this.path = path;
+        this.steamDir = steamDir;
     }
 
     protected String getContent() {
@@ -42,12 +44,12 @@ class OriginalFileFiller implements ProcessTask {
         }
         try {
             File file = new File(
-                    DirectoryLookup.getSteamDir().getAbsolutePath()
+                    steamDir.get().getAbsolutePath()
                     + "steamapps/common/Stellaris/"//at least ubutu's steam uses lower case
                     + path
             );
             return file.exists() && file.canRead() ? FileUtils.readFileToString(file, "utf-8") : "";
-        } catch (IOException | RegistryException exception) {
+        } catch (IOException exception) {
             System.out.println(exception.getLocalizedMessage());
             return "-not readable-";
         }

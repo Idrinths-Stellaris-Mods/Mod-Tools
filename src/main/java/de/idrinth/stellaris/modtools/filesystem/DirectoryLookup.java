@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.service;
+package de.idrinth.stellaris.modtools.filesystem;
 
 import com.github.sarxos.winreg.HKey;
 import com.github.sarxos.winreg.RegistryException;
@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import org.apache.commons.lang3.SystemUtils;
 
-public class DirectoryLookup {
+class DirectoryLookup {
 
     protected static File modDir;
     protected static File steamDir;

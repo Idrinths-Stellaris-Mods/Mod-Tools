@@ -16,13 +16,21 @@
  */
 package de.idrinth.stellaris.modtools.process5modcreation;
 
+import de.idrinth.stellaris.modtools.filesystem.DirectoryNotFoundException;
+import de.idrinth.stellaris.modtools.filesystem.ModLocation;
 import de.idrinth.stellaris.modtools.process.AbstractQueueInitializer;
 import de.idrinth.stellaris.modtools.process.DataInitializer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Process5Initializer extends AbstractQueueInitializer implements DataInitializer {
     @Override
     protected void init() {
-        tasks.add(new CreateMod());
+        try {
+            tasks.add(new CreateMod(new ModLocation()));
+        } catch (DirectoryNotFoundException ex) {
+            Logger.getLogger(Process5Initializer.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     @Override
     public int getQueueSize() {

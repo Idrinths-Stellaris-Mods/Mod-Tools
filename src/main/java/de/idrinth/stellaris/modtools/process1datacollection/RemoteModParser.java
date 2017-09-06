@@ -17,7 +17,7 @@
 package de.idrinth.stellaris.modtools.process1datacollection;
 
 import de.idrinth.stellaris.modtools.MainApp;
-import de.idrinth.stellaris.modtools.entity.Modification;
+import de.idrinth.stellaris.modtools.persistence.entity.Modification;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import java.io.IOException;
 import java.util.ArrayList;

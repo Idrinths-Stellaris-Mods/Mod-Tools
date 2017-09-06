@@ -16,7 +16,7 @@
  */
 package de.idrinth.stellaris.modtools.gui;
 
-import de.idrinth.stellaris.modtools.entity.PatchedFile;
+import de.idrinth.stellaris.modtools.persistence.entity.PatchedFile;
 
 public class CollisionTableView extends ClickableTableView<FileDataRow, FileDataRow> {
 

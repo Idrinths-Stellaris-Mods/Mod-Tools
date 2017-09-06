@@ -14,29 +14,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.abstract_cases;
+package de.idrinth.stellaris.modtools.filesystem;
 
-import de.idrinth.stellaris.modtools.persistence.PersistenceProvider;
-import java.util.List;
+import de.idrinth.stellaris.modtools.filesystem.DirectoryLookup;
 import org.junit.Assert;
 import org.junit.Test;
 
-abstract public class TestAnyTask extends TestATask {
-    
+public class DirectoryLookupTest {
 
     /**
-     * Test of handle method, of class Task.
+     * Test of getModDir method, of class DirectoryLookup.
      */
     @Test
-    public void testHandle() {
-        System.out.println("run - basics");
-        try {
-            Assert.assertTrue(
-                "Full Identifier is not correct",
-                get().handle(new PersistenceProvider().get()) instanceof List<?>
-            );
-        } catch(Exception e) {
-            Assert.assertTrue(true);//@todo implement the requirements for all tasks
-        }
+    public void testGetModDir() throws Exception {
+        System.out.println("getModDir");
+        Assert.assertTrue("Mod Directory was not found to exists.", DirectoryLookup.getModDir().exists());
     }
+
+    /**
+     * Test of getSteamDir method, of class DirectoryLookup.
+     */
+    @Test
+    public void testGetSteamDir() throws Exception {
+        System.out.println("getSteamDir");
+        Assert.assertTrue("Steam Directory was not found to exists.", DirectoryLookup.getSteamDir().exists());
+    }
+    
 }

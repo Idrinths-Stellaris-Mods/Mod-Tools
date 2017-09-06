@@ -14,20 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.service;
+package de.idrinth.stellaris.modtools.filesystem;
 
-import javax.persistence.EntityManager;
-import junit.framework.Assert;
-import org.junit.Test;
+import java.io.IOException;
 
-public class PersistenceProviderTest {
+public class DirectoryNotFoundException extends IOException {
 
-    /**
-     * Test of get method, of class PersistenceProvider.
-     */
-    @Test
-    public void testGet() {
-        System.out.println("get");
-        Assert.assertTrue("get does not return an EntityManager", EntityManager.class.isAssignableFrom(new PersistenceProvider().get().getClass()));
+    public DirectoryNotFoundException(String string, Throwable thrwbl) {
+        super(string, thrwbl);
     }
+
 }

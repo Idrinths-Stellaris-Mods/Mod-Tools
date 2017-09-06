@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.entity;
+package de.idrinth.stellaris.modtools.persistence.entity;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -23,78 +24,54 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-@NamedQueries({
-    @NamedQuery(
-            name = "originals",
-            query = "select f from Original f"
-    )
-    ,
-    @NamedQuery(
-            name = "original.path",
-            query = "select f from Original f where f.relativePath=:path"
-    )
-})
 @Entity
-public class Original {
+public class Colliding implements Serializable {
 
     @Id
     @GeneratedValue
     private long aid;
-    //original
     @OneToOne(fetch = FetchType.LAZY)
-    private LazyText content;
-    protected String relativePath;
-    //connection
+    private Modification modification;
     @OneToMany(fetch = FetchType.LAZY)
-    protected Set<Patch> patches = new HashSet<>();
+    private Set<Modification> modifications = new HashSet<>();
 
-    public Original() {
+    public Colliding() {
     }
 
-    public Original(String relativePath) {
-        this.relativePath = relativePath;
-    }
-
-    public long getAid() {
-        return aid;
+    public Colliding(Modification modification) {
+        this.modification = modification;
     }
 
     public void setAid(long aid) {
         this.aid = aid;
     }
 
-    public String getContent() {
-        return content.getText();
+    public long getAid() {
+        return aid;
     }
 
-    public void setContent(String content) {
-        this.content.setText(content);
+    public Modification getModification() {
+        return modification;
     }
 
-    public String getRelativePath() {
-        return relativePath;
+    public void setModification(Modification modification) {
+        this.modification = modification;
     }
 
-    public void setRelativePath(String relativePath) {
-        this.relativePath = relativePath;
+    public Set<Modification> getModifications() {
+        return modifications;
     }
 
-    public Set<Patch> getPatches() {
-        return patches;
-    }
-
-    public void setPatches(Set<Patch> patches) {
-        this.patches = patches;
+    public void setModifications(Set<Modification> modifications) {
+        this.modifications = modifications;
     }
 
     @Override
     public int hashCode() {
-        return 177 + Objects.hashCode(this.relativePath);
+        return 67 * 3 + Objects.hashCode(this.modification);
     }
 
     @Override
@@ -105,8 +82,8 @@ public class Original {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        final Original other = (Original) obj;
-        return Objects.equals(this.relativePath, other.relativePath);
+        final Colliding other = (Colliding) obj;
+        return Objects.equals(this.modification, other.modification);
     }
 
 }

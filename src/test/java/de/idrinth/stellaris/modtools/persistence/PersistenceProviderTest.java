@@ -14,29 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.service;
+package de.idrinth.stellaris.modtools.persistence;
 
-import org.junit.Assert;
+import javax.persistence.EntityManager;
+import junit.framework.Assert;
 import org.junit.Test;
 
-public class DirectoryLookupTest {
+public class PersistenceProviderTest {
 
     /**
-     * Test of getModDir method, of class DirectoryLookup.
+     * Test of get method, of class PersistenceProvider.
      */
     @Test
-    public void testGetModDir() throws Exception {
-        System.out.println("getModDir");
-        Assert.assertTrue("Mod Directory was not found to exists.", DirectoryLookup.getModDir().exists());
+    public void testGet() {
+        System.out.println("get");
+        Assert.assertTrue("get does not return an EntityManager", EntityManager.class.isAssignableFrom(new PersistenceProvider().get().getClass()));
     }
-
-    /**
-     * Test of getSteamDir method, of class DirectoryLookup.
-     */
-    @Test
-    public void testGetSteamDir() throws Exception {
-        System.out.println("getSteamDir");
-        Assert.assertTrue("Steam Directory was not found to exists.", DirectoryLookup.getSteamDir().exists());
-    }
-    
 }

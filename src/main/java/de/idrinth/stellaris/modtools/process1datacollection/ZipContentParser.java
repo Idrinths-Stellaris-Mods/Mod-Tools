@@ -17,7 +17,8 @@
 package de.idrinth.stellaris.modtools.process1datacollection;
 
 import de.idrinth.stellaris.modtools.process.ProcessTask;
-import de.idrinth.stellaris.modtools.service.FileExtensions;
+import de.idrinth.stellaris.modtools.filesystem.FileExtensions;
+import de.idrinth.stellaris.modtools.filesystem.FileSystemLocation;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -32,8 +33,8 @@ class ZipContentParser extends Files {
 
     private final File file;
 
-    public ZipContentParser(String modConfigName, File file) {
-        super(modConfigName);
+    public ZipContentParser(String modConfigName, File file, FileSystemLocation steamDir) {
+        super(modConfigName, steamDir);
         this.file = file;
     }
 

@@ -16,12 +16,12 @@
  */
 package de.idrinth.stellaris.modtools.process2prepatchcleaning;
 
-import de.idrinth.stellaris.modtools.entity.Patch;
+import de.idrinth.stellaris.modtools.persistence.entity.Patch;
 import de.idrinth.stellaris.modtools.abstract_cases.TestATask;
-import de.idrinth.stellaris.modtools.entity.Modification;
-import de.idrinth.stellaris.modtools.entity.Original;
+import de.idrinth.stellaris.modtools.persistence.entity.Modification;
+import de.idrinth.stellaris.modtools.persistence.entity.Original;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
-import de.idrinth.stellaris.modtools.service.PersistenceProvider;
+import de.idrinth.stellaris.modtools.persistence.PersistenceProvider;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.junit.Assert;

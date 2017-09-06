@@ -16,7 +16,7 @@
  */
 package de.idrinth.stellaris.modtools.gui;
 
-import de.idrinth.stellaris.modtools.entity.Modification;
+import de.idrinth.stellaris.modtools.persistence.entity.Modification;
 
 public class ModTableView extends ClickableTableView<ModDataRow, ModDataRow> {
 

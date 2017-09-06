@@ -17,7 +17,7 @@
 package de.idrinth.stellaris.modtools.process;
 
 import de.idrinth.stellaris.modtools.gui.ProgressElementGroup;
-import de.idrinth.stellaris.modtools.service.PersistenceProvider;
+import de.idrinth.stellaris.modtools.persistence.PersistenceProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;

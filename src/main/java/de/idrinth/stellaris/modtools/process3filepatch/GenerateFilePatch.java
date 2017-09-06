@@ -17,9 +17,9 @@
 package de.idrinth.stellaris.modtools.process3filepatch;
 
 import com.sksamuel.diffpatch.DiffMatchPatch;
-import de.idrinth.stellaris.modtools.entity.Patch;
+import de.idrinth.stellaris.modtools.persistence.entity.Patch;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
-import de.idrinth.stellaris.modtools.service.FileExtensions;
+import de.idrinth.stellaris.modtools.filesystem.FileExtensions;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;

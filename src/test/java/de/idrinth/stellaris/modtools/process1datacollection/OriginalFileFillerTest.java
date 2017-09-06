@@ -23,7 +23,7 @@ public class OriginalFileFillerTest extends TestAnyTask {
 
     @Override
     protected ProcessTask get() {
-        return new OriginalFileFiller("mmm");
+        return new OriginalFileFiller("mmm", null);
     }
 
 }

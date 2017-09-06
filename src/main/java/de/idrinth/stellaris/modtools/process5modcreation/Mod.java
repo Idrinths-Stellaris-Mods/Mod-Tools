@@ -16,7 +16,7 @@
  */
 package de.idrinth.stellaris.modtools.process5modcreation;
 
-import de.idrinth.stellaris.modtools.service.DirectoryLookup;
+import de.idrinth.stellaris.modtools.filesystem.FileSystemLocation;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.logging.Level;
@@ -30,17 +30,15 @@ class Mod {
     private final ModLine dependencies = new MultiValue();
     private final ModLine supported_version = new SingleValue();
     private final ModLine tags = new MultiValue();
+    private final FileSystemLocation modDir;
 
-    public Mod(String filename, String modname) {
+    public Mod(String filename, String modname, FileSystemLocation modDir) {
         addVersionValue("1.0.*");
         addTagValue("Merge");
-        try {
-            path.addValue(DirectoryLookup.getModDir() + "/" + filename + ".zip");
-        } catch (IOException ex) {
-            Logger.getLogger(Mod.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        path.addValue(modDir.get() + "/" + filename + ".zip");
         name.addValue(modname);
         this.filename = filename;
+        this.modDir = modDir;
     }
 
     @Override
@@ -70,7 +68,7 @@ class Mod {
     }
 
     public final String getPathValue() throws IOException {
-        return DirectoryLookup.getModDir() + "/" + filename;
+        return modDir.get() + "/" + filename;
     }
 
     public final void addDepedencyValue(String value) {

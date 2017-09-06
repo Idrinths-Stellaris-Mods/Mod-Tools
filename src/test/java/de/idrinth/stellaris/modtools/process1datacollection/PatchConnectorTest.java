@@ -23,7 +23,7 @@ public class PatchConnectorTest extends TestAnyTask {
 
     @Override
     protected ProcessTask get() {
-        return new PatchConnector(1, 1, "mm");
+        return new PatchConnector(1, 1, "mm", null);
     }
 
 }

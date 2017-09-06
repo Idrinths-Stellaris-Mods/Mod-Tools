@@ -32,7 +32,7 @@ public class FilesTest extends TestAnyTask {
     private class FilesImpl extends Files {
 
         public FilesImpl(String modConfigName) {
-            super(modConfigName);
+            super(modConfigName, null);
         }
 
         @Override

@@ -17,13 +17,32 @@
 package de.idrinth.stellaris.modtools.process5modcreation;
 
 import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
+import de.idrinth.stellaris.modtools.filesystem.FileSystemLocation;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
+import java.io.File;
 
 public class CreateModTest extends TestAnyTask {
 
     @Override
     protected ProcessTask get() {
-        return new CreateMod();
+        return new CreateMod(new ModDirFake());
     }
+    private class ModDirFake implements FileSystemLocation {
+        private final File directory;
 
+        public ModDirFake() {
+            this(new File("./CreateModTest"));
+        }
+        public ModDirFake(File directory) {
+            this.directory = directory;
+            if(!directory.exists()) {
+                directory.mkdirs();
+            }
+        }
+        
+        @Override
+        public File get() {
+            return directory;
+        }
+    }
 }

@@ -16,10 +16,10 @@
  */
 package de.idrinth.stellaris.modtools.process4applypatch;
 
-import de.idrinth.stellaris.modtools.entity.Original;
-import de.idrinth.stellaris.modtools.entity.PatchedFile;
+import de.idrinth.stellaris.modtools.persistence.entity.Original;
+import de.idrinth.stellaris.modtools.persistence.entity.PatchedFile;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
-import de.idrinth.stellaris.modtools.service.FileExtensions;
+import de.idrinth.stellaris.modtools.filesystem.FileExtensions;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;

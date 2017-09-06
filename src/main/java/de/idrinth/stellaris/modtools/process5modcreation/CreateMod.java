@@ -16,7 +16,8 @@
  */
 package de.idrinth.stellaris.modtools.process5modcreation;
 
-import de.idrinth.stellaris.modtools.entity.PatchedFile;
+import de.idrinth.stellaris.modtools.persistence.entity.PatchedFile;
+import de.idrinth.stellaris.modtools.filesystem.FileSystemLocation;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import java.io.File;
 import java.io.IOException;
@@ -39,9 +40,9 @@ class CreateMod implements ProcessTask {
     private final Mod mod;
     private final String id;
 
-    public CreateMod() {
+    public CreateMod(FileSystemLocation modDir) {
         id = convertBase10To62(LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYYMMddHHmmss")));
-        mod = new Mod("idrinths-auto-patch_" + id, "!!!Automatic Patch " + id);
+        mod = new Mod("idrinths-auto-patch_" + id, "!!!Automatic Patch " + id, modDir);
     }
 
     private String convertBase10To62(String input) {

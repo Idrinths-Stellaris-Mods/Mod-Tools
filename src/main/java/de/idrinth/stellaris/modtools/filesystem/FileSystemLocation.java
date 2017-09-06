@@ -14,21 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.service;
+package de.idrinth.stellaris.modtools.filesystem;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import java.io.File;
 
-public class PersistenceProvider {
-
-    private final EntityManagerFactory entityManager;
-
-    public EntityManager get() {
-        return entityManager.createEntityManager();
-    }
-
-    public PersistenceProvider() {
-        entityManager = Persistence.createEntityManagerFactory("de.idrinth_Stellaris.ModTools");
-    }
+public interface FileSystemLocation {
+    public File get();
 }

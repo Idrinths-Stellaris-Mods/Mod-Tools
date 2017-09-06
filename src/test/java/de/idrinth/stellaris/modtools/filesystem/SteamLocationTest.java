@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Björn Büttner
+ * Copyright (C) 2017 Idrinth
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,16 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.process1datacollection;
+package de.idrinth.stellaris.modtools.filesystem;
 
-import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
-import de.idrinth.stellaris.modtools.process.ProcessTask;
-import java.io.File;
+import de.idrinth.stellaris.modtools.abstract_cases.TestAnyFileSystemLocation;
 
-public class ConfigParserTest extends TestAnyTask {
+public class SteamLocationTest extends TestAnyFileSystemLocation {
 
     @Override
-    protected ProcessTask get() {
-        return new ConfigParser(new File("./cf.mod"), null, null);
+    protected FileSystemLocation makeInstance() throws DirectoryNotFoundException {
+        return new SteamLocation();
     }
 }

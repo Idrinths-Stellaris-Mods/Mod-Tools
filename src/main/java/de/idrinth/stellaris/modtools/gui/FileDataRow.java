@@ -16,8 +16,8 @@
  */
 package de.idrinth.stellaris.modtools.gui;
 
-import de.idrinth.stellaris.modtools.entity.Modification;
-import de.idrinth.stellaris.modtools.entity.PatchedFile;
+import de.idrinth.stellaris.modtools.persistence.entity.Modification;
+import de.idrinth.stellaris.modtools.persistence.entity.PatchedFile;
 import java.util.Set;
 import javax.persistence.EntityManager;
 

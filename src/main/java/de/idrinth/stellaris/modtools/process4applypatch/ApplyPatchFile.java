@@ -17,8 +17,8 @@
 package de.idrinth.stellaris.modtools.process4applypatch;
 
 import com.sksamuel.diffpatch.DiffMatchPatch;
-import de.idrinth.stellaris.modtools.entity.Patch;
-import de.idrinth.stellaris.modtools.entity.PatchedFile;
+import de.idrinth.stellaris.modtools.persistence.entity.Patch;
+import de.idrinth.stellaris.modtools.persistence.entity.PatchedFile;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import java.util.ArrayList;
 import java.util.LinkedList;

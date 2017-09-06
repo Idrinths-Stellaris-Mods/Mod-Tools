@@ -17,8 +17,8 @@
 package de.idrinth.stellaris.modtools.process1datacollection;
 
 import com.github.sarxos.winreg.RegistryException;
-import de.idrinth.stellaris.modtools.service.DirectoryLookup;
-import de.idrinth.stellaris.modtools.entity.Modification;
+import de.idrinth.stellaris.modtools.persistence.entity.Modification;
+import de.idrinth.stellaris.modtools.filesystem.FileSystemLocation;
 import java.io.File;
 import java.io.IOException;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
@@ -33,9 +33,13 @@ class ConfigParser implements ProcessTask {
 
     private final File configuration;
     private final ArrayList<ProcessTask> todo = new ArrayList<>();
+    private final FileSystemLocation modDir;
+    private final FileSystemLocation steamDir;
 
-    public ConfigParser(File configuration) {
+    public ConfigParser(File configuration, FileSystemLocation modDir, FileSystemLocation steamDir) {
         this.configuration = configuration;
+        this.modDir = modDir;
+        this.steamDir = steamDir;
     }
 
     protected File getWithPrefix(String path) throws IOException {
@@ -44,7 +48,7 @@ class ConfigParser implements ProcessTask {
             return file;
         }
         if (!file.isAbsolute()) {
-            file = new File(DirectoryLookup.getModDir().getParent() + "/" + path);
+            file = new File(modDir.get().getParent() + "/" + path);
             if (file.exists()) {
                 return file;
             }
@@ -55,9 +59,9 @@ class ConfigParser implements ProcessTask {
     private ProcessTask handlePath(String path) throws IOException, RegistryException {
         File file = getWithPrefix(path);
         if (path.endsWith(".zip")) {
-            return new ZipContentParser(configuration.getName(), file);
+            return new ZipContentParser(configuration.getName(), file, steamDir);
         }
-        return new FileSystemParser(configuration.getName(), file);
+        return new FileSystemParser(configuration.getName(), file, steamDir);
     }
 
     private void persist(Modification mod, EntityManager manager) {

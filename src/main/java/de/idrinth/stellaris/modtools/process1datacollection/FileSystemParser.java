@@ -17,7 +17,8 @@
 package de.idrinth.stellaris.modtools.process1datacollection;
 
 import de.idrinth.stellaris.modtools.process.ProcessTask;
-import de.idrinth.stellaris.modtools.service.FileExtensions;
+import de.idrinth.stellaris.modtools.filesystem.FileExtensions;
+import de.idrinth.stellaris.modtools.filesystem.FileSystemLocation;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -30,8 +31,8 @@ class FileSystemParser extends Files {
 
     private final File folder;
 
-    public FileSystemParser(String modConfigName, File folder) {
-        super(modConfigName);
+    public FileSystemParser(String modConfigName, File folder, FileSystemLocation steamDir) {
+        super(modConfigName, steamDir);
         this.folder = folder;
     }
 
