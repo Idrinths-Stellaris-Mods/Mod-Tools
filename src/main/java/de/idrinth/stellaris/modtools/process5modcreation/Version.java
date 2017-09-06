@@ -48,8 +48,10 @@ class Version {
                     return true;
                 case -1:
                     return false;
-                default://i.e. 0
+                case 0://meant to fall through
+                default:
                     counter++;
+                    break;
             }
         }
         return false;
