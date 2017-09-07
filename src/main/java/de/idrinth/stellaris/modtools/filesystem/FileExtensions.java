@@ -18,8 +18,8 @@ package de.idrinth.stellaris.modtools.filesystem;
 
 public class FileExtensions {
 
-    private static final String[] PATCH = ".txt,.yml,.asset,.csv,.gfx,.shader,.fxh,.gui".split(",");
-    private static final String[] REPLACE = ".wav,.ogg,.ods,.dds,.bmp,.png,.psd,.jpg,.ani,.cur,.ttf,.fnt,.tga,.otf,.anim,.mesh".split(",");
+    private static final String[] PATCH = "txt,yml,asset,csv,gfx,shader,fxh,gui".split(",");
+    private static final String[] REPLACE = "wav,ogg,ods,dds,bmp,png,psd,jpg,ani,cur,ttf,fnt,tga,otf,anim,mesh".split(",");
 
     private FileExtensions() {
         //this is a static class only
@@ -43,7 +43,7 @@ public class FileExtensions {
 
     private static boolean isInList(String[] list, String filename) {
         for (String ext : list) {
-            if (filename.endsWith(ext)) {
+            if (filename.endsWith("."+ext)) {
                 return true;
             }
         }

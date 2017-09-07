@@ -16,14 +16,51 @@
  */
 package de.idrinth.stellaris.modtools.process1datacollection;
 
-import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
+import de.idrinth.stellaris.modtools.abstract_cases.TestATask;
+import de.idrinth.stellaris.modtools.persistence.PersistenceProvider;
+import de.idrinth.stellaris.modtools.persistence.entity.Modification;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import javax.persistence.EntityManager;
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.FileUtils;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class ZipContentParserTest extends TestAnyTask {
+public class ZipContentParserTest extends TestATask {
 
     @Override
     protected ProcessTask get() {
-        return new ZipContentParser("a.zip", new File("./"));
+        return new ZipContentParser("ZipContentParserTest.mod", new File(getAllowedFolder()+"/a.zip"));
+    }
+    /**
+     * Test of handle method, of class ZipContentParser.
+     */
+    @Test
+    public void testHandle() {
+        System.out.println("handle");
+        try {
+            EntityManager manager = new PersistenceProvider().get();
+            if(!manager.getTransaction().isActive()) {
+                manager.getTransaction().begin();
+            }
+            manager.persist(new Modification("ZipContentParserTest.mod",31));
+            manager.getTransaction().commit();
+            IOUtils.copy(getClass().getResourceAsStream("/test.zip"), FileUtils.openOutputStream(new File(getAllowedFolder()+"/a.zip")));
+            List <ProcessTask> result = get().handle(manager);
+            Assert.assertTrue(
+                "result is not of correct type",
+                result instanceof List<?>
+            );
+            Assert.assertEquals(
+                "Not enough follow-ups",
+                1,
+                result.size()
+            );
+        } catch(Exception ex) {
+            Assert.fail(ex.getMessage());
+        }
     }
 }

@@ -16,15 +16,51 @@
  */
 package de.idrinth.stellaris.modtools.process1datacollection;
 
-import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
+import de.idrinth.stellaris.modtools.abstract_cases.TestATask;
+import de.idrinth.stellaris.modtools.persistence.PersistenceProvider;
+import de.idrinth.stellaris.modtools.persistence.entity.Modification;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import java.io.File;
+import java.util.List;
+import javax.persistence.EntityManager;
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.FileUtils;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class FileSystemParserTest extends TestAnyTask {
+public class FileSystemParserTest extends TestATask {
 
     @Override
     protected ProcessTask get() {
-        return new FileSystemParser("m", new File("./"));
+        return new FileSystemParser("FileSystemParserTest.mod", getAllowedFolder());
     }
-
+    /**
+     * Test of handle method, of class FileSystemParser.
+     */
+    @Test
+    public void testHandle() {
+        System.out.println("handle");
+        try {
+            EntityManager manager = new PersistenceProvider().get();
+            if(!manager.getTransaction().isActive()) {
+                manager.getTransaction().begin();
+            }
+            manager.persist(new Modification("FileSystemParserTest.mod",32));
+            manager.getTransaction().commit();
+            new File(getAllowedFolder()+"/commons").mkdirs();
+            IOUtils.copy(getClass().getResourceAsStream("/test.txt"), FileUtils.openOutputStream(new File(getAllowedFolder()+"/commons/test.txt")));
+            List <ProcessTask> result = get().handle(manager);
+            Assert.assertTrue(
+                "result is not of correct type",
+                result instanceof List<?>
+            );
+            Assert.assertEquals(
+                "Not enough follow-ups",
+                1,
+                result.size()
+            );
+        } catch(Exception ex) {
+            Assert.fail(ex.getMessage());
+        }
+    }
 }

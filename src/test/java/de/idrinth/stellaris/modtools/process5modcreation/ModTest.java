@@ -16,13 +16,14 @@
  */
 package de.idrinth.stellaris.modtools.process5modcreation;
 
+import de.idrinth.stellaris.modtools.abstract_cases.FileBased;
 import de.idrinth.stellaris.modtools.filesystem.FileSystemLocation;
 import java.io.File;
 import java.io.IOException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class ModTest {
+public class ModTest extends FileBased {
     /**
      * Test of toString method, of class Mod.
      * @throws java.io.IOException
@@ -30,18 +31,17 @@ public class ModTest {
     @Test
     public void testToString() throws IOException {
         System.out.println("toString");
-        File target = new File("./ModTest");
         assertEquals(
             "Mod differs from expected content",
             "name = \"Mod\"\n" +
-                "path = \""+ target + "/file.zip\"\n" +
+                "path = \""+ getAllowedFolder() + "/file.zip\"\n" +
                 "dependencies = {\n" +
                 "}\n" +
                 "supported_version = \"1.0.*\"\n" +
                 "tags = {\n" +
                 "\t\"Merge\"\n" +
                 "}\n",
-            new Mod("file", "Mod", new ModDirFake(target)).toString()
+            new Mod("file", "Mod", new ModDirFake(getAllowedFolder())).toString()
         );
     }
 
@@ -52,13 +52,12 @@ public class ModTest {
     @Test
     public void testAddNameValue() throws IOException {
         System.out.println("addNameValue");
-        File target = new File("./ModTest");
-        Mod instance = new Mod("file", "Mod", new ModDirFake(target));
+        Mod instance = new Mod("file", "Mod", new ModDirFake(getAllowedFolder()));
         instance.addNameValue("MyMod");
         assertEquals(
             "Mod differs from expected content",
             "name = \"MyMod\"\n" +
-                "path = \""+ target + "/file.zip\"\n" +
+                "path = \""+ getAllowedFolder() + "/file.zip\"\n" +
                 "dependencies = {\n" +
                 "}\n" +
                 "supported_version = \"1.0.*\"\n" +
@@ -76,13 +75,12 @@ public class ModTest {
     @Test
     public void testAddVersionValue() throws IOException {
         System.out.println("addVersionValue");
-        File target = new File("./ModTest");
-        Mod instance = new Mod("file", "Mod", new ModDirFake(target));
+        Mod instance = new Mod("file", "Mod", new ModDirFake(getAllowedFolder()));
         instance.addVersionValue("3.0.0");
         assertEquals(
             "Mod differs from expected content",
             "name = \"Mod\"\n" +
-                "path = \""+ target + "/file.zip\"\n" +
+                "path = \""+ getAllowedFolder() + "/file.zip\"\n" +
                 "dependencies = {\n" +
                 "}\n" +
                 "supported_version = \"3.0.0\"\n" +
@@ -100,10 +98,9 @@ public class ModTest {
     @Test
     public void testGetPathValue() throws IOException {
         System.out.println("getPathValue");
-        File target = new File("./ModTest");
         assertEquals(
-           target +"/file",
-           new Mod("file", "Mod", new ModDirFake(target)).getPathValue()
+           getAllowedFolder() +"/file",
+           new Mod("file", "Mod", new ModDirFake(getAllowedFolder())).getPathValue()
         );
     }
 
@@ -114,13 +111,12 @@ public class ModTest {
     @Test
     public void testAddDepedencyValue() throws IOException {
         System.out.println("addDepedencyValue");
-        File target = new File("./ModTest");
-        Mod instance = new Mod("file", "Mod", new ModDirFake(target));
+        Mod instance = new Mod("file", "Mod", new ModDirFake(getAllowedFolder()));
         instance.addDepedencyValue("MyOtherMod");
         assertEquals(
             "Mod differs from expected content",
             "name = \"Mod\"\n" +
-                "path = \""+ target + "/file.zip\"\n" +
+                "path = \""+ getAllowedFolder() + "/file.zip\"\n" +
                 "dependencies = {\n" +
                 "\t\"MyOtherMod\"\n" +
                 "}\n" +
@@ -139,13 +135,12 @@ public class ModTest {
     @Test
     public void testAddTagValue() throws IOException {
         System.out.println("addTagValue");
-        File target = new File("./ModTest");
-        Mod instance = new Mod("file", "Mod", new ModDirFake(target));
+        Mod instance = new Mod("file", "Mod", new ModDirFake(getAllowedFolder()));
         instance.addTagValue("MyOtherMod");
         assertEquals(
             "Mod differs from expected content",
             "name = \"Mod\"\n" +
-                "path = \""+ target + "/file.zip\"\n" +
+                "path = \""+ getAllowedFolder() + "/file.zip\"\n" +
                 "dependencies = {\n" +
                 "}\n" +
                 "supported_version = \"1.0.*\"\n" +

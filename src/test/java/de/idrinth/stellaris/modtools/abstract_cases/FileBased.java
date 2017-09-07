@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Björn Büttner
+ * Copyright (C) 2017 Idrinth
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,13 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.process;
+package de.idrinth.stellaris.modtools.abstract_cases;
 
-import java.util.List;
-import javax.persistence.EntityManager;
+import java.io.File;
 
-public interface ProcessTask {
-
-    List<ProcessTask> handle(EntityManager manager) throws Exception;
-    String getIdentifier();
+abstract public class FileBased {
+    private File dir;
+    protected File getAllowedFolder() {
+        if(null == dir) {
+            dir = new File("./tests/"+this.getClass().getName());
+            dir.mkdirs();
+        }
+        return dir;
+    }
 }

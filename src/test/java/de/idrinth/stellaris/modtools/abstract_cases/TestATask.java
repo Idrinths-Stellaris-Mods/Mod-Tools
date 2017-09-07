@@ -20,7 +20,7 @@ import de.idrinth.stellaris.modtools.process.ProcessTask;
 import org.junit.Assert;
 import org.junit.Test;
 
-public abstract class TestATask {
+public abstract class TestATask extends FileBased {
     
     protected abstract ProcessTask get();
 

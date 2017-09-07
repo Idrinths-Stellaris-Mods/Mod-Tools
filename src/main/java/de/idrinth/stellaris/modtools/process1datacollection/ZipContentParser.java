@@ -51,7 +51,7 @@ class ZipContentParser extends Files {
     }
 
     @Override
-    public List<ProcessTask> handle(EntityManager manager) {
+    public List<ProcessTask> handle(EntityManager manager) throws Exception {
         if (!file.exists()) {
             return todo;
         }
@@ -63,8 +63,6 @@ class ZipContentParser extends Files {
                     System.out.println(ex.getLocalizedMessage());
                 }
             }
-        } catch (Exception e) {
-            System.err.println(e.getLocalizedMessage());
         }
         return todo;
     }

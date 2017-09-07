@@ -120,7 +120,7 @@ class RemoteModParser implements ProcessTask {
                 return Integer.parseInt(result, 10);
             }
         } catch (NumberFormatException e) {
-            System.out.println("failed matching number in link");
+            System.out.println("failed matching number in link: "+e.getMessage());
         }
         return -1;
     }

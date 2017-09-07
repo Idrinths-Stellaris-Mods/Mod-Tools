@@ -31,7 +31,7 @@ public class CreateModTest extends TestAnyTask {
         private final File directory;
 
         public ModDirFake() {
-            this(new File("./CreateModTest"));
+            this(getAllowedFolder());
         }
         public ModDirFake(File directory) {
             this.directory = directory;

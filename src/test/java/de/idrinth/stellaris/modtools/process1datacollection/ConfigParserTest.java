@@ -22,7 +22,6 @@ import de.idrinth.stellaris.modtools.persistence.PersistenceProvider;
 import de.idrinth.stellaris.modtools.persistence.entity.Modification;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.apache.commons.io.FileUtils;
@@ -33,14 +32,14 @@ public class ConfigParserTest extends TestATask {
 
     @Override
     protected ProcessTask get() {
-        return get(new File("./ConfigParserTest/cf0.mod"));
+        return get(new File(getAllowedFolder()+"/cf0.mod"));
     }
 
     protected ProcessTask get(File file) {
         return new ConfigParser(file, new ModDirFake());
     }
 
-    private void checkHandlePart(File file, String content, int results, String name, int id, String version) throws IOException {
+    private void checkHandlePart(File file, String content, int results, String name, int id, String version) throws Exception {
             EntityManager manager = new PersistenceProvider().get();
             file.getParentFile().mkdirs();
                 FileUtils.writeStringToFile(file, content, "utf-8");
@@ -82,26 +81,26 @@ public class ConfigParserTest extends TestATask {
         System.out.println("handle");
         try {
             // local folder
-            new File("./ConfigParserTest/local").mkdirs();
+            new File(getAllowedFolder()+"/local").mkdirs();
             checkHandlePart(
-                new File("./ConfigParserTest/cf.mod"),
-                    "name = \"Mod\"\npath = \"ConfigParserTest/local\"\ndependencies = {\n}\nsupported_version = \"1.0.*\"\ntags = {\n\t\"Merge\"\n}\n",
+                new File(getAllowedFolder()+"/cf.mod"),
+                    "name = \"Mod\"\npath = \""+getAllowedFolder()+"/local\"\ndependencies = {\n}\nsupported_version = \"1.0.*\"\ntags = {\n\t\"Merge\"\n}\n",
                     1,
                     "Mod",
                     0,
                     "1.0.*"
             );
             // remote zip
-            new File("./ConfigParserTest/remote.zip").createNewFile();
+            new File(getAllowedFolder()+"/remote.zip").createNewFile();
             checkHandlePart(
-                new File("./ConfigParserTest/cf2.mod"),
-                    "name = \"Mod2\"\narchive = \"ConfigParserTest/remote.zip\"\nremote_file_id = \"3210\"\ndependencies = {\n}\nsupported_version = \"1.9.*\"\ntags = {\n\t\"Merge\"\n}\n",
+                new File(getAllowedFolder()+"/cf2.mod"),
+                    "name = \"Mod2\"\narchive = \""+getAllowedFolder()+"/remote.zip\"\nremote_file_id = \"3210\"\ndependencies = {\n}\nsupported_version = \"1.9.*\"\ntags = {\n\t\"Merge\"\n}\n",
                     2,
                     "Mod2",
                     3210,
                     "1.9.*"
             );
-        } catch(IOException ex) {
+        } catch(Exception ex) {
             Assert.fail(ex.getMessage());
         }
     }
@@ -109,7 +108,7 @@ public class ConfigParserTest extends TestATask {
         private final File directory;
 
         public ModDirFake() {
-            this(new File("./CreateModTest"));
+            this(getAllowedFolder());
         }
         public ModDirFake(File directory) {
             this.directory = directory;
