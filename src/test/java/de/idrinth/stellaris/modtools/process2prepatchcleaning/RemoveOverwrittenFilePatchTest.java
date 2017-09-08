@@ -46,7 +46,7 @@ public class RemoveOverwrittenFilePatchTest extends TestATask {
             // creating data
             Modification mod1 = new Modification("",1);
             Modification mod2 = new Modification("",2);
-            Modification mod3 = new Modification("",2);
+            Modification mod3 = new Modification("",3);
             mod1.setName("Test 1");
             mod2.setName("Test 2");
             mod3.setName("Test 3");
@@ -56,20 +56,12 @@ public class RemoveOverwrittenFilePatchTest extends TestATask {
             mod2.getOverwrite().add(mod1);
             Original original = new Original("commons/test");
             manager.persist(original);
-            Patch patch1 = new Patch(mod1, original);
-            mod1.getPatches().add(patch1);
-            original.getPatches().add(patch1);
-            manager.persist(patch1);
-            Patch patch2 = new Patch(mod2, original);
-            mod2.getPatches().add(patch2);
-            original.getPatches().add(patch2);
-            manager.persist(patch2);
-            Patch patch3 = new Patch(mod3, original);
-            mod3.getPatches().add(patch3);
-            original.getPatches().add(patch3);
-            manager.persist(patch3);
+            manager.persist(new Patch(mod1, original));
+            manager.persist(new Patch(mod2, original));
+            manager.persist(new Patch(mod3, original));
             // storing data
             manager.getTransaction().commit();
+            manager.clear();
             //testing
             List<?> result = new RemoveOverwrittenFilePatch(original.getAid()).handle(manager);
             Assert.assertTrue(
@@ -83,7 +75,7 @@ public class RemoveOverwrittenFilePatchTest extends TestATask {
             );
             Assert.assertEquals(
                 "Patch wasn't removed correctly",
-                1,
+                2,
                 manager.find(Original.class, original.getAid()).getPatches().size()
             );
         } catch(Exception e) {

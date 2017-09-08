@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Idrinth
+ * Copyright (C) 2017 Björn Büttner
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,15 +40,9 @@ public class RemoveSingleUseFiles implements ProcessTask {
         if(original.getPatches().size()>1) {
             ll.add(new RemoveOverwrittenFilePatch(id));
         } else {
-            original.getPatches().stream().map((patch) -> {
-                patch.getMod().getPatches().remove(patch);
-                return patch;
-            }).map((patch) -> {
-                original.getPatches().remove(patch);
-                return patch;
-            }).forEachOrdered((patch) -> {
+            /*original.getPatches().stream().forEach((patch) -> {
                 manager.remove(patch);
-            });
+            });*/
             manager.remove(original);
         }
         manager.getTransaction().commit();

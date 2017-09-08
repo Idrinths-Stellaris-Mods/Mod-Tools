@@ -58,12 +58,12 @@ class RemoteModParser implements ProcessTask {
     }
 
     /**
-     * 0.1-10s of waiting
+     * 0.1-1s of waiting
      *
      * @return
      */
     private int getRandom() {
-        return (int) (Math.random() * 9900) + 100;
+        return (int) (Math.random() * 900) + 100;
     }
 
     private Document getDocument() throws IOException {

@@ -55,8 +55,8 @@ public class FileSystemParserTest extends TestATask {
                 result instanceof List<?>
             );
             Assert.assertEquals(
-                "Not enough follow-ups",
-                1,
+                "Unexpected follow-ups",
+                0,
                 result.size()
             );
         } catch(Exception ex) {

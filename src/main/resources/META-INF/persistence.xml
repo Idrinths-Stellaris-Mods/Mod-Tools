@@ -13,6 +13,7 @@
       <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
       <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
       <property name="hibernate.connection.provider_class" value="org.hibernate.c3p0.internal.C3P0ConnectionProvider"/>
+      <property name="hibernate.show_sql" value="true"/>
       <!-- H2-DB Specifics -->
       <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:smt:DB_CLOSE_DELAY=-1"/>
       <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>

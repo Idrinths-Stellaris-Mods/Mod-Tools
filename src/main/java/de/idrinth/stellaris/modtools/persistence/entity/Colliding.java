@@ -16,9 +16,7 @@
  */
 package de.idrinth.stellaris.modtools.persistence.entity;
 
-import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,7 +26,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
-public class Colliding implements Serializable {
+public class Colliding extends EntityCompareAndHash {
 
     @Id
     @GeneratedValue
@@ -45,10 +43,12 @@ public class Colliding implements Serializable {
         this.modification = modification;
     }
 
+    @Override
     public void setAid(long aid) {
         this.aid = aid;
     }
 
+    @Override
     public long getAid() {
         return aid;
     }
@@ -67,23 +67,6 @@ public class Colliding implements Serializable {
 
     public void setModifications(Set<Modification> modifications) {
         this.modifications = modifications;
-    }
-
-    @Override
-    public int hashCode() {
-        return 67 * 3 + Objects.hashCode(this.modification);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        final Colliding other = (Colliding) obj;
-        return Objects.equals(this.modification, other.modification);
     }
 
 }

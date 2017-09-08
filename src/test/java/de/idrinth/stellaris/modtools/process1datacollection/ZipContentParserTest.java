@@ -21,7 +21,6 @@ import de.idrinth.stellaris.modtools.persistence.PersistenceProvider;
 import de.idrinth.stellaris.modtools.persistence.entity.Modification;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.apache.commons.compress.utils.IOUtils;
@@ -55,8 +54,8 @@ public class ZipContentParserTest extends TestATask {
                 result instanceof List<?>
             );
             Assert.assertEquals(
-                "Not enough follow-ups",
-                1,
+                "Unexpected follow-ups",
+                0,
                 result.size()
             );
         } catch(Exception ex) {

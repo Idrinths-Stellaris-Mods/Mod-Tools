@@ -16,8 +16,6 @@
  */
 package de.idrinth.stellaris.modtools.persistence.entity;
 
-import java.io.Serializable;
-import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -36,7 +34,7 @@ import org.hibernate.annotations.CascadeType;
     )
 })
 @Entity
-public class Patch implements Serializable {
+public class Patch extends EntityCompareAndHash {
 
     @Id
     @GeneratedValue
@@ -53,14 +51,16 @@ public class Patch implements Serializable {
     }
 
     public Patch(Modification mod, Original file) {
-        this.mod = mod;
-        this.file = file;
+        setMod(mod);
+        setFile(file);
     }
 
+    @Override
     public long getAid() {
         return aid;
     }
 
+    @Override
     public void setAid(long aid) {
         this.aid = aid;
     }
@@ -69,7 +69,8 @@ public class Patch implements Serializable {
         return mod;
     }
 
-    public void setMod(Modification mod) {
+    public final void setMod(Modification mod) {
+        mod.getPatches().add(this);
         this.mod = mod;
     }
 
@@ -77,7 +78,8 @@ public class Patch implements Serializable {
         return file;
     }
 
-    public void setFile(Original file) {
+    public final void setFile(Original file) {
+        file.getPatches().add(this);
         this.file = file;
     }
 
@@ -91,22 +93,4 @@ public class Patch implements Serializable {
         }
         this.diff.setText(diff);
     }
-
-    @Override
-    public int hashCode() {
-        return 2023 + 17 * Objects.hashCode(this.mod) + Objects.hashCode(this.file);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        final Patch other = (Patch) obj;
-        return this.getAid() == other.getAid() || (Objects.equals(this.mod, other.mod) && Objects.equals(this.file, other.file));
-    }
-
 }

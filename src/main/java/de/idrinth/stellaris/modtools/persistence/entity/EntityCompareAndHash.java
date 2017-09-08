@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Björn Büttner
+ * Copyright (C) 2017 Idrinth
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,48 +16,29 @@
  */
 package de.idrinth.stellaris.modtools.persistence.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import java.util.Objects;
 
-@Entity
-class LazyText extends EntityCompareAndHash {
-
-    @Id
-    @GeneratedValue
-    private long aid;
-    @Column(columnDefinition = "LONGTEXT")
-    private String text = "";
-
-    public LazyText() {
-    }
-
-    public LazyText(String text) {
-        this.text = text;
-    }
-
-    @Override
-    public void setAid(long aid) {
-        this.aid = aid;
-    }
-
-    @Override
-    public long getAid() {
-        return aid;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
+abstract public class EntityCompareAndHash implements BaseEntity {
 
     @Override
     public String toString() {
-        return text;
+        return this.getClass().getName()+"@"+getAid();
     }
 
+    @Override
+    public int hashCode() {
+        return this.getClass().getName().hashCode() * 7 + (int) (this.getAid() ^ (this.getAid() >>> 32));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final BaseEntity other = (BaseEntity) obj;
+        return Objects.equals(this.getAid(), other.getAid());
+    }
 }

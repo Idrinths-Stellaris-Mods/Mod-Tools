@@ -17,12 +17,12 @@
 package de.idrinth.stellaris.modtools.persistence.entity;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.NamedQueries;
@@ -48,7 +48,7 @@ import org.hibernate.annotations.CascadeType;
     )
 })
 @Entity
-public class Modification {
+public class Modification extends EntityCompareAndHash {
 
     @Id
     @GeneratedValue
@@ -59,10 +59,11 @@ public class Modification {
     protected String name;
     protected String version;
     @OneToOne(fetch = FetchType.LAZY)
+    @Cascade({CascadeType.DELETE,CascadeType.PERSIST})
     private LazyText description;
     //connection
-    @OneToMany(fetch = FetchType.LAZY)
-    protected Set<Patch> files = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="mod")
+    protected Set<Patch> patches = new HashSet<>();
     @ManyToMany(fetch = FetchType.LAZY)
     protected Set<Modification> overwrite = new HashSet<>();
     @OneToOne(fetch = FetchType.LAZY)
@@ -77,20 +78,22 @@ public class Modification {
         this.id = id;
     }
 
+    @Override
     public long getAid() {
         return aid;
     }
 
+    @Override
     public void setAid(long aid) {
         this.aid = aid;
     }
 
     public Set<Patch> getFiles() {
-        return files;
+        return patches;
     }
 
     public void setFiles(Set<Patch> files) {
-        this.files = files;
+        this.patches = files;
     }
 
     public Colliding getCollides() {
@@ -142,36 +145,24 @@ public class Modification {
     }
 
     public String getDescription() {
+        if(null == description) {
+            description = new LazyText();
+        }
         return description.getText();
     }
 
     public void setDescription(String description) {
+        if(null == this.description) {
+            this.description = new LazyText();
+        }
         this.description.setText(description);
     }
 
     public Set<Patch> getPatches() {
-        return files;
+        return patches;
     }
 
     public void setPatches(Set<Patch> files) {
-        this.files = files;
+        this.patches = files;
     }
-
-    @Override
-    public int hashCode() {
-        return 18605 + 61 * Objects.hashCode(this.configPath) + this.id;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        final Modification other = (Modification) obj;
-        return this.id == other.id && Objects.equals(this.configPath, other.configPath);
-    }
-
 }

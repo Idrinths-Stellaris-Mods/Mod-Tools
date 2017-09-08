@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Björn Büttner
+ * Copyright (C) 2017 Idrinth
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,17 +14,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.abstract_cases;
+package de.idrinth.stellaris.modtools.persistence.entity;
 
-import java.io.File;
+import de.idrinth.stellaris.modtools.abstract_cases.TestAnyEntity;
 
-abstract public class FileBased {
-    private File dir;
-    protected File getAllowedFolder() {
-        if(null == dir) {
-            dir = new File("./tests/"+this.getClass().getName());
-            dir.mkdirs();
-        }
-        return dir;
+public class EntityCompareAndHashTest extends TestAnyEntity {
+
+    @Override
+    protected BaseEntity get() {
+        return new BaseEntityImpl();
     }
+
+    public class BaseEntityImpl extends EntityCompareAndHash {
+        private long aid;
+        @Override
+        public long getAid() {
+            return aid;
+        }
+
+        @Override
+        public void setAid(long aid) {
+            this.aid = aid;
+        }
+    }
+    
 }

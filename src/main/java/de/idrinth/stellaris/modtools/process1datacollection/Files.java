@@ -17,10 +17,12 @@
 package de.idrinth.stellaris.modtools.process1datacollection;
 
 import de.idrinth.stellaris.modtools.persistence.entity.Modification;
+import de.idrinth.stellaris.modtools.persistence.entity.Original;
 import de.idrinth.stellaris.modtools.persistence.entity.Patch;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import java.util.ArrayList;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 abstract class Files implements ProcessTask {
 
@@ -44,10 +46,18 @@ abstract class Files implements ProcessTask {
         Modification mod = (Modification) manager.createNamedQuery("modifications.config", Modification.class)
                 .setParameter("configPath", modConfigName)
                 .getSingleResult();
-        Patch patch = new Patch();
+        Original file;
+        try {
+            file = (Original) manager.createNamedQuery("original.path", Original.class)
+                    .setParameter("path", fPath)
+                    .getSingleResult();
+        } catch (NoResultException ex) {
+            file = new Original(fPath);
+            manager.persist(file);
+        }
+        Patch patch = new Patch(mod, file);
         patch.setDiff(content);
         manager.persist(patch);
-        todo.add(new PatchConnector(patch.getAid(), mod.getAid(), fPath.replace("\\", "/")));
         manager.getTransaction().commit();
         System.out.println(fPath + " was added");
     }

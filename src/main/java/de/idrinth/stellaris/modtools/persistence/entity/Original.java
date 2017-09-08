@@ -17,7 +17,6 @@
 package de.idrinth.stellaris.modtools.persistence.entity;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,6 +26,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 @NamedQueries({
     @NamedQuery(
@@ -40,17 +41,19 @@ import javax.persistence.OneToOne;
     )
 })
 @Entity
-public class Original {
+public class Original extends EntityCompareAndHash {
 
     @Id
     @GeneratedValue
     private long aid;
     //original
     @OneToOne(fetch = FetchType.LAZY)
+    @Cascade({CascadeType.DELETE,CascadeType.PERSIST})
     private LazyText content;
     protected String relativePath;
     //connection
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="file")
+    @Cascade({CascadeType.DELETE})
     protected Set<Patch> patches = new HashSet<>();
 
     public Original() {
@@ -60,19 +63,27 @@ public class Original {
         this.relativePath = relativePath;
     }
 
+    @Override
     public long getAid() {
         return aid;
     }
 
+    @Override
     public void setAid(long aid) {
         this.aid = aid;
     }
 
     public String getContent() {
+        if(null == content) {
+            content = new LazyText();
+        }
         return content.getText();
     }
 
     public void setContent(String content) {
+        if(null == this.content) {
+            this.content = new LazyText();
+        }
         this.content.setText(content);
     }
 
@@ -91,22 +102,4 @@ public class Original {
     public void setPatches(Set<Patch> patches) {
         this.patches = patches;
     }
-
-    @Override
-    public int hashCode() {
-        return 177 + Objects.hashCode(this.relativePath);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        final Original other = (Original) obj;
-        return Objects.equals(this.relativePath, other.relativePath);
-    }
-
 }

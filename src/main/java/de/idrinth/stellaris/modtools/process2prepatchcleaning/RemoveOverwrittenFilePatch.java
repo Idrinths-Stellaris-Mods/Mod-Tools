@@ -18,6 +18,7 @@ package de.idrinth.stellaris.modtools.process2prepatchcleaning;
 
 import de.idrinth.stellaris.modtools.persistence.entity.Colliding;
 import de.idrinth.stellaris.modtools.persistence.entity.Original;
+import de.idrinth.stellaris.modtools.persistence.entity.Patch;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,13 +45,21 @@ class RemoveOverwrittenFilePatch implements ProcessTask {
                 ignores.add(mod.getAid());
             });
         });
-        original.getPatches().forEach((patch) -> {
-            if (ignores.contains(patch.getMod().getAid())) {
-                patch.getMod().getPatches().remove(patch);
-                original.getPatches().remove(patch);
-                manager.remove(patch);
-                modified = true;
-            }
+        ArrayList<Patch> toRemove = new ArrayList<>();
+        original.getPatches().stream().filter((patch) -> (ignores.contains(patch.getMod().getAid()))).map((patch) -> {
+            toRemove.add(patch);
+            return patch;
+        }).forEachOrdered((_item) -> {
+            modified = true;
+        });
+        toRemove.stream().map((patch) -> {
+            patch.getMod().getPatches().remove(patch);
+            return patch;
+        }).map((patch) -> {
+            original.getPatches().remove(patch);
+            return patch;
+        }).forEachOrdered((patch) -> {
+            manager.remove(patch);
         });
         original.getPatches().forEach((patch1) -> {
             original.getPatches().forEach((patch2) -> {

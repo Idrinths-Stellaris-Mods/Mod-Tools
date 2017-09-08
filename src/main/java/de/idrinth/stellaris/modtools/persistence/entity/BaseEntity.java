@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Björn Büttner
+ * Copyright (C) 2017 Idrinth
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,16 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.process1datacollection;
+package de.idrinth.stellaris.modtools.persistence.entity;
 
-import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
-import de.idrinth.stellaris.modtools.process.ProcessTask;
+import java.io.Serializable;
 
-public class PatchConnectorTest extends TestAnyTask {
-
+public interface BaseEntity extends Serializable {
+    public long getAid();
+    public void setAid(long aid);
     @Override
-    protected ProcessTask get() {
-        return new PatchConnector(1, 1, "mm");
-    }
-
+    public int hashCode();
+    @Override
+    public boolean equals(Object obj);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Idrinth
+ * Copyright (C) 2017 Björn Büttner
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,15 +44,12 @@ public class RemoveSingleUseFilesTest extends TestATask {
         try {
             manager.getTransaction().begin();
             // creating data
-            Modification mod1 = new Modification("",1);
-            mod1.setName("Test 1");
-            manager.persist(mod1);
+            Modification mod = new Modification("",1);
+            mod.setName("Test 1");
+            manager.persist(mod);
             Original original = new Original("commons/test");
             manager.persist(original);
-            Patch patch1 = new Patch(mod1, original);
-            mod1.getPatches().add(patch1);
-            original.getPatches().add(patch1);
-            manager.persist(patch1);
+            manager.persist(new Patch(mod, original));
             // storing data
             manager.getTransaction().commit();
             //testing
@@ -67,7 +64,7 @@ public class RemoveSingleUseFilesTest extends TestATask {
                 result.size()
             );
             Assert.assertNull(
-                "Patch wasn't removed correctly",
+                "Patch+File wasn't removed correctly",
                 manager.find(Original.class, original.getAid())
             );
         } catch(Exception e) {

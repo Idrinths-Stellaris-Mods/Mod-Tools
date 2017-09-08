@@ -16,9 +16,7 @@
  */
 package de.idrinth.stellaris.modtools.persistence.entity;
 
-import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,6 +26,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 @NamedQueries({
     @NamedQuery(
@@ -41,7 +41,7 @@ import javax.persistence.OneToOne;
     )
 })
 @Entity
-public class PatchedFile implements Serializable {
+public class PatchedFile extends EntityCompareAndHash {
 
     @Id
     @GeneratedValue
@@ -49,6 +49,7 @@ public class PatchedFile implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     private Original original;
     @OneToOne(fetch = FetchType.LAZY)
+    @Cascade({CascadeType.DELETE,CascadeType.PERSIST})
     private LazyText content;
     private int importance;
     @ManyToMany(fetch = FetchType.LAZY)
@@ -56,10 +57,12 @@ public class PatchedFile implements Serializable {
     private boolean patchable;
     private boolean patchableExt;
 
+    @Override
     public long getAid() {
         return aid;
     }
 
+    @Override
     public void setAid(long aid) {
         this.aid = aid;
     }
@@ -96,10 +99,16 @@ public class PatchedFile implements Serializable {
     }
 
     public String getContent() {
+        if(null == content) {
+            content = new LazyText();
+        }
         return content.getText();
     }
 
     public void setContent(String content) {
+        if(null == this.content) {
+            this.content = new LazyText();
+        }
         this.content.setText(content);
     }
 
@@ -117,23 +126,6 @@ public class PatchedFile implements Serializable {
 
     public void setImportance(int importance) {
         this.importance = importance;
-    }
-
-    @Override
-    public int hashCode() {
-        return 83 * 7 + Objects.hashCode(this.original);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        final PatchedFile other = (PatchedFile) obj;
-        return Objects.equals(this.original, other.original);
     }
 
 }
