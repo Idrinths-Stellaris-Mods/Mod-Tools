@@ -37,18 +37,18 @@ public class CollidingTest extends TestAnyEntity {
     }
 
     /**
-     * Test of setModifications method, of class Colliding.
+     * Test of setModifications+getModifications method, of class Colliding.
      */
     @Test
-    public void testSetModifications() {
+    public void testModifications() {
         System.out.println("modifications");
         Colliding instance = (Colliding) get();
         Set<Modification> set = new HashSet<>();
         set.add(new Modification());
-        junit.framework.Assert.assertNotNull("there was no modification set pre-set", instance.getModifications());
-        junit.framework.Assert.assertFalse("modification sets were equal?", set.equals(instance.getModifications()));
+        Assert.assertNotNull("there was no modification set pre-set", instance.getModifications());
+        Assert.assertFalse("modification sets were equal?", set.equals(instance.getModifications()));
         instance.setModifications(set);
-        junit.framework.Assert.assertTrue("modification sets were inequal", set.equals(instance.getModifications()));
+        Assert.assertTrue("modification sets were inequal", set.equals(instance.getModifications()));
     }
 
     @Override
