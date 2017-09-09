@@ -17,6 +17,7 @@
 package de.idrinth.stellaris.modtools.process1datacollection;
 
 import de.idrinth.stellaris.modtools.MainApp;
+import de.idrinth.stellaris.modtools.persistence.entity.Colliding;
 import de.idrinth.stellaris.modtools.persistence.entity.Modification;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
 import java.io.IOException;
@@ -30,6 +31,7 @@ import javax.persistence.EntityManager;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import javax.persistence.NoResultException;
 
 class RemoteModParser implements ProcessTask {
 
@@ -57,18 +59,9 @@ class RemoteModParser implements ProcessTask {
         return work.html().replaceAll("\\s{2,}", " ");
     }
 
-    /**
-     * 0.1-1s of waiting
-     *
-     * @return
-     */
-    private int getRandom() {
-        return (int) (Math.random() * 900) + 100;
-    }
-
-    private Document getDocument() throws IOException {
+    protected Document getDocument() throws IOException {
         try {
-            Thread.sleep(getRandom());
+            Thread.sleep((int) (Math.random() * 900) + 100);
         } catch (InterruptedException ex) {
             Logger.getLogger(RemoteModParser.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -96,13 +89,8 @@ class RemoteModParser implements ProcessTask {
                     if (link.hasAttr("href")) {
                         int lId = match(reg.matcher(link.attr("href")));
                         if (lId > 0) {
-                            Modification lMod = (Modification) manager.createNamedQuery("modifications.id", Modification.class)
-                                    .setParameter("id", lId)
-                                    .getSingleResult();
-                            if (null == lMod) {
-                                todo.add(new RemoteModParser(lId));
-                            }
-                            mod.getOverwrite().add(lMod);
+                            todo.add(new RemoteModParser(lId));
+                            mod.getOverwrite().add(getOrCreateModForId(lId, manager));
                         }
                     }
                 }
@@ -135,19 +123,26 @@ class RemoteModParser implements ProcessTask {
         if (!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }
-        Modification mod = (Modification) manager.createNamedQuery("modifications.id", Modification.class)
-                .setParameter("id", id)
-                .getSingleResult();
-        if (null == mod) {
-            System.out.println("Creating new mod for remote id " + id);
-            mod = new Modification("", id);
-            mod.getCollides().setModification(mod);
-            manager.persist(mod);
-        }
+        Modification mod = getOrCreateModForId(id, manager);
         if (null == mod.getDescription() || "".equals(mod.getDescription())) {//not already processed
             fill(mod, manager);
         }
         manager.getTransaction().commit();
         return todo;
+    }
+    private Modification getOrCreateModForId(int mid, EntityManager manager) {
+        Modification mod;
+        try {
+            mod = (Modification) manager.createNamedQuery("modifications.id", Modification.class)
+                .setParameter("id", mid)
+                .getSingleResult();
+        } catch(NoResultException ex) {
+            System.out.println(ex.getMessage());
+            System.out.println("Creating new mod for remote id " + mid);
+            mod = new Modification("", mid);
+            mod.setCollides(new Colliding(mod));
+            manager.persist(mod);
+        }
+        return mod;
     }
 }

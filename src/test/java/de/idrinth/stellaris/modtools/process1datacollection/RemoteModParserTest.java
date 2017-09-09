@@ -16,13 +16,73 @@
  */
 package de.idrinth.stellaris.modtools.process1datacollection;
 
-import de.idrinth.stellaris.modtools.abstract_cases.TestAnyTask;
+import de.idrinth.stellaris.modtools.abstract_cases.TestATask;
+import de.idrinth.stellaris.modtools.persistence.PersistenceProvider;
+import de.idrinth.stellaris.modtools.persistence.entity.Modification;
 import de.idrinth.stellaris.modtools.process.ProcessTask;
+import java.io.IOException;
+import java.util.List;
+import javax.persistence.EntityManager;
+import org.apache.commons.io.IOUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class RemoteModParserTest extends TestAnyTask {
+public class RemoteModParserTest extends TestATask {
 
     @Override
     protected ProcessTask get() {
-        return new RemoteModParser(1);
+        return new NoRemoteModParser();
+    }
+    /**
+     * Test of handle method, of class RemoteModParserTest.
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testHandle() throws Exception {
+        System.out.println("handle");
+        EntityManager manager = new PersistenceProvider().get();
+        List<ProcessTask> result = get().handle(manager);
+        Assert.assertEquals(
+            "handle does not return correct number of items",
+            2,
+            result.size()
+        );
+        Assert.assertEquals(
+            "wrong amount of mods created",
+            1,
+            manager.createNamedQuery("modifications.id", Modification.class)
+                .setParameter("id", 123)
+                .getResultList()
+                .size()
+        );
+        Modification mod = manager.createNamedQuery("modifications.id", Modification.class).setParameter("id", 123).getSingleResult();
+        Assert.assertEquals(
+            "Title was not added correctly",
+            "!Merge 'Combat Balancing - Naked Corvette Prevention' + 'Ethics, Civics and Traditions Rebuild'",
+            mod.getName()
+        );
+        Assert.assertTrue(
+           "Description was not added",
+           mod.getDescription().length() > 0
+        );
+        Assert.assertEquals(
+           "Not all overwrites added",
+           2,
+           mod.getOverwrite().size()
+        );
+    }
+    private class NoRemoteModParser extends RemoteModParser {
+        public NoRemoteModParser() {
+            super(123);
+        }
+
+        @Override
+        protected Document getDocument() throws IOException {
+            return Jsoup.parse(
+                IOUtils.toString(getClass().getResourceAsStream("/steam-mod-website.html"), "utf-8")
+            );
+        }
     }
 }

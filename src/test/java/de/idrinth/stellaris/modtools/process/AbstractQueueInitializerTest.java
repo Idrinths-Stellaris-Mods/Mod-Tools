@@ -17,7 +17,7 @@
 package de.idrinth.stellaris.modtools.process;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.Assert;
 
 public class AbstractQueueInitializerTest {
     /**
@@ -27,7 +27,7 @@ public class AbstractQueueInitializerTest {
     public void testPoll() {
         System.out.println("poll");
         DataInitializer instance = new AbstractQueueInitializerImpl();
-        assertEquals(null, instance.poll());
+        Assert.assertEquals(null, instance.poll());
     }
 
     /**
@@ -37,7 +37,7 @@ public class AbstractQueueInitializerTest {
     public void testHasNext() {
         System.out.println("hasNext");
         DataInitializer instance = new AbstractQueueInitializerImpl();
-        assertEquals(false, instance.hasNext());
+        Assert.assertEquals(false, instance.hasNext());
     }
 
     /**
@@ -47,7 +47,7 @@ public class AbstractQueueInitializerTest {
     public void testGetQueueSize() {
         System.out.println("getQueueSize");
         DataInitializer instance = new AbstractQueueInitializerImpl();
-        assertEquals(20, instance.getQueueSize());
+        Assert.assertEquals(20, instance.getQueueSize());
     }
 
     /**
@@ -57,11 +57,11 @@ public class AbstractQueueInitializerTest {
     public void testInitOnce() {
         System.out.println("getQueueSize");
         AbstractQueueInitializerImpl instance = new AbstractQueueInitializerImpl();
-        assertEquals(0, instance.initCalledCount);
+        Assert.assertEquals(0, instance.initCalledCount);
         instance.hasNext();
-        assertEquals(1, instance.initCalledCount);
+        Assert.assertEquals(1, instance.initCalledCount);
         instance.hasNext();
-        assertEquals(1, instance.initCalledCount);
+        Assert.assertEquals(1, instance.initCalledCount);
     }
 
     public class AbstractQueueInitializerImpl extends AbstractQueueInitializer {

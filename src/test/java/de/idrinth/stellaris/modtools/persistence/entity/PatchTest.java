@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Idrinth
+ * Copyright (C) 2017 Björn Büttner
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@ package de.idrinth.stellaris.modtools.persistence.entity;
 import de.idrinth.stellaris.modtools.abstract_cases.TestAnyEntity;
 import junit.framework.Assert;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class PatchTest extends TestAnyEntity {
 
@@ -32,7 +31,7 @@ public class PatchTest extends TestAnyEntity {
         Patch instance = new Patch();
         Modification mod = new Modification("abc",123);
         instance.setMod(mod);
-        org.junit.Assert.assertTrue("Mod couldn't be set and retrieved correctly",mod.equals(instance.getMod()));
+        Assert.assertTrue("Mod couldn't be set and retrieved correctly",mod.equals(instance.getMod()));
     }
 
     /**
@@ -56,9 +55,9 @@ public class PatchTest extends TestAnyEntity {
         System.out.println("diff");
         Patch instance = new Patch();
         instance.setDiff("test 1");
-        assertEquals("Content couldn't be set", "test 1" ,instance.getDiff());
+        Assert.assertEquals("Content couldn't be set", "test 1" ,instance.getDiff());
         instance.setDiff("test 12");
-        assertEquals("Content couldn't be updated", "test 12" ,instance.getDiff());
+        Assert.assertEquals("Content couldn't be updated", "test 12" ,instance.getDiff());
     }
 
     @Override

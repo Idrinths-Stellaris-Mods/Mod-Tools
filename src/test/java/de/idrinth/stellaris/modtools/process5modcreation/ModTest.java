@@ -21,7 +21,7 @@ import de.idrinth.stellaris.modtools.filesystem.FileSystemLocation;
 import java.io.File;
 import java.io.IOException;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.Assert;
 
 public class ModTest extends FileBased {
     /**
@@ -31,7 +31,7 @@ public class ModTest extends FileBased {
     @Test
     public void testToString() throws IOException {
         System.out.println("toString");
-        assertEquals(
+        Assert.assertEquals(
             "Mod differs from expected content",
             "name = \"Mod\"\n" +
                 "path = \""+ getAllowedFolder() + "/file.zip\"\n" +
@@ -54,7 +54,7 @@ public class ModTest extends FileBased {
         System.out.println("addNameValue");
         Mod instance = new Mod("file", "Mod", new ModDirFake(getAllowedFolder()));
         instance.addNameValue("MyMod");
-        assertEquals(
+        Assert.assertEquals(
             "Mod differs from expected content",
             "name = \"MyMod\"\n" +
                 "path = \""+ getAllowedFolder() + "/file.zip\"\n" +
@@ -77,7 +77,7 @@ public class ModTest extends FileBased {
         System.out.println("addVersionValue");
         Mod instance = new Mod("file", "Mod", new ModDirFake(getAllowedFolder()));
         instance.addVersionValue("3.0.0");
-        assertEquals(
+        Assert.assertEquals(
             "Mod differs from expected content",
             "name = \"Mod\"\n" +
                 "path = \""+ getAllowedFolder() + "/file.zip\"\n" +
@@ -98,7 +98,7 @@ public class ModTest extends FileBased {
     @Test
     public void testGetPathValue() throws IOException {
         System.out.println("getPathValue");
-        assertEquals(
+        Assert.assertEquals(
            getAllowedFolder() +"/file",
            new Mod("file", "Mod", new ModDirFake(getAllowedFolder())).getPathValue()
         );
@@ -113,7 +113,7 @@ public class ModTest extends FileBased {
         System.out.println("addDepedencyValue");
         Mod instance = new Mod("file", "Mod", new ModDirFake(getAllowedFolder()));
         instance.addDepedencyValue("MyOtherMod");
-        assertEquals(
+        Assert.assertEquals(
             "Mod differs from expected content",
             "name = \"Mod\"\n" +
                 "path = \""+ getAllowedFolder() + "/file.zip\"\n" +
@@ -137,7 +137,7 @@ public class ModTest extends FileBased {
         System.out.println("addTagValue");
         Mod instance = new Mod("file", "Mod", new ModDirFake(getAllowedFolder()));
         instance.addTagValue("MyOtherMod");
-        assertEquals(
+        Assert.assertEquals(
             "Mod differs from expected content",
             "name = \"Mod\"\n" +
                 "path = \""+ getAllowedFolder() + "/file.zip\"\n" +

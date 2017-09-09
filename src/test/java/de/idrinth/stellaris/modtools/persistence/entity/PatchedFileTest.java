@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Idrinth
+ * Copyright (C) 2017 Björn Büttner
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.Set;
 import junit.framework.Assert;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class PatchedFileTest extends TestAnyEntity {
     /**
@@ -71,9 +70,9 @@ public class PatchedFileTest extends TestAnyEntity {
         System.out.println("content");
         PatchedFile instance = new PatchedFile();
         instance.setContent("test 1");
-        assertEquals("Content couldn't be set", "test 1" ,instance.getContent());
+        Assert.assertEquals("Content couldn't be set", "test 1" ,instance.getContent());
         instance.setContent("test 12");
-        assertEquals("Content couldn't be updated", "test 12" ,instance.getContent());
+        Assert.assertEquals("Content couldn't be updated", "test 12" ,instance.getContent());
     }
 
     /**
@@ -99,9 +98,9 @@ public class PatchedFileTest extends TestAnyEntity {
         System.out.println("importance");
         PatchedFile instance = new PatchedFile();
         instance.setImportance(1);
-        assertEquals("Importance couldn't be set", 1, instance.getImportance());
+        Assert.assertEquals("Importance couldn't be set", 1, instance.getImportance());
         instance.setImportance(2);
-        assertEquals("Importance couldn't be overwritten", 2, instance.getImportance());
+        Assert.assertEquals("Importance couldn't be overwritten", 2, instance.getImportance());
     }
 
     @Override

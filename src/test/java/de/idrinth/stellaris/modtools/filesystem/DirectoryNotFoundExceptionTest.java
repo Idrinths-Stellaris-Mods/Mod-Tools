@@ -14,24 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.idrinth.stellaris.modtools.process5modcreation;
+package de.idrinth.stellaris.modtools.filesystem;
 
-import java.io.IOException;
-import org.apache.commons.io.IOUtils;
-import org.junit.Test;
 import org.junit.Assert;
+import org.junit.Test;
 
-public class StreamFromTextTest {
+public class DirectoryNotFoundExceptionTest {
 
-    /**
-     * Test of get method, of class StreamFromText.
-     * @throws java.io.IOException
-     */
     @Test
-    public void testGet() throws IOException {
-        System.out.println("get");
-        StreamFromText instance = new StreamFromText("This is an example");
-        Assert.assertEquals("This is an example", IOUtils.toString(instance.get(),"utf-8"));
+    public void testInitialisation() {
+        Exception cause = new Exception("test");
+        DirectoryNotFoundException ex = new DirectoryNotFoundException("example-text",cause);
+        Assert.assertEquals("Message was not stored correctly", "example-text", ex.getMessage());
+        Assert.assertEquals("Cause was not stored correctly", cause, ex.getCause());
     }
     
 }

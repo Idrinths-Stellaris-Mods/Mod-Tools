@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Idrinth
+ * Copyright (C) 2017 Björn Büttner
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class ModificationTest extends TestAnyEntity {
 
@@ -113,9 +112,9 @@ public class ModificationTest extends TestAnyEntity {
         System.out.println("description");
         Modification instance = new Modification();
         instance.setDescription("test 1");
-        assertEquals("Description couldn't be set", "test 1" ,instance.getDescription());
+        Assert.assertEquals("Description couldn't be set", "test 1" ,instance.getDescription());
         instance.setDescription("test 12");
-        assertEquals("Description couldn't be updated", "test 12" ,instance.getDescription());
+        Assert.assertEquals("Description couldn't be updated", "test 12" ,instance.getDescription());
     }
 
     /**

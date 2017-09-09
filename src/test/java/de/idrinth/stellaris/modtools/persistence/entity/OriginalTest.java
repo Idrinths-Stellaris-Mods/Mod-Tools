@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Idrinth
+ * Copyright (C) 2017 Björn Büttner
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.Set;
 import junit.framework.Assert;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class OriginalTest extends TestAnyEntity {
 
@@ -33,9 +32,9 @@ public class OriginalTest extends TestAnyEntity {
         System.out.println("content");
         Original instance = new Original();
         instance.setContent("test 1");
-        assertEquals("Content couldn't be set", "test 1" ,instance.getContent());
+        Assert.assertEquals("Content couldn't be set", "test 1" ,instance.getContent());
         instance.setContent("test 12");
-        assertEquals("Content couldn't be updated", "test 12" ,instance.getContent());
+        Assert.assertEquals("Content couldn't be updated", "test 12" ,instance.getContent());
     }
 
     /**
@@ -59,10 +58,10 @@ public class OriginalTest extends TestAnyEntity {
         Original instance = new Original();
         Set<Patch> set = new HashSet<>();
         set.add(new Patch());
-        junit.framework.Assert.assertNotNull("there was no patch set pre-set", instance.getPatches());
-        junit.framework.Assert.assertFalse("patch sets were equal?", set.equals(instance.getPatches()));
+        Assert.assertNotNull("there was no patch set pre-set", instance.getPatches());
+        Assert.assertFalse("patch sets were equal?", set.equals(instance.getPatches()));
         instance.setPatches(set);
-        junit.framework.Assert.assertTrue("patch sets were inequal", set.equals(instance.getPatches()));
+        Assert.assertTrue("patch sets were inequal", set.equals(instance.getPatches()));
     }
 
     @Override
