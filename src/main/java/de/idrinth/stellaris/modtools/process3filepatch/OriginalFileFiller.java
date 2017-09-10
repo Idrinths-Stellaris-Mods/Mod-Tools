@@ -47,11 +47,13 @@ class OriginalFileFiller implements ProcessTask {
                     + "steamapps/common/Stellaris/"//at least ubutu's steam uses lower case
                     + path
             );
-            return file.exists() && file.canRead() ? FileUtils.readFileToString(file, "utf-8") : "";
+            if(file.exists() && file.canRead()){
+                return FileUtils.readFileToString(file, "utf-8");
+            }
         } catch (IOException exception) {
             System.out.println(exception.getLocalizedMessage());
-            return "-not readable-";
         }
+        return "-not readable-";
     }
 
     @Override
@@ -59,13 +61,15 @@ class OriginalFileFiller implements ProcessTask {
         if (!manager.getTransaction().isActive()) {
             manager.getTransaction().begin();
         }
+        ArrayList<ProcessTask> list = new ArrayList<>();
         Original file = (Original) manager.find(Original.class, aid);
-        if (null == file.getContent() || "".equals(file.getContent())) {
+        if(null == file) {
+            System.out.println("Original with aid "+aid+" wasn't found");
+        } else if (null == file.getContent() || "".equals(file.getContent())) {
             file.setContent(getContent(file.getRelativePath()));
+            list.add(new GenerateFilePatch(aid));
         }
         manager.getTransaction().commit();
-        ArrayList<ProcessTask> list = new ArrayList<>();
-        list.add(new GenerateFilePatch(aid));
         return list;
     }
 

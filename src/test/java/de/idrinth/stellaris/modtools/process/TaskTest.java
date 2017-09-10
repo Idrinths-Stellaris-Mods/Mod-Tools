@@ -16,6 +16,7 @@
  */
 package de.idrinth.stellaris.modtools.process;
 
+import de.idrinth.stellaris.modtools.persistence.PersistenceProvider;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -30,7 +31,7 @@ public class TaskTest {
     public void testRun() {
         System.out.println("run");
         CounterQueue queue = new CounterQueue();
-        Task instance = new Task(queue,new CounterProcessTask(0));
+        Task instance = new Task(queue, new CounterProcessTask(0), new PersistenceProvider());
         instance.run();
         Assert.assertEquals("Not all results reached Queue", 3, queue.count);
     }
@@ -43,7 +44,7 @@ public class TaskTest {
         System.out.println("getFullIdentifier");
         Assert.assertEquals(
             CounterProcessTask.class.getName()+"@7",
-            new Task(null, new CounterProcessTask(7)).getFullIdentifier()
+            new Task(null, new CounterProcessTask(7), new PersistenceProvider()).getFullIdentifier()
         );
     }
     private class CounterProcessTask implements ProcessTask {
@@ -73,11 +74,6 @@ public class TaskTest {
         @Override
         public void add(ProcessTask task) {
             count++;
-        }
-
-        @Override
-        public EntityManager getEntityManager() {
-            return null;
         }
 
         @Override

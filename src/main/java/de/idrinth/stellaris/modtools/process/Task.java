@@ -16,21 +16,25 @@
  */
 package de.idrinth.stellaris.modtools.process;
 
+import de.idrinth.stellaris.modtools.persistence.PersistenceProvider;
+
 class Task implements Runnable {
 
     protected final ProcessHandlingQueue queue;
     private final ProcessTask task;
+    private final PersistenceProvider persistence;
 
-    public Task(ProcessHandlingQueue queue, ProcessTask task) {
+    public Task(ProcessHandlingQueue queue, ProcessTask task, PersistenceProvider persistence) {
         this.queue = queue;
         this.task = task;
+        this.persistence = persistence;
     }
 
     @Override
     public void run() {
         try {
             System.out.println("   Running " + getFullIdentifier());
-            task.handle( queue.getEntityManager()).forEach((newTask) -> {
+            task.handle(persistence.get()).forEach((newTask) -> {
                 queue.add(newTask);
             });
             System.out.println("   Finished " + getFullIdentifier());

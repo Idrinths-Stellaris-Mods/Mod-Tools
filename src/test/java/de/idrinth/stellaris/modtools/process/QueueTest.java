@@ -52,14 +52,6 @@ public class QueueTest {
         Assert.assertTrue("task was not run",task.done);
     }
 
-    /**
-     * Test of getEntityManager method, of class Queue.
-     */
-    @Test
-    public void testGetEntityManager() {
-        System.out.println("getEntityManager");
-        Assert.assertTrue(EntityManager.class.isAssignableFrom(new Queue(new TestDataInitializer(new TestProcessTask()),new TestCallable(),new TestProgressElementGroup(),"", new PersistenceProvider()).getEntityManager().getClass()));
-    }
     private class TestCallable implements Callable {
 
         @Override

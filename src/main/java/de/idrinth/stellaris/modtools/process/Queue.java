@@ -27,7 +27,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.persistence.EntityManager;
 
 public class Queue implements ProcessHandlingQueue {
 
@@ -50,7 +49,7 @@ public class Queue implements ProcessHandlingQueue {
 
     @Override
     public synchronized void add(ProcessTask task) {
-        Task lTask = new Task(this, task);
+        Task lTask = new Task(this, task, persistence);
         if (!known.contains(lTask.getFullIdentifier())) {
             futures.add(executor.submit(lTask));
             known.add(lTask.getFullIdentifier());
@@ -80,7 +79,7 @@ public class Queue implements ProcessHandlingQueue {
                 // fine, not really important
             }
             try {
-                Thread.sleep(500);
+                Thread.sleep(100);
             } catch (InterruptedException ex) {
                 Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -91,6 +90,7 @@ public class Queue implements ProcessHandlingQueue {
 
     @Override
     public final void run() {
+        progress.update(0, 1);
         while(initialDataProvider.hasNext()) {
             add(initialDataProvider.poll());
         }
@@ -100,10 +100,5 @@ public class Queue implements ProcessHandlingQueue {
         } catch (Exception ex) {
             Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    @Override
-    public EntityManager getEntityManager() {
-        return persistence.get();
     }
 }

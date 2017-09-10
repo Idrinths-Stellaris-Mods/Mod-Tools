@@ -19,11 +19,13 @@ package de.idrinth.stellaris.modtools.abstract_cases;
 import java.io.File;
 
 abstract public class FileBased {
+    private static final String FILE_BASE = System.getProperty("java.io.tmpdir")+"/tests/";
     private File dir;
     protected File getAllowedFolder() {
         if(null == dir) {
-            dir = new File("./tests/"+this.getClass().getName());
+            dir = new File(FILE_BASE+this.getClass().getName().replace("\\.", "-"));
             dir.mkdirs();
+            dir.deleteOnExit();
         }
         return dir;
     }

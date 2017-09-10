@@ -36,7 +36,7 @@ public class MainApp extends Application {
         try {
             version = IOUtils.toString(getClass().getResourceAsStream("/version"), "utf-8");
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
-            stage.setTitle("Idrinth's Stellaris Mod-Tools");
+            stage.setTitle("Idrinth's Stellaris Mod-Tools "+version);
             stage.setScene(new Scene(root));
             stage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/logo.png")));
             stage.show();
